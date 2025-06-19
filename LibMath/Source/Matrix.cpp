@@ -43,13 +43,22 @@ bool LibMath::Matrix2Dx2::operator==(Matrix2Dx2 const& other) const
 			m_elements[1][1] == other.m_elements[1][1]	);
 }
 
-LibMath::Matrix2Dx2::RowProxy LibMath::Matrix2Dx2::operator[](size_t const row)
-{
-	if (row > 1)
-	{
-		throw(std::out_of_range("Error: row out of range"));
-	}
-	return RowProxy(m_elements[row]);
+float* LibMath::Matrix2Dx2::operator[](size_t const row)  
+{  
+	if (row > 1)  
+	{  
+		throw(std::out_of_range("Error: row out of range"));  
+	}  
+	return m_elements[row];  
+}  
+
+float const* LibMath::Matrix2Dx2::operator[](size_t const row) const  
+{  
+	if (row > 1)  
+	{  
+		throw(std::out_of_range("Error: row out of range"));  
+	}  
+	return m_elements[row];  
 }
 
 float LibMath::Matrix2Dx2::determinant(void) const
@@ -89,15 +98,19 @@ LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::adjugate(void) const
 
 LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::inverse(void) const
 {
-	Matrix2Dx2 adjugate = this->adjugate();
 	float determinant = this->determinant();
 
-	float coef = 1 / determinant;
+	if (LibMath::almostEqual(determinant, 0))
+	{
+		return Matrix2Dx2();
+	}
 
-	return Matrix2Dx2(coef * adjugate.m_elements[0][0],
-					coef * adjugate.m_elements[0][1],
-					coef * adjugate.m_elements[1][0],
-					coef * adjugate.m_elements[1][1]);
+	float inv_det = 1 / determinant;
+
+	return Matrix2Dx2(inv_det * m_elements[1][1],
+					-inv_det * m_elements[0][1],
+					-inv_det * m_elements[1][0],
+					inv_det * m_elements[0][0]);
 }
 
 LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::transpose(void) const
@@ -122,14 +135,14 @@ LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::createRotation(Radian const& rad_) cons
 		-sinTheta, cosTheta);
 }
 
-LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::createScale(LibMath::Vector2 vec) const
+LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::createScale(LibMath::Vector2 const& vec) const
 {
 	Matrix2Dx2 scale(vec.getX(), 0, 0, vec.getY());
 
 	return scale;
 }
 
-LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::createTransform(LibMath::Radian rad, LibMath::Vector2 scale) const
+LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::createTransform(LibMath::Radian const& rad, LibMath::Vector2 const& scale) const
 {
 
 	// Create the basic 2x2 rotation matrix
@@ -148,7 +161,7 @@ LibMath::Matrix2Dx2 LibMath::Matrix2Dx2::identity(void) const
 	return Matrix2Dx2(1, 0, 0, 1);
 }
 
-LibMath::Matrix2Dx2 LibMath::operator+(LibMath::Matrix2Dx2  m1, LibMath::Matrix2Dx2 m2)
+LibMath::Matrix2Dx2 LibMath::operator+(LibMath::Matrix2Dx2 const&  m1, LibMath::Matrix2Dx2 const& m2)
 {
 	float a1 = m1[0][0] + m2[0][0];
 	float a2 = m1[0][1] + m2[0][1];
@@ -158,7 +171,7 @@ LibMath::Matrix2Dx2 LibMath::operator+(LibMath::Matrix2Dx2  m1, LibMath::Matrix2
 	return LibMath::Matrix2Dx2(a1, a2, a3, a4);
 }
 
-LibMath::Matrix2Dx2 LibMath::operator*(LibMath::Matrix2Dx2 m1, LibMath::Matrix2Dx2 m2)
+LibMath::Matrix2Dx2 LibMath::operator*(LibMath::Matrix2Dx2 const& m1, LibMath::Matrix2Dx2 const& m2)
 {
 	float a1 = m1[0][0] * m2[0][0] + m1[1][0] * m2[0][1];
 	float a2 = m1[0][1] * m2[0][0] + m1[1][1] * m2[0][1];
@@ -168,7 +181,7 @@ LibMath::Matrix2Dx2 LibMath::operator*(LibMath::Matrix2Dx2 m1, LibMath::Matrix2D
 	return LibMath::Matrix2Dx2(a1, a2, a3, a4);
 }
 
-LibMath::Matrix2Dx2 LibMath::operator*(LibMath::Matrix2Dx2 m1, float scalar)
+LibMath::Matrix2Dx2 LibMath::operator*(LibMath::Matrix2Dx2 const& m1, float const&  scalar)
 {
 	float a1 = scalar * m1[0][0];
 	float a2 = scalar * m1[0][1];
@@ -178,7 +191,7 @@ LibMath::Matrix2Dx2 LibMath::operator*(LibMath::Matrix2Dx2 m1, float scalar)
 	return LibMath::Matrix2Dx2(a1, a2, a3, a4);
 }
 
-LibMath::Vector2 LibMath::operator*(LibMath::Matrix2Dx2 m, LibMath::Vector2 vec)
+LibMath::Vector2 LibMath::operator*(LibMath::Matrix2Dx2 const& m, LibMath::Vector2 const& vec)
 {
 	float a1 = m[0][0] * vec.getX() + m[1][0] * vec.getY();
 	float a2 = m[0][1] * vec.getX() + m[1][1] * vec.getY();
@@ -290,7 +303,7 @@ LibMath::Matrix2Dx3::RowProxy LibMath::Matrix2Dx3::operator[](size_t const row) 
 	return RowProxy(m_elements[row]);
 }
 
-LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createTranslation(LibMath::Vector2 const translation)
+LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createTranslation(LibMath::Vector2 const& translation)
 {
 	Matrix2Dx3 translation_m(      1,               0,              0,
 							       0,               1,              0, 
@@ -300,7 +313,7 @@ LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createTranslation(LibMath::Vector2 cons
 }
 
 LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createRotation(LibMath::Geometry2D::Point
-	const point, LibMath::Radian  rad)
+	const& point, LibMath::Radian const& rad)
 {
 
 	float cosR = LibMath::cos(rad);
@@ -312,7 +325,7 @@ LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createRotation(LibMath::Geometry2D::Poi
 	return rotation;
 }
 
-LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createScale(LibMath::Vector2 const scale)
+LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createScale(LibMath::Vector2 const& scale)
 {
 	Matrix2Dx3 scale_m(scale.getX(), 0, 0,
 		0, scale.getY(), 0,
@@ -320,7 +333,7 @@ LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createScale(LibMath::Vector2 const scal
 	return scale_m;
 }
 
-LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createTransform(LibMath::Vector2 const translation, LibMath::Radian const rotation, LibMath::Vector2 const scale) 
+LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createTransform(LibMath::Vector2 const& translation, LibMath::Radian const& rotation, LibMath::Vector2 const& scale) 
 {
 	float cosR = LibMath::cos(rotation);
 	float sinR = LibMath::sin(rotation);
@@ -341,7 +354,7 @@ LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::identity(void)
 	return Matrix2Dx3(1, 0, 0, 0, 1, 0, 0, 0, 1);
 }
 
-LibMath::Matrix2Dx3 LibMath::operator+(Matrix2Dx3 const m1, Matrix2Dx3 const m2)
+LibMath::Matrix2Dx3 LibMath::operator+(Matrix2Dx3 const& m1, Matrix2Dx3 const& m2)
 {
 
 	return Matrix2Dx3(
@@ -351,7 +364,7 @@ LibMath::Matrix2Dx3 LibMath::operator+(Matrix2Dx3 const m1, Matrix2Dx3 const m2)
 	);
 }
 
-LibMath::Matrix2Dx3 LibMath::operator*(Matrix2Dx3 const m, float const scalar)
+LibMath::Matrix2Dx3 LibMath::operator*(Matrix2Dx3 const& m, float const& scalar)
 {
 	return Matrix2Dx3(
 		scalar * m[0][0], scalar * m[0][1], scalar * m[0][2],
@@ -360,7 +373,17 @@ LibMath::Matrix2Dx3 LibMath::operator*(Matrix2Dx3 const m, float const scalar)
 	);
 }
 
-LibMath::Matrix2Dx3 LibMath::operator*(Matrix2Dx3 const m1, Matrix2Dx3 const m2)
+LibMath::Vector3 LibMath::operator*(Matrix2Dx3 const& m, LibMath::Vector3 const& vec)
+{
+	//column-major
+	return Vector3(
+		(m[0][0] * vec.getX() + m[1][0] * vec.getY() + m[2][0] * vec.getZ()),
+		(m[0][1] * vec.getX() + m[1][1] * vec.getY() + m[2][1] * vec.getZ()),
+		(m[0][2] * vec.getX() + m[1][2] * vec.getY() + m[2][2] * vec.getZ())
+	);
+}
+
+LibMath::Matrix2Dx3 LibMath::operator*(Matrix2Dx3 const& m1, Matrix2Dx3 const& m2)
 {
 	// Access elements in column-major order: m[column][row]
 
@@ -541,7 +564,14 @@ LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::inverse(void) const
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createTransform(LibMath::Vector2 const translate, LibMath::Radian const rotation, LibMath::Vector2 const scale)
+LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createTranslation(LibMath::Vector2 const& translation)
+{
+	return Matrix3Dx3(			0,					0,					0,
+								0,					0,					0, 
+					translation.getX(), translation.getY(),				1);
+}
+
+LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createTransform(LibMath::Vector2 const& translate, LibMath::Radian const& rotation, LibMath::Vector2 const& scale)
 {
 	
 	float cosR = LibMath::cos(rotation);
@@ -554,7 +584,7 @@ LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createTransform(LibMath::Vector2 const 
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationX(LibMath::Radian const angle)
+LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationX(LibMath::Radian const& angle)
 {
 	float cosR = LibMath::cos(angle);
 	float sinR = LibMath::sin(angle);
@@ -566,7 +596,7 @@ LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationX(LibMath::Radian const a
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationY(LibMath::Radian const angle)
+LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationY(LibMath::Radian const& angle)
 {
 	float cosR = LibMath::cos(angle);
 	float sinR = LibMath::sin(angle);
@@ -578,7 +608,7 @@ LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationY(LibMath::Radian const a
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationZ(LibMath::Radian const angle)
+LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationZ(LibMath::Radian const& angle)
 {
 	float cosR = LibMath::cos(angle);
 	float sinR = LibMath::sin(angle);
@@ -590,7 +620,16 @@ LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationZ(LibMath::Radian const a
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createScale(LibMath::Vector3 const scale)
+LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationZ(LibMath::Vector2 const& center, LibMath::Radian const& angle)
+{
+	Matrix3Dx3 translateToOrigin = createTranslation(Vector2(-center.getX(), -center.getY()));
+	Matrix3Dx3 rotation = createRotationZ(angle);
+	Matrix3Dx3 translateBack = createTranslation(center);
+
+	return translateBack * rotation * translateToOrigin;
+}
+
+LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createScale(LibMath::Vector3 const& scale)
 {
 	return Matrix3Dx3(
 		scale.getX(), 0.0f, 0.f,
@@ -608,7 +647,7 @@ LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::identity(void)
 	);
 }
 
-LibMath::Matrix3Dx3	LibMath::operator+(Matrix3Dx3 const m1, Matrix3Dx3 const m2)
+LibMath::Matrix3Dx3	LibMath::operator+(Matrix3Dx3 const& m1, Matrix3Dx3 const& m2)
 {
 	return Matrix3Dx3(
 		m1[0][0] + m2[0][0], m1[0][1] + m2[0][1], m1[0][2] + m2[0][2],
@@ -617,7 +656,7 @@ LibMath::Matrix3Dx3	LibMath::operator+(Matrix3Dx3 const m1, Matrix3Dx3 const m2)
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const m, float const scalar)
+LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const& m, float const& scalar)
 {
 	return Matrix3Dx3(
 		scalar * m[0][0], scalar * m[0][1], scalar * m[0][2],
@@ -626,7 +665,7 @@ LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const m, float const scalar)
 	);
 }
 
-LibMath::Vector3 LibMath::operator*(Matrix3Dx3 const mat, LibMath::Vector3 const vec)
+LibMath::Vector3 LibMath::operator*(Matrix3Dx3 const& mat, LibMath::Vector3 const& vec)
 {
 	// Column-Major
 	return LibMath::Vector3(
@@ -636,7 +675,7 @@ LibMath::Vector3 LibMath::operator*(Matrix3Dx3 const mat, LibMath::Vector3 const
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const m1, Matrix3Dx3 const m2)
+LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const& m1, Matrix3Dx3 const& m2)
 {
 
 	float a1 = (m1[0][0] * m2[0][0]) + (m1[1][0] * m2[0][1]) + (m1[2][0] * m2[0][2]);

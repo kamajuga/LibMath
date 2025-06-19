@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("Vector2");
 	//arguments.push_back("Vector3");
 	//arguments.push_back("Vector4");
-	//arguments.push_back("Matrix2Dx2");
+	arguments.push_back("Matrix2Dx2");
 	//arguments.push_back("Matrix2Dx3");
 	//arguments.push_back("Matrix3Dx3");
 	//arguments.push_back("Matrix4");
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("Capsule3D");
 	//arguments.push_back("Sphere Collisions");
 	//arguments.push_back("Plan Collisions");
-	arguments.push_back("Capsule Collisions");
+	//arguments.push_back("Capsule Collisions");
 	//arguments.push_back("AABB Collisions");
 	//arguments.push_back("Advanced Collision Scenarios");
 
