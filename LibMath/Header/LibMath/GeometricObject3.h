@@ -29,25 +29,17 @@ namespace LibMath
 
 			const Vector3	toVector3(void) const { return Vector3(m_x, m_y, m_z); };
 
-			float& getX(void) { return m_x; };
-			float& getY(void) { return m_y; };
-			float& getZ(void) { return m_z; };
-
-			float const		getX(void) const { return m_x; };
-			float const		getY(void) const { return m_y; };
-			float const		getZ(void) const { return m_z; };
-
 			float			getDistanceSquared(const Point&) const;
 			float			getDistance(const Point&) const;
 
 			Vector3			operator-(const Point& point);
 
-
-
-		private:
 			float			m_x = 0.0f;
 			float			m_y = 0.0f;
 			float			m_z = 0.0f;
+
+		private:
+			
 
 		};
 
@@ -62,9 +54,6 @@ namespace LibMath
 
 			Line& operator=(const Line& other);
 			Line operator*(const float& scalair);
-
-			const Point& getOrigin(void) const { return m_origin; };
-			const Vector3& getDirection(void) const { return m_direction; };
 
 
 			Point			m_origin;
@@ -84,8 +73,6 @@ namespace LibMath
 
 			Plan& operator=(const Plan& other);
 
-			const Vector3			normal(void) const { return m_normal; };
-			const float				distance(void) const { return m_distance; };
 
 
 			Vector3			m_normal;
@@ -113,15 +100,13 @@ namespace LibMath
 			float			extentY(void) const;
 			float			extentZ(void) const;
 
-			float& width(void) { return m_width; };
-			float& height(void) { return m_height; };
-			float& depth(void) { return m_depth; };
-		private:
-
 			Point			m_center;
 			float			m_width = 0.f; // length on X axis
 			float			m_height = 0.f; // length on Y axis
 			float			m_depth = 0.f; // length on Z axis
+		private:
+
+			
 		};
 
 		class OBB : public Object3D
@@ -134,15 +119,14 @@ namespace LibMath
 
 			OBB& operator=(const OBB& other);
 
-			Radian			rotation(void);
-
-
-		private:
 			Point			m_center;
 			float			m_width = 0.f;
 			float			m_height = 0.f;
 			float			m_depth = 0.f;
 			LibMath::Radian m_rotation;
+
+		private:
+			
 		};
 
 		class Sphere : public Object3D
@@ -154,9 +138,6 @@ namespace LibMath
 			~Sphere() = default;
 
 			Sphere& operator=(const Sphere& other);
-
-			const Point& center(void) const { return m_center; };
-			const float& radius(void) const { return m_radius; };
 
 			Point			m_center;
 			float			m_radius = 0.f;

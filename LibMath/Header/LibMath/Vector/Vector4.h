@@ -28,16 +28,13 @@ namespace LibMath
 
 		void			homogenize(void);
 
-		float			getX(void) const { return m_x; };
-		float			getY(void) const { return m_y; };
-		float			getZ(void) const { return m_z; };
-		float			getK(void) const { return m_k; };
 
-	private:
 		float m_x = 0.0f;
 		float m_y = 0.0f;
 		float m_z = 0.0f;
 		float m_k = 0.0f;
+	private:
+		
 	};
 
 	bool				operator==(Vector4 const& vec1, Vector4 const& vec2);

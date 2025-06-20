@@ -19,15 +19,6 @@ namespace LibMath
 						Vector3(Vector3 const& other);						// copy all component
 						~Vector3() = default;
 
-		float			getX(void) const { return m_x; };
-		float&			getX(void) { return m_x; };
-
-		float			getY(void) const { return m_y; };
-		float&			getY(void) { return m_y; };
-
-		float			getZ(void) const { return m_z; };
-		float&			getZ(void) { return m_z; };
-
 		static Vector3	zero(void);											// return a vector with all its component set to 0
 		static Vector3	one(void);											// return a vector with all its component set to 1
 		static Vector3	up(void);											// return a unit vector pointing upward
@@ -81,10 +72,11 @@ namespace LibMath
 
 		void			translate(Vector3 const& vec);						// offset this vector by a given distance
 
-	private:
 		float m_x = 0.0f;
 		float m_y = 0.0f;
 		float m_z = 0.0f;
+	private:
+		
 	};
 
 	Vector3			rotateArroundAxis(Vector3 const& vector, Vector3 const& axis, Radian angle);

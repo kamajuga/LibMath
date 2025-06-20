@@ -72,26 +72,26 @@ TEST_CASE("Line", "[.all][geometricObject]")
 
 		// Default constructor
 		LibMath::Geometry2D::Line lineDefault;
-		CHECK(lineDefault.m_p1 == LibMath::Geometry2D::Point());
-		CHECK(lineDefault.m_p2 == LibMath::Geometry2D::Point());
+		CHECK(lineDefault.m_start == LibMath::Geometry2D::Point());
+		CHECK(lineDefault.m_end == LibMath::Geometry2D::Point());
 
 		// Parameterized constructor
 		LibMath::Geometry2D::Point p1(0.0f, 0.0f);
 		LibMath::Geometry2D::Point p2(3.0f, 4.0f);
 		LibMath::Geometry2D::Line lineParam(p1, p2);
-		CHECK(lineParam.m_p1 == p1);
-		CHECK(lineParam.m_p2 == p2);
+		CHECK(lineParam.m_start == p1);
+		CHECK(lineParam.m_end == p2);
 
 		// Copy constructor
 		LibMath::Geometry2D::Line lineCopy(lineParam);
-		CHECK(lineCopy.m_p1 == p1);
-		CHECK(lineCopy.m_p2 == p2);
+		CHECK(lineCopy.m_start == p1);
+		CHECK(lineCopy.m_end == p2);
 
 		// Assignment operator
 		LibMath::Geometry2D::Line lineAssign;
 		lineAssign = lineParam;
-		CHECK(lineAssign.m_p1 == p1);
-		CHECK(lineAssign.m_p2 == p2);
+		CHECK(lineAssign.m_start == p1);
+		CHECK(lineAssign.m_end == p2);
 	}
 
 	SECTION("Accessor")
@@ -105,7 +105,7 @@ TEST_CASE("Line", "[.all][geometricObject]")
 
 		{
 			LibMath::Geometry2D::Line& line2 = line;
-			CHECK(line2.m_p1 == p1);
+			CHECK(line2.m_start == p1);
 		}
 
 	}
@@ -299,11 +299,37 @@ TEST_CASE("Line2D Collisions", "[.all][Collision2D][Line2D]")
 		LibMath::Geometry2D::Point p2(4.0f, 4.0f);
 		LibMath::Geometry2D::Point pointOnLine(2.0f, 2.0f);
 		LibMath::Geometry2D::Point pointOffLine(3.0f, 2.0f);
-
 		LibMath::Geometry2D::Line line(p1, p2);
-
 		CHECK(LibMath::Collision2D::checkCollisionLinePoint(line, pointOnLine));
 		CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(line, pointOffLine));
+
+		// Additional tests for point-line collision
+		SECTION("Point on line endpoints")
+		{
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(line, p1));  // Point at start
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(line, p2));  // Point at end
+		}
+
+		SECTION("Horizontal line point tests")
+		{
+			LibMath::Geometry2D::Line horizontalLine(LibMath::Geometry2D::Point(0.0f, 5.0f), LibMath::Geometry2D::Point(10.0f, 5.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(horizontalLine, LibMath::Geometry2D::Point(5.0f, 5.0f)));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(horizontalLine, LibMath::Geometry2D::Point(5.0f, 6.0f)));
+		}
+
+		SECTION("Vertical line point tests")
+		{
+			LibMath::Geometry2D::Line verticalLine(LibMath::Geometry2D::Point(3.0f, 0.0f), LibMath::Geometry2D::Point(3.0f, 8.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(verticalLine, LibMath::Geometry2D::Point(3.0f, 4.0f)));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(verticalLine, LibMath::Geometry2D::Point(4.0f, 4.0f)));
+		}
+
+		SECTION("Negative coordinates")
+		{
+			LibMath::Geometry2D::Line negativeLine(LibMath::Geometry2D::Point(-5.0f, -5.0f), LibMath::Geometry2D::Point(0.0f, 0.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(negativeLine, LibMath::Geometry2D::Point(-2.5f, -2.5f)));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(negativeLine, LibMath::Geometry2D::Point(-2.0f, -3.0f)));
+		}
 	}
 
 	SECTION("Collision with Line")
@@ -313,11 +339,9 @@ TEST_CASE("Line2D Collisions", "[.all][Collision2D][Line2D]")
 			LibMath::Geometry2D::Point p2(4.0f, 4.0f);
 			LibMath::Geometry2D::Point p3(0.0f, 4.0f);
 			LibMath::Geometry2D::Point p4(4.0f, 0.0f);
-
 			LibMath::Geometry2D::Line line1(p1, p2);
 			LibMath::Geometry2D::Line line2(p3, p4); // Intersecting line
 			LibMath::Geometry2D::Line line3(LibMath::Geometry2D::Point(5.0f, 5.0f), LibMath::Geometry2D::Point(6.0f, 6.0f)); // Non-intersecting line
-
 			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, line2));
 			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(line1, line3));
 		}
@@ -327,47 +351,207 @@ TEST_CASE("Line2D Collisions", "[.all][Collision2D][Line2D]")
 			LibMath::Geometry2D::Point p2(4.0f, 0.0f);
 			LibMath::Geometry2D::Point p3(0.0f, 2.0f);
 			LibMath::Geometry2D::Point p4(4.0f, 2.0f);
-
 			LibMath::Geometry2D::Line line1(p1, p2); // Horizontal line at y=0
 			LibMath::Geometry2D::Line line2(p3, p4); // Horizontal line at y=2
-
 			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // Parallel, no intersection
 		}
-
+		
 		{
 			LibMath::Geometry2D::Point p1(0.0f, 0.0f);
 			LibMath::Geometry2D::Point p2(4.0f, 4.0f);
 			LibMath::Geometry2D::Point p3(4.0f, 4.0f);
 			LibMath::Geometry2D::Point p4(8.0f, 8.0f);
-
 			LibMath::Geometry2D::Line line1(p1, p2);
 			LibMath::Geometry2D::Line line2(p3, p4);
-
 			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // Lines touch at (4, 4)
 		}
-
+		
 		{
 			LibMath::Geometry2D::Point p1(0.0f, 0.0f);
 			LibMath::Geometry2D::Point p2(4.0f, 4.0f);
 			LibMath::Geometry2D::Point p3(0.0f, 4.0f);
 			LibMath::Geometry2D::Point p4(4.0f, 0.0f);
-
 			LibMath::Geometry2D::Line line1(p1, p2);
 			LibMath::Geometry2D::Line line2(p3, p4);
-
 			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // Intersect at (2, 2)
 		}
-
+		
 		{
 			LibMath::Geometry2D::Point p1(0.0f, 0.0f);
 			LibMath::Geometry2D::Point p2(2.0f, 2.0f);
 			LibMath::Geometry2D::Point p3(3.0f, 0.0f);
 			LibMath::Geometry2D::Point p4(5.0f, 2.0f);
-
 			LibMath::Geometry2D::Line line1(p1, p2);
 			LibMath::Geometry2D::Line line2(p3, p4);
-
 			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // Skew lines do not intersect
+		}
+
+		// Additional line-line collision tests
+		SECTION("Overlapping lines")
+		{
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(4.0f, 4.0f));
+			LibMath::Geometry2D::Line line2(LibMath::Geometry2D::Point(1.0f, 1.0f), LibMath::Geometry2D::Point(3.0f, 3.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // line2 is subset of line1
+		}
+
+		SECTION("T-intersection")
+		{
+			LibMath::Geometry2D::Line horizontalLine(LibMath::Geometry2D::Point(0.0f, 2.0f), LibMath::Geometry2D::Point(4.0f, 2.0f));
+			LibMath::Geometry2D::Line verticalLine(LibMath::Geometry2D::Point(2.0f, 0.0f), LibMath::Geometry2D::Point(2.0f, 4.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(horizontalLine, verticalLine)); // T-intersection at (2, 2)
+		}
+
+		SECTION("Perpendicular lines not intersecting")
+		{
+			LibMath::Geometry2D::Line horizontalLine(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(2.0f, 0.0f));
+			LibMath::Geometry2D::Line verticalLine(LibMath::Geometry2D::Point(3.0f, -1.0f), LibMath::Geometry2D::Point(3.0f, 1.0f));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(horizontalLine, verticalLine));
+		}
+
+		SECTION("Diagonal parallel lines")
+		{
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(2.0f, 2.0f));
+			LibMath::Geometry2D::Line line2(LibMath::Geometry2D::Point(1.0f, 0.0f), LibMath::Geometry2D::Point(3.0f, 2.0f));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // Parallel diagonal lines
+		}
+
+		SECTION("Lines with negative slopes")
+		{
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 4.0f), LibMath::Geometry2D::Point(4.0f, 0.0f));
+			LibMath::Geometry2D::Line line2(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(4.0f, 4.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // X-intersection at (2, 2)
+		}
+
+		SECTION("Lines in different quadrants")
+		{
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(-2.0f, -2.0f), LibMath::Geometry2D::Point(0.0f, 0.0f));
+			LibMath::Geometry2D::Line line2(LibMath::Geometry2D::Point(-2.0f, 0.0f), LibMath::Geometry2D::Point(0.0f, -2.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // Intersect at (-1, -1)
+		}
+	}
+
+	SECTION("Edge Cases")
+	{
+		SECTION("Zero-length line (point)")
+		{
+			LibMath::Geometry2D::Point samePoint(2.0f, 2.0f);
+			LibMath::Geometry2D::Line zeroLine(samePoint, samePoint);
+			LibMath::Geometry2D::Line normalLine(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(4.0f, 4.0f));
+
+			// Zero-length line collision with point
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(zeroLine, samePoint));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(zeroLine, LibMath::Geometry2D::Point(3.0f, 3.0f)));
+
+			// Zero-length line collision with normal line
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(zeroLine, normalLine)); // Point (2,2) is on line
+
+			// Two zero-length lines
+			LibMath::Geometry2D::Line zeroLine2(LibMath::Geometry2D::Point(3.0f, 3.0f), LibMath::Geometry2D::Point(3.0f, 3.0f));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(zeroLine, zeroLine2)); // Different points
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(zeroLine, zeroLine)); // Same point
+		}
+
+		SECTION("Very close points (floating point precision)")
+		{
+			const float epsilon = 1e-6f;
+			LibMath::Geometry2D::Line line(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(1.0f, 1.0f));
+			LibMath::Geometry2D::Point nearPoint(0.5f + epsilon, 0.5f + epsilon);
+			LibMath::Geometry2D::Point exactPoint(0.5f, 0.5f);
+
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(line, exactPoint));
+			// This test depends on the implementation's tolerance for floating point errors
+			// CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(line, nearPoint));
+		}
+
+		SECTION("Lines with very small differences")
+		{
+			const float epsilon = 1e-6f;
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(1.0f, 1.0f));
+			LibMath::Geometry2D::Line almostParallel(LibMath::Geometry2D::Point(0.0f, epsilon), LibMath::Geometry2D::Point(1.0f, 1.0f + epsilon));
+
+			// Should intersect near origin due to tiny difference
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, almostParallel));
+		}
+
+		SECTION("Colinear lines")
+		{
+			// Same line
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(4.0f, 4.0f));
+			LibMath::Geometry2D::Line sameLine(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(4.0f, 4.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, sameLine));
+
+			// Colinear but not overlapping
+			LibMath::Geometry2D::Line colinearLine(LibMath::Geometry2D::Point(5.0f, 5.0f), LibMath::Geometry2D::Point(8.0f, 8.0f));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(line1, colinearLine));
+
+			// Colinear and overlapping
+			LibMath::Geometry2D::Line overlappingLine(LibMath::Geometry2D::Point(2.0f, 2.0f), LibMath::Geometry2D::Point(6.0f, 6.0f));
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, overlappingLine));
+		}
+
+		SECTION("Extreme coordinate values")
+		{
+			LibMath::Geometry2D::Line extremeLine(LibMath::Geometry2D::Point(-1000.0f, -1000.0f),
+				LibMath::Geometry2D::Point(1000.0f, 1000.0f));
+			LibMath::Geometry2D::Point originPoint(0.0f, 0.0f);
+			LibMath::Geometry2D::Point extremePoint(500.0f, 500.0f);
+
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(extremeLine, originPoint));
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(extremeLine, extremePoint));
+		}
+
+		SECTION("Axis-aligned edge cases")
+		{
+			// Horizontal line at origin
+			LibMath::Geometry2D::Line xAxis(LibMath::Geometry2D::Point(-5.0f, 0.0f), LibMath::Geometry2D::Point(5.0f, 0.0f));
+			// Vertical line at origin  
+			LibMath::Geometry2D::Line yAxis(LibMath::Geometry2D::Point(0.0f, -5.0f), LibMath::Geometry2D::Point(0.0f, 5.0f));
+
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(xAxis, yAxis)); // Intersect at origin
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(xAxis, LibMath::Geometry2D::Point(0.0f, 0.0f)));
+			CHECK(LibMath::Collision2D::checkCollisionLinePoint(yAxis, LibMath::Geometry2D::Point(0.0f, 0.0f)));
+		}
+
+		SECTION("Near-miss intersections")
+		{
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(2.0f, 2.0f));
+			LibMath::Geometry2D::Line line2(LibMath::Geometry2D::Point(0.0f, 0.1f), LibMath::Geometry2D::Point(2.0f, 2.1f));
+
+			// Lines are very close but don't actually intersect within the segments
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(line1, line2));
+		}
+	}
+
+	SECTION("Boundary and Limit Tests")
+	{
+		SECTION("Point exactly at line extension")
+		{
+			LibMath::Geometry2D::Line shortLine(LibMath::Geometry2D::Point(1.0f, 1.0f), LibMath::Geometry2D::Point(2.0f, 2.0f));
+			LibMath::Geometry2D::Point extensionPoint(0.0f, 0.0f); // On line extension but not on segment
+			LibMath::Geometry2D::Point extensionPoint2(3.0f, 3.0f); // On line extension but not on segment
+
+			// Depends on whether your implementation treats lines as infinite or as segments
+			// Assuming line segments (finite):
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(shortLine, extensionPoint));
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLinePoint(shortLine, extensionPoint2));
+		}
+
+		SECTION("Lines that would intersect if extended")
+		{
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(1.0f, 1.0f));
+			LibMath::Geometry2D::Line line2(LibMath::Geometry2D::Point(2.0f, 0.0f), LibMath::Geometry2D::Point(3.0f, 1.0f));
+
+			// These lines would intersect if extended, but don't as segments
+			CHECK_FALSE(LibMath::Collision2D::checkCollisionLineLine(line1, line2));
+		}
+
+		SECTION("Multiple intersection candidates")
+		{
+			// Line that could intersect at multiple theoretical points due to precision
+			LibMath::Geometry2D::Line line1(LibMath::Geometry2D::Point(0.0f, 0.0f), LibMath::Geometry2D::Point(4.0f, 0.0f));
+			LibMath::Geometry2D::Line line2(LibMath::Geometry2D::Point(2.0f, -1.0f), LibMath::Geometry2D::Point(2.0f, 1.0f));
+
+			CHECK(LibMath::Collision2D::checkCollisionLineLine(line1, line2)); // Should intersect at (2, 0)
 		}
 	}
 }

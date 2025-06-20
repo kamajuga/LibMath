@@ -29,15 +29,6 @@ LibMath::Vector2::Vector2(Vector2 const& other)
 	m_y = other.m_y;
 }
 
-float LibMath::Vector2::getX(void) const
-{
-	return m_x;
-}
-
-float LibMath::Vector2::getY(void) const
-{
-	return m_y;
-}
 
 float& LibMath::Vector2::operator[](int n)
 {
@@ -546,9 +537,9 @@ void LibMath::Vector3::rotate(Radian rad_x, Radian rad_y, Radian rad_z)
 	float m22 = ch * cp;
 
 	// Application de la matrice au vecteur (column-major)
-	float x = getX();
-	float y = getY();
-	float z = getZ();
+	float x = m_x;
+	float y = m_y;
+	float z = m_z;
 
 	m_x = (m00 * x + m10 * y + m20 * z);  // Colonne 0
 	m_y = (m01 * x + m11 * y + m21 * z);  // Colonne 1
@@ -601,9 +592,9 @@ LibMath::Vector3 LibMath::rotateArroundAxis(Vector3 const& vector, Vector3 const
 	float oneMinusCosTheta = 1 - cosTheta;
 
 	// Extract axis components
-	float x = normalizedAxis.getX();
-	float y = normalizedAxis.getY();
-	float z = normalizedAxis.getZ();
+	float x = normalizedAxis.m_x;
+	float y = normalizedAxis.m_y;
+	float z = normalizedAxis.m_z;
 
 	// Compute the rotation matrix elements
 	float r11 = cosTheta + x * x * oneMinusCosTheta;
@@ -619,9 +610,9 @@ LibMath::Vector3 LibMath::rotateArroundAxis(Vector3 const& vector, Vector3 const
 	float r33 = cosTheta + z * z * oneMinusCosTheta;
 
 	// Apply the rotation matrix to the vector
-	float newX = vector.getX() * r11 + vector.getY() * r12 + vector.getZ() * r13;
-	float newY = vector.getX() * r21 + vector.getY() * r22 + vector.getZ() * r23;
-	float newZ = vector.getX() * r31 + vector.getY() * r32 + vector.getZ() * r33;
+	float newX = vector.m_x * r11 + vector.m_y * r12 + vector.m_z * r13;
+	float newY = vector.m_x * r21 + vector.m_y * r22 + vector.m_z * r23;
+	float newZ = vector.m_x * r31 + vector.m_y * r32 + vector.m_z * r33;
 
 	return { newX, newY, newZ };
 }
@@ -646,42 +637,42 @@ std::string LibMath::formatNumber(float value)
 bool LibMath::operator==(Vector3 const& vec1, Vector3 const& vec2)
 {
 	
-	return (vec1.getX() == vec2.getX() && vec1.getY() == vec2.getY() && vec1.getZ() == vec2.getZ());
+	return (vec1.m_x == vec2.m_x && vec1.m_y == vec2.m_y && vec1.m_z == vec2.m_z);
 }
 
 bool LibMath::operator!=(Vector3 const& vec1, Vector3 const& vec2)
 {
-	return (vec1.getX() != vec2.getX() || vec1.getY() != vec2.getY() || vec1.getZ() != vec2.getZ());
+	return (vec1.m_x != vec2.m_x || vec1.m_y != vec2.m_y || vec1.m_z != vec2.m_z);
 }
 
 LibMath::Vector3 LibMath::operator-(Vector3 vec)
 {
-	return Vector3(-vec.getX(), -vec.getY(), -vec.getZ());
+	return Vector3(-vec.m_x, -vec.m_y, -vec.m_z);
 }
 
 LibMath::Vector3 LibMath::operator+(Vector3 vec1, Vector3 const& vec2)
 {
-	return Vector3(vec1.getX() + vec2.getX(), vec1.getY() + vec2.getY(), vec1.getZ() + vec2.getZ());
+	return Vector3(vec1.m_x + vec2.m_x, vec1.m_y + vec2.m_y, vec1.m_z + vec2.m_z);
 }
 
 LibMath::Vector3 LibMath::operator-(Vector3 vec1, Vector3 const& vec2)
 {
-	return Vector3(vec1.getX() - vec2.getX(), vec1.getY() - vec2.getY(), vec1.getZ() - vec2.getZ());
+	return Vector3(vec1.m_x - vec2.m_x, vec1.m_y - vec2.m_y, vec1.m_z - vec2.m_z);
 }
 
 LibMath::Vector3 LibMath::operator*(Vector3 vec1, Vector3 const& vec2)
 {
-	return Vector3(vec1.getX() * vec2.getX(), vec1.getY() * vec2.getY(), vec1.getZ() * vec2.getZ());
+	return Vector3(vec1.m_x * vec2.m_x, vec1.m_y * vec2.m_y, vec1.m_z * vec2.m_z);
 }
 
 LibMath::Vector3 LibMath::operator*(Vector3 vec, float val)
 {
-	return Vector3(vec.getX() * val, vec.getY() * val, vec.getZ() * val);
+	return Vector3(vec.m_x * val, vec.m_y * val, vec.m_z * val);
 }
 
 LibMath::Vector3 LibMath::operator/(Vector3 vec1, Vector3 const& vec2)
 {
-	return Vector3(vec1.getX() / vec2.getX(), vec1.getY() /vec2.getY(), vec1.getZ() / vec2.getZ());
+	return Vector3(vec1.m_x / vec2.m_x, vec1.m_y /vec2.m_y, vec1.m_z / vec2.m_z);
 }
 
 LibMath::Vector3 LibMath::operator/(Vector3 vec, float val)
@@ -690,68 +681,68 @@ LibMath::Vector3 LibMath::operator/(Vector3 vec, float val)
 	{
 		throw(std::invalid_argument("Division by zero"));
 	}
-	return Vector3(vec.getX() / val, vec.getY() / val, vec.getZ() /val );
+	return Vector3(vec.m_x / val, vec.m_y / val, vec.m_z /val );
 }
 
 LibMath::Vector3& LibMath::operator+=(Vector3& vec1, Vector3 const& vec2)
 {
-	vec1.getX() += vec2.getX();
-	vec1.getY() += vec2.getY();
-	vec1.getZ() += vec2.getZ();
+	vec1.m_x += vec2.m_x;
+	vec1.m_y += vec2.m_y;
+	vec1.m_z += vec2.m_z;
 
 	return vec1;
 }
 
 LibMath::Vector3& LibMath::operator-=(Vector3& vec1, Vector3 const& vec2)
 {
-	vec1.getX() -= vec2.getX();
-	vec1.getY() -= vec2.getY();
-	vec1.getZ() -= vec2.getZ();
+	vec1.m_x -= vec2.m_x;
+	vec1.m_y -= vec2.m_y;
+	vec1.m_z -= vec2.m_z;
 
 	return vec1;
 }
 
 LibMath::Vector3& LibMath::operator*=(Vector3& vec1, Vector3 const& vec2)
 {
-	vec1.getX() *= vec2.getX();
-	vec1.getY() *= vec2.getY();
-	vec1.getZ() *= vec2.getZ();
+	vec1.m_x *= vec2.m_x;
+	vec1.m_y *= vec2.m_y;
+	vec1.m_z *= vec2.m_z;
 
 	return vec1;
 }
 
 LibMath::Vector3& LibMath::operator*=(Vector3& vec, float val)
 {
-	vec.getX() *= val;
-	vec.getY() *= val;
-	vec.getZ() *= val;
+	vec.m_x *= val;
+	vec.m_y *= val;
+	vec.m_z *= val;
 
 	return vec;
 }
 
 LibMath::Vector3& LibMath::operator/=(Vector3& vec1, Vector3 const& vec2)
 {
-	vec1.getX() /= vec2.getX();
-	vec1.getY() /= vec2.getY();
-	vec1.getZ() /= vec2.getZ();
+	vec1.m_x /= vec2.m_x;
+	vec1.m_y /= vec2.m_y;
+	vec1.m_z /= vec2.m_z;
 
 	return vec1;
 }
 
 std::ostream& LibMath::operator<<(std::ostream& os, Vector3 const& vec)
 {
-	return os << "{" << vec.getX() << "," << vec.getY() << "," << vec.getZ() << "}";
+	return os << "{" << vec.m_x << "," << vec.m_y << "," << vec.m_z << "}";
 }
 
 std::istream& LibMath::operator>>(std::istream& is, Vector3& vec)
 {
 	char c;
 	is >> c;
-	is >> vec.getX();
+	is >> vec.m_x;
 	is >> c;
-	is >> vec.getY();
+	is >> vec.m_y;
 	is >> c;
-	is >> vec.getZ();
+	is >> vec.m_z;
 	is >> c;
 
 	return is;
@@ -787,9 +778,9 @@ LibMath::Vector4::Vector4(Vector4 const& other)
 
 LibMath::Vector4::Vector4(Vector3 const& vec3)
 {
-	m_x = vec3.getX();
-	m_y = vec3.getY();
-	m_z = vec3.getZ();
+	m_x = vec3.m_x;
+	m_y = vec3.m_y;
+	m_z = vec3.m_z;
 	m_k = 1.f;
 }
 
@@ -888,27 +879,27 @@ void LibMath::Vector4::homogenize(void)
 
 bool LibMath::operator==(Vector4 const& vec1, Vector4 const& vec2)
 {
-	return ((vec1.getX() == vec2.getX()) && (vec1.getY() == vec2.getY()) && (vec1.getZ() == vec2.getZ()) && (vec1.getK() == vec2.getK()));
+	return ((vec1.m_x == vec2.m_x) && (vec1.m_y == vec2.m_y) && (vec1.m_z == vec2.m_z) && (vec1.m_k == vec2.m_k));
 }
 
 LibMath::Vector4 LibMath::operator-(Vector4 vec)
 {
-	return Vector4(-vec.getX(), -vec.getY(), -vec.getZ(), -vec.getK());
+	return Vector4(-vec.m_x, -vec.m_y, -vec.m_z, -vec.m_k);
 }
 
 LibMath::Vector4 LibMath::operator+(Vector4 vec1, Vector4 vec2)
 {
-	return Vector4(vec1.getX() + vec2.getX(), vec1.getY() + vec2.getY(), vec1.getZ() + vec2.getZ(), vec1.getK() + vec2.getK());
+	return Vector4(vec1.m_x + vec2.m_x, vec1.m_y + vec2.m_y, vec1.m_z + vec2.m_z, vec1.m_k + vec2.m_k);
 }
 
 LibMath::Vector4 LibMath::operator-(Vector4 vec1, Vector4 vec2)
 {
-	return Vector4(vec1.getX() - vec2.getX(), vec1.getY() - vec2.getY(), vec1.getZ() - vec2.getZ(), vec1.getK() - vec2.getK());
+	return Vector4(vec1.m_x - vec2.m_x, vec1.m_y - vec2.m_y, vec1.m_z - vec2.m_z, vec1.m_k - vec2.m_k);
 }
 
 LibMath::Vector4 LibMath::operator*(Vector4 vec, float val)
 {
-	return Vector4(vec.getX() * val, vec.getY() * val, vec.getZ() * val, vec.getK() * val);
+	return Vector4(vec.m_x * val, vec.m_y * val, vec.m_z * val, vec.m_k * val);
 }
 
 LibMath::Vector4 LibMath::operator/(Vector4 vec, float val)
@@ -917,7 +908,7 @@ LibMath::Vector4 LibMath::operator/(Vector4 vec, float val)
 	{
 		throw(std::invalid_argument("Error: division by zero"));
 	}
-	return Vector4(vec.getX() / val, vec.getY() / val, vec.getZ() / val, vec.getK() / val);
+	return Vector4(vec.m_x / val, vec.m_y / val, vec.m_z / val, vec.m_k / val);
 }
 
 #pragma endregion

@@ -21,19 +21,19 @@ TEST_CASE("Point3D", "[.all][geometricObject3D]")
     SECTION("Instantiation") 
     {
         Point p1;  // Default constructor
-        REQUIRE(p1.getX() == Catch::Approx(0.f));
-        REQUIRE(p1.getY() == Catch::Approx(0.f));
-        REQUIRE(p1.getZ() == Catch::Approx(0.f));
+        REQUIRE(p1.m_x == Catch::Approx(0.f));
+        REQUIRE(p1.m_y == Catch::Approx(0.f));
+        REQUIRE(p1.m_z == Catch::Approx(0.f));
 
         Point p2(1.f, 2.f, 3.f);  // Param constructor
-        REQUIRE(p2.getX() == Catch::Approx(1.f));
-        REQUIRE(p2.getY() == Catch::Approx(2.f));
-        REQUIRE(p2.getZ() == Catch::Approx(3.f));
+        REQUIRE(p2.m_x == Catch::Approx(1.f));
+        REQUIRE(p2.m_y == Catch::Approx(2.f));
+        REQUIRE(p2.m_z == Catch::Approx(3.f));
 
         Point p3(p2);  // Copy constructor
-        REQUIRE(p3.getX() == Catch::Approx(1.f));
-        REQUIRE(p3.getY() == Catch::Approx(2.f));
-        REQUIRE(p3.getZ() == Catch::Approx(3.f));
+        REQUIRE(p3.m_x == Catch::Approx(1.f));
+        REQUIRE(p3.m_y == Catch::Approx(2.f));
+        REQUIRE(p3.m_z == Catch::Approx(3.f));
     }
 
     SECTION("Assignment Operator") 
@@ -42,27 +42,27 @@ TEST_CASE("Point3D", "[.all][geometricObject3D]")
         Point p2;
         p2 = p1;
 
-        REQUIRE(p2.getX() == Catch::Approx(4.f));
-        REQUIRE(p2.getY() == Catch::Approx(5.f));
-        REQUIRE(p2.getZ() == Catch::Approx(6.f));
+        REQUIRE(p2.m_x == Catch::Approx(4.f));
+        REQUIRE(p2.m_y == Catch::Approx(5.f));
+        REQUIRE(p2.m_z == Catch::Approx(6.f));
     }
 
     SECTION("Vector Conversion")
     {
         LibMath::Geometry3D::Point point(5.0f, 10.0f, 15.0f);
         LibMath::Vector3 vec = point.toVector3();
-        CHECK(vec.getX() == 5.0f);
-        CHECK(vec.getY() == 10.0f);
-        CHECK(vec.getZ() == 15.0f);
+        CHECK(vec.m_x == 5.0f);
+        CHECK(vec.m_y == 10.0f);
+        CHECK(vec.m_z == 15.0f);
     }
 
     SECTION("Const Getters") 
     {
         const Point p(10.f, 11.f, 12.f);
 
-        REQUIRE(p.getX() == Catch::Approx(10.f));
-        REQUIRE(p.getY() == Catch::Approx(11.f));
-        REQUIRE(p.getZ() == Catch::Approx(12.f)); // Attention ici : probable bug !
+        REQUIRE(p.m_x == Catch::Approx(10.f));
+        REQUIRE(p.m_y == Catch::Approx(11.f));
+        REQUIRE(p.m_z == Catch::Approx(12.f)); // Attention ici : probable bug !
     }
 }
 
@@ -80,28 +80,28 @@ TEST_CASE("Line3D", "[.all][geometricObject3D]")
     SECTION("Constructors") 
     {
         Line l1;
-        REQUIRE(l1.getOrigin().getX() == Catch::Approx(0.f));
-        REQUIRE(l1.getOrigin().getY() == Catch::Approx(0.f));
-        REQUIRE(l1.getOrigin().getZ() == Catch::Approx(0.f));
-        REQUIRE(l1.getDirection().getX() == Catch::Approx(0.f));
-        REQUIRE(l1.getDirection().getY() == Catch::Approx(0.f));
-        REQUIRE(l1.getDirection().getZ()  == Catch::Approx(0.f));
+        REQUIRE(l1.m_origin.m_x == Catch::Approx(0.f));
+        REQUIRE(l1.m_origin.m_y == Catch::Approx(0.f));
+        REQUIRE(l1.m_origin.m_z == Catch::Approx(0.f));
+        REQUIRE(l1.m_direction.m_x == Catch::Approx(0.f));
+        REQUIRE(l1.m_direction.m_y == Catch::Approx(0.f));
+        REQUIRE(l1.m_direction.m_z  == Catch::Approx(0.f));
 
         Line l2(origin, dir);
-        REQUIRE(l2.getOrigin().getX() == Catch::Approx(1.f));
-        REQUIRE(l2.getOrigin().getY() == Catch::Approx(2.f));
-        REQUIRE(l2.getOrigin().getZ() == Catch::Approx(3.f));
-        REQUIRE(l2.getDirection().getX() == Catch::Approx(0.f));
-        REQUIRE(l2.getDirection().getY() == Catch::Approx(1.f));
-        REQUIRE(l2.getDirection().getZ() == Catch::Approx(0.f));
+        REQUIRE(l2.m_origin.m_x == Catch::Approx(1.f));
+        REQUIRE(l2.m_origin.m_y == Catch::Approx(2.f));
+        REQUIRE(l2.m_origin.m_z == Catch::Approx(3.f));
+        REQUIRE(l2.m_direction.m_x == Catch::Approx(0.f));
+        REQUIRE(l2.m_direction.m_y == Catch::Approx(1.f));
+        REQUIRE(l2.m_direction.m_z == Catch::Approx(0.f));
 
         Line l3(l2); // copy constructor
-        REQUIRE(l3.getOrigin().getX() == Catch::Approx(1.f));
-        REQUIRE(l3.getOrigin().getY() == Catch::Approx(2.f));
-        REQUIRE(l3.getOrigin().getZ() == Catch::Approx(3.f));
-        REQUIRE(l3.getDirection().getX() == Catch::Approx(0.f));
-        REQUIRE(l3.getDirection().getY() == Catch::Approx(1.f));
-        REQUIRE(l3.getDirection().getZ() == Catch::Approx(0.f));
+        REQUIRE(l3.m_origin.m_x == Catch::Approx(1.f));
+        REQUIRE(l3.m_origin.m_y == Catch::Approx(2.f));
+        REQUIRE(l3.m_origin.m_z == Catch::Approx(3.f));
+        REQUIRE(l3.m_direction.m_x == Catch::Approx(0.f));
+        REQUIRE(l3.m_direction.m_y == Catch::Approx(1.f));
+        REQUIRE(l3.m_direction.m_z == Catch::Approx(0.f));
     }
 
     SECTION("Assignment operator")
@@ -110,12 +110,12 @@ TEST_CASE("Line3D", "[.all][geometricObject3D]")
         Line l2;
         l2 = l1;
 
-        REQUIRE(l2.getOrigin().getX() == Catch::Approx(1.f));
-        REQUIRE(l2.getOrigin().getY() == Catch::Approx(2.f));
-        REQUIRE(l2.getOrigin().getZ() == Catch::Approx(3.f));
-        REQUIRE(l2.getDirection().getX() == Catch::Approx(0.f));
-        REQUIRE(l2.getDirection().getY() == Catch::Approx(1.f));
-        REQUIRE(l2.getDirection().getZ() == Catch::Approx(0.f));
+        REQUIRE(l2.m_origin.m_x == Catch::Approx(1.f));
+        REQUIRE(l2.m_origin.m_y == Catch::Approx(2.f));
+        REQUIRE(l2.m_origin.m_z == Catch::Approx(3.f));
+        REQUIRE(l2.m_direction.m_x == Catch::Approx(0.f));
+        REQUIRE(l2.m_direction.m_y == Catch::Approx(1.f));
+        REQUIRE(l2.m_direction.m_z == Catch::Approx(0.f));
     }
 }
 
@@ -127,19 +127,19 @@ TEST_CASE("Plan3D", "[.all][geometricObject3D]")
     SECTION("Default constructor") 
     {
         Plan p;
-        REQUIRE(p.normal().getX() == Catch::Approx(0.f));
-        REQUIRE(p.normal().getY() == Catch::Approx(0.f));
-        REQUIRE(p.normal().getZ() == Catch::Approx(0.f));
-        REQUIRE(p.distance() == Catch::Approx(0.f));
+        REQUIRE(p.m_normal.m_x == Catch::Approx(0.f));
+        REQUIRE(p.m_normal.m_y == Catch::Approx(0.f));
+        REQUIRE(p.m_normal.m_z == Catch::Approx(0.f));
+        REQUIRE(p.m_distance == Catch::Approx(0.f));
     }
 
     SECTION("Parameterized constructor") 
     {
         Plan p(normal, distance);
-        REQUIRE(p.normal().getX() == Catch::Approx(0.f));
-        REQUIRE(p.normal().getY() == Catch::Approx(1.f));
-        REQUIRE(p.normal().getZ() == Catch::Approx(0.f));
-        REQUIRE(p.distance() == Catch::Approx(5.f));
+        REQUIRE(p.m_normal.m_x == Catch::Approx(0.f));
+        REQUIRE(p.m_normal.m_y == Catch::Approx(1.f));
+        REQUIRE(p.m_normal.m_z == Catch::Approx(0.f));
+        REQUIRE(p.m_distance == Catch::Approx(5.f));
     }
 
     SECTION("Copy constructor") 
@@ -147,10 +147,10 @@ TEST_CASE("Plan3D", "[.all][geometricObject3D]")
         Plan original(normal, distance);
         Plan copy(original);
 
-        REQUIRE(copy.normal().getX() == Catch::Approx(0.f));
-        REQUIRE(copy.normal().getY() == Catch::Approx(1.f));
-        REQUIRE(copy.normal().getZ() == Catch::Approx(0.f));
-        REQUIRE(copy.distance() == Catch::Approx(5.f));
+        REQUIRE(copy.m_normal.m_x == Catch::Approx(0.f));
+        REQUIRE(copy.m_normal.m_y == Catch::Approx(1.f));
+        REQUIRE(copy.m_normal.m_z == Catch::Approx(0.f));
+        REQUIRE(copy.m_distance == Catch::Approx(5.f));
     }
 
     SECTION("Assignment operator") 
@@ -159,10 +159,10 @@ TEST_CASE("Plan3D", "[.all][geometricObject3D]")
         Plan p2;
         p2 = p1;
 
-        REQUIRE(p2.normal().getX() == Catch::Approx(0.f));
-        REQUIRE(p2.normal().getY() == Catch::Approx(1.f));
-        REQUIRE(p2.normal().getZ() == Catch::Approx(0.f));
-        REQUIRE(p2.distance() == Catch::Approx(5.f));
+        REQUIRE(p2.m_normal.m_x == Catch::Approx(0.f));
+        REQUIRE(p2.m_normal.m_y == Catch::Approx(1.f));
+        REQUIRE(p2.m_normal.m_z == Catch::Approx(0.f));
+        REQUIRE(p2.m_distance == Catch::Approx(5.f));
     }
 }
 
@@ -176,9 +176,9 @@ TEST_CASE("AABB3D", "[.all][geometricObject3D]")
     SECTION("Default constructor") 
     {
         AABB aabb;
-        REQUIRE(aabb.center().getX() == Catch::Approx(0.f));
-        REQUIRE(aabb.center().getY() == Catch::Approx(0.f));
-        REQUIRE(aabb.center().getZ() == Catch::Approx(0.f));
+        REQUIRE(aabb.m_center.m_x == Catch::Approx(0.f));
+        REQUIRE(aabb.m_center.m_y == Catch::Approx(0.f));
+        REQUIRE(aabb.m_center.m_z == Catch::Approx(0.f));
         REQUIRE(aabb.extentX() == Catch::Approx(0.f));
         REQUIRE(aabb.extentY() == Catch::Approx(0.f));
         REQUIRE(aabb.extentZ() == Catch::Approx(0.f));
@@ -187,9 +187,9 @@ TEST_CASE("AABB3D", "[.all][geometricObject3D]")
     SECTION("Parameterized constructor") 
     {
         AABB aabb(center, width, height, depth);
-        REQUIRE(aabb.center().getX() == Catch::Approx(1.f));
-        REQUIRE(aabb.center().getY() == Catch::Approx(2.f));
-        REQUIRE(aabb.center().getZ() == Catch::Approx(3.f));
+        REQUIRE(aabb.m_center.m_x == Catch::Approx(1.f));
+        REQUIRE(aabb.m_center.m_y == Catch::Approx(2.f));
+        REQUIRE(aabb.m_center.m_z == Catch::Approx(3.f));
         REQUIRE(aabb.extentX() == Catch::Approx(width / 2.f));
         REQUIRE(aabb.extentY() == Catch::Approx(height / 2.f));
         REQUIRE(aabb.extentZ() == Catch::Approx(depth / 2.f));
@@ -199,9 +199,9 @@ TEST_CASE("AABB3D", "[.all][geometricObject3D]")
     {
         AABB original(center, width, height, depth);
         AABB copy(original);
-        REQUIRE(copy.center().getX() == Catch::Approx(1.f));
-        REQUIRE(copy.center().getY() == Catch::Approx(2.f));
-        REQUIRE(copy.center().getZ() == Catch::Approx(3.f));
+        REQUIRE(copy.m_center.m_x == Catch::Approx(1.f));
+        REQUIRE(copy.m_center.m_y == Catch::Approx(2.f));
+        REQUIRE(copy.m_center.m_z == Catch::Approx(3.f));
         REQUIRE(copy.extentX() == Catch::Approx(width / 2.f));
         REQUIRE(copy.extentY() == Catch::Approx(height / 2.f));
         REQUIRE(copy.extentZ() == Catch::Approx(depth / 2.f));
@@ -212,9 +212,9 @@ TEST_CASE("AABB3D", "[.all][geometricObject3D]")
         AABB a1(center, width, height, depth);
         AABB a2;
         a2 = a1;
-        REQUIRE(a2.center().getX() == Catch::Approx(1.f));
-        REQUIRE(a2.center().getY() == Catch::Approx(2.f));
-        REQUIRE(a2.center().getZ() == Catch::Approx(3.f));
+        REQUIRE(a2.m_center.m_x == Catch::Approx(1.f));
+        REQUIRE(a2.m_center.m_y == Catch::Approx(2.f));
+        REQUIRE(a2.m_center.m_z == Catch::Approx(3.f));
         REQUIRE(a2.extentX() == Catch::Approx(width / 2.f));
         REQUIRE(a2.extentY() == Catch::Approx(height / 2.f));
         REQUIRE(a2.extentZ() == Catch::Approx(depth / 2.f));
@@ -232,25 +232,25 @@ TEST_CASE("OBB3D", "[.all][geometricObject3D]")
     SECTION("Default constructor") 
     {
         OBB obb;
-        REQUIRE(obb.rotation().raw() == Catch::Approx(0.f));
+        REQUIRE(obb.m_rotation.raw() == Catch::Approx(0.f));
     }
 
     SECTION("Parameterized constructor") {
         OBB obb(center, width, height, depth, rotation);
-        REQUIRE(obb.rotation().raw() == Catch::Approx(1.5f));
+        REQUIRE(obb.m_rotation.raw() == Catch::Approx(1.5f));
     }
 
     SECTION("Copy constructor") {
         OBB original(center, width, height, depth, rotation);
         OBB copy(original);
-        REQUIRE(copy.rotation().raw() == Catch::Approx(1.5f));
+        REQUIRE(copy.m_rotation.raw() == Catch::Approx(1.5f));
     }
 
     SECTION("Assignment operator") {
         OBB obb1(center, width, height, depth, rotation);
         OBB obb2;
         obb2 = obb1;
-        REQUIRE(obb2.rotation().raw() == Catch::Approx(1.5f));
+        REQUIRE(obb2.m_rotation.raw() == Catch::Approx(1.5f));
     }
 }
 
@@ -260,37 +260,37 @@ TEST_CASE("Sphere3D", "[.all][geometricObject3D]") {
 
     SECTION("Default constructor") {
         Sphere s;
-        REQUIRE(s.radius() == Catch::Approx(0.f));
-        REQUIRE(s.center().getX() == Catch::Approx(0.f));
-        REQUIRE(s.center().getY() == Catch::Approx(0.f));
-        REQUIRE(s.center().getZ() == Catch::Approx(0.f));
+        REQUIRE(s.m_radius == Catch::Approx(0.f));
+        REQUIRE(s.m_center.m_x == Catch::Approx(0.f));
+        REQUIRE(s.m_center.m_y == Catch::Approx(0.f));
+        REQUIRE(s.m_center.m_z == Catch::Approx(0.f));
     }
 
     SECTION("Parameterized constructor") {
         Sphere s(center, radius);
-        REQUIRE(s.radius() == Catch::Approx(5.f));
-        REQUIRE(s.center().getX() == Catch::Approx(1.f));
-        REQUIRE(s.center().getY() == Catch::Approx(2.f));
-        REQUIRE(s.center().getZ() == Catch::Approx(3.f));
+        REQUIRE(s.m_radius == Catch::Approx(5.f));
+        REQUIRE(s.m_center.m_x == Catch::Approx(1.f));
+        REQUIRE(s.m_center.m_y == Catch::Approx(2.f));
+        REQUIRE(s.m_center.m_z == Catch::Approx(3.f));
     }
 
     SECTION("Copy constructor") {
         Sphere s1(center, radius);
         Sphere s2(s1);
-        REQUIRE(s2.radius() == Catch::Approx(5.f));
-        REQUIRE(s2.center().getX() == Catch::Approx(1.f));
-        REQUIRE(s2.center().getY() == Catch::Approx(2.f));
-        REQUIRE(s2.center().getZ() == Catch::Approx(3.f));
+        REQUIRE(s2.m_radius == Catch::Approx(5.f));
+        REQUIRE(s2.m_center.m_x == Catch::Approx(1.f));
+        REQUIRE(s2.m_center.m_y == Catch::Approx(2.f));
+        REQUIRE(s2.m_center.m_z == Catch::Approx(3.f));
     }
 
     SECTION("Assignment operator") {
         Sphere s1(center, radius);
         Sphere s2;
         s2 = s1;
-        REQUIRE(s2.radius() == Catch::Approx(5.f));
-        REQUIRE(s2.center().getX() == Catch::Approx(1.f));
-        REQUIRE(s2.center().getY() == Catch::Approx(2.f));
-        REQUIRE(s2.center().getZ() == Catch::Approx(3.f));
+        REQUIRE(s2.m_radius == Catch::Approx(5.f));
+        REQUIRE(s2.m_center.m_x == Catch::Approx(1.f));
+        REQUIRE(s2.m_center.m_y == Catch::Approx(2.f));
+        REQUIRE(s2.m_center.m_z == Catch::Approx(3.f));
     }
 }
 
@@ -302,33 +302,33 @@ TEST_CASE("Capsule3D", "[.all][geometricObject3D]") {
     SECTION("Default constructor") {
         Capsule c;
         REQUIRE(c.m_radius == Catch::Approx(0.f));
-        REQUIRE(c.m_pointA.getX() == Catch::Approx(0.f));
-        REQUIRE(c.m_pointA.getY() == Catch::Approx(0.f));
-        REQUIRE(c.m_pointA.getZ() == Catch::Approx(0.f));
+        REQUIRE(c.m_pointA.m_x == Catch::Approx(0.f));
+        REQUIRE(c.m_pointA.m_y == Catch::Approx(0.f));
+        REQUIRE(c.m_pointA.m_z == Catch::Approx(0.f));
 
-        REQUIRE(c.m_pointB.getX() == Catch::Approx(0.f));
-        REQUIRE(c.m_pointB.getY() == Catch::Approx(0.f));
-        REQUIRE(c.m_pointB.getZ() == Catch::Approx(0.f));
+        REQUIRE(c.m_pointB.m_x == Catch::Approx(0.f));
+        REQUIRE(c.m_pointB.m_y == Catch::Approx(0.f));
+        REQUIRE(c.m_pointB.m_z == Catch::Approx(0.f));
     }
 
     SECTION("Parameterized constructor") {
         Capsule c(a, b, radius);
         REQUIRE(c.m_radius == Catch::Approx(2.f));
-        REQUIRE(c.m_pointA.getX() == Catch::Approx(1.f));
-        REQUIRE(c.m_pointA.getY() == Catch::Approx(2.f));
-        REQUIRE(c.m_pointA.getZ() == Catch::Approx(3.f));
+        REQUIRE(c.m_pointA.m_x == Catch::Approx(1.f));
+        REQUIRE(c.m_pointA.m_y == Catch::Approx(2.f));
+        REQUIRE(c.m_pointA.m_z == Catch::Approx(3.f));
 
-        REQUIRE(c.m_pointB.getX() == Catch::Approx(4.f));
-        REQUIRE(c.m_pointB.getY() == Catch::Approx(5.f));
-        REQUIRE(c.m_pointB.getZ() == Catch::Approx(6.f));
+        REQUIRE(c.m_pointB.m_x == Catch::Approx(4.f));
+        REQUIRE(c.m_pointB.m_y == Catch::Approx(5.f));
+        REQUIRE(c.m_pointB.m_z == Catch::Approx(6.f));
     }
 
     SECTION("Copy constructor") {
         Capsule c1(a, b, radius);
         Capsule c2(c1);
         REQUIRE(c2.m_radius == Catch::Approx(2.f));
-        REQUIRE(c2.m_pointA.getX() == Catch::Approx(1.f));
-        REQUIRE(c2.m_pointB.getZ() == Catch::Approx(6.f));
+        REQUIRE(c2.m_pointA.m_x == Catch::Approx(1.f));
+        REQUIRE(c2.m_pointB.m_z == Catch::Approx(6.f));
     }
 
     SECTION("Assignment operator") {
@@ -336,8 +336,8 @@ TEST_CASE("Capsule3D", "[.all][geometricObject3D]") {
         Capsule c2;
         c2 = c1;
         REQUIRE(c2.m_radius == Catch::Approx(2.f));
-        REQUIRE(c2.m_pointA.getY() == Catch::Approx(2.f));
-        REQUIRE(c2.m_pointB.getX() == Catch::Approx(4.f));
+        REQUIRE(c2.m_pointA.m_y == Catch::Approx(2.f));
+        REQUIRE(c2.m_pointB.m_x == Catch::Approx(4.f));
     }
 }
 

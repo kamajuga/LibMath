@@ -50,20 +50,20 @@ float LibMath::Geometry2D::DistancebBetweenPoint(Point const& point1, Point cons
 
 LibMath::Geometry2D::Line::Line(Point const& p1, Point const& p2)
 {
-	m_p1 = p1;
-	m_p2 = p2;
+	m_start = p1;
+	m_end = p2;
 }
 
 LibMath::Geometry2D::Line::Line(const Line& other)
 {
-	m_p1 = other.m_p1;
-	m_p2 = other.m_p2;
+	m_start = other.m_start;
+	m_end = other.m_end;
 }
 
 LibMath::Geometry2D::Line& LibMath::Geometry2D::Line::operator=(const Line& other)
 {
-	m_p1 = other.m_p1;
-	m_p2 = other.m_p2;
+	m_start = other.m_start;
+	m_end = other.m_end;
 
 	return *this;
 }
@@ -71,17 +71,17 @@ LibMath::Geometry2D::Line& LibMath::Geometry2D::Line::operator=(const Line& othe
 float LibMath::Geometry2D::Line::lenght(void) const
 {
 
-	return sqrtf(powf(m_p1.m_x - m_p2.m_x, 2.0f) + powf(m_p1.m_y - m_p2.m_y, 2.0f));
+	return sqrtf(powf(m_start.m_x - m_end.m_x, 2.0f) + powf(m_start.m_y - m_end.m_y, 2.0f));
 }
 
 float LibMath::Geometry2D::Line::lenghtSquare(void) const
 {
-	return powf(m_p1.m_x - m_p2.m_x, 2.0f) + powf(m_p1.m_y - m_p2.m_y, 2.0f);
+	return powf(m_start.m_x - m_end.m_x, 2.0f) + powf(m_start.m_y - m_end.m_y, 2.0f);
 }
 
 bool LibMath::Geometry2D::operator==(Line line1, Line Line)
 {
-	return (line1.m_p1 == Line.m_p1 && Line.m_p2 == Line.m_p2);
+	return (line1.m_start == Line.m_start && Line.m_end == Line.m_end);
 }
 
 bool LibMath::Geometry2D::isPointOnSegment(Point const& point, Point const& segStart, Point const& segEnd)

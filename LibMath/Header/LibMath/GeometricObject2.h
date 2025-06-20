@@ -47,8 +47,8 @@ namespace LibMath
 			float			lenght(void) const;
 			float			lenghtSquare(void) const;
 
-			Point			m_p1;
-			Point			m_p2;
+			Point			m_start;
+			Point			m_end;
 
 		private:
 			

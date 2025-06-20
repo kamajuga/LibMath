@@ -114,8 +114,8 @@ TEST_CASE("Matrix2Dx2", "[.all][matrix][Matrix2D]") {
         LibMath::Vector2 result = m1 * vec;
         glm::vec2 resultGlm = m1Glm * vecGlm;
 
-        CHECK(result.getX() == Catch::Approx(resultGlm.x)); // 1*1 + 2*2
-        CHECK(result.getY() == Catch::Approx(resultGlm.y)); // 3*1 + 4*2
+        CHECK(result.m_x == Catch::Approx(resultGlm.x)); // 1*1 + 2*2
+        CHECK(result.m_y == Catch::Approx(resultGlm.y)); // 3*1 + 4*2
     }
 
     SECTION("Matrix Properties") {
@@ -187,8 +187,8 @@ TEST_CASE("Matrix2Dx2", "[.all][matrix][Matrix2D]") {
         glm::mat3 scalingGlm = glm::scale(identity3Glm, scaleGlm);
         glm::vec2 scaledVecGlm = scaleGlm * vecGlm;
         
-        CHECK(scaledVec.getX() == scaledVecGlm.x);
-        CHECK(scaledVec.getY() == scaledVecGlm.y);
+        CHECK(scaledVec.m_x == scaledVecGlm.x);
+        CHECK(scaledVec.m_y == scaledVecGlm.y);
     }
 
     SECTION("Edge Cases") {
@@ -737,9 +737,9 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
         glm::vec3 vecGlm(1.f, 2.f, 3.f);
         glm::vec3 resultGlm = mat1Glm * vecGlm;
 
-        CHECK(result.getX() == resultGlm.x);
-        CHECK(result.getY() == resultGlm.y);
-        CHECK(result.getZ() == resultGlm.z);
+        CHECK(result.m_x == resultGlm.x);
+        CHECK(result.m_y == resultGlm.y);
+        CHECK(result.m_z == resultGlm.z);
     }
 
     SECTION("Edge Cases")

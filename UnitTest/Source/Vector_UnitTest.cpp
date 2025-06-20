@@ -15,8 +15,8 @@
 
 using namespace LibMath::Literal;
 
-#define CHECK_VECTOR2(vector, vectorGlm) CHECK(vector.getX() == Catch::Approx(vectorGlm.x)); CHECK(vector.getY() == Catch::Approx(vectorGlm.y));
-#define CHECK_VECTOR3(vector, vectorGlm) CHECK(vector.getX() == Catch::Approx(vectorGlm.x)); CHECK(vector.getY() == Catch::Approx(vectorGlm.y)); CHECK(vector.getZ() == Catch::Approx(vectorGlm.z))
+#define CHECK_VECTOR2(vector, vectorGlm) CHECK(vector.m_x == Catch::Approx(vectorGlm.x)); CHECK(vector.m_y == Catch::Approx(vectorGlm.y));
+#define CHECK_VECTOR3(vector, vectorGlm) CHECK(vector.m_x == Catch::Approx(vectorGlm.x)); CHECK(vector.m_y == Catch::Approx(vectorGlm.y)); CHECK(vector.m_z == Catch::Approx(vectorGlm.z))
 
 TEST_CASE("Vector2", "[.all][vector][Vector2]")
 {
@@ -582,12 +582,12 @@ TEST_CASE("Vector3", "[.all][vector][Vector3]")
 			SECTION("Euler Angle")
 			{
 				LibMath::Vector3 rotate = origin;
-				rotate.rotate(LibMath::Radian{ transformation.getX() }, LibMath::Radian{ transformation.getY() }, LibMath::Radian{ transformation.getZ()});
+				rotate.rotate(LibMath::Radian{ transformation.m_x }, LibMath::Radian{ transformation.m_y }, LibMath::Radian{ transformation.m_z});
 
 
 				glm::vec4 rotateGlm = glm::orientate4(transformationGlm) * originGlm;
 
-				std::cout << "My Rotation: (" << rotate.getX() << ", " << rotate.getY() << ", " << rotate.getZ() << ")\n";
+				std::cout << "My Rotation: (" << rotate.m_x << ", " << rotate.m_y << ", " << rotate.m_z << ")\n";
 				std::cout << "GLM Rotation: (" << rotateGlm.x << ", " << rotateGlm.y << ", " << rotateGlm.z << ")\n";
 
 
@@ -774,31 +774,31 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 	{
 		// Default constructor
 		LibMath::Vector4 empty;
-		CHECK(empty.getX() == 0.0f);
-		CHECK(empty.getY() == 0.0f);
-		CHECK(empty.getZ() == 0.0f);
-		CHECK(empty.getK() == 0.0f);
+		CHECK(empty.m_x == 0.0f);
+		CHECK(empty.m_y == 0.0f);
+		CHECK(empty.m_z == 0.0f);
+		CHECK(empty.m_k == 0.0f);
 
 		// Single-value constructor
 		LibMath::Vector4 singleParam(2.5f);
-		CHECK(singleParam.getX() == 2.5f);
-		CHECK(singleParam.getY() == 2.5f);
-		CHECK(singleParam.getZ() == 2.5f);
-		CHECK(singleParam.getK() == 2.5f);
+		CHECK(singleParam.m_x == 2.5f);
+		CHECK(singleParam.m_y == 2.5f);
+		CHECK(singleParam.m_z == 2.5f);
+		CHECK(singleParam.m_k == 2.5f);
 
 		// Parameterized constructor
 		LibMath::Vector4 allParams(1.0f, 2.0f, 3.0f, 4.0f);
-		CHECK(allParams.getX() == 1.0f);
-		CHECK(allParams.getY() == 2.0f);
-		CHECK(allParams.getZ() == 3.0f);
-		CHECK(allParams.getK() == 4.0f);
+		CHECK(allParams.m_x == 1.0f);
+		CHECK(allParams.m_y == 2.0f);
+		CHECK(allParams.m_z == 3.0f);
+		CHECK(allParams.m_k == 4.0f);
 
 		// Copy constructor
 		LibMath::Vector4 copy(allParams);
-		CHECK(copy.getX() == 1.0f);
-		CHECK(copy.getY() == 2.0f);
-		CHECK(copy.getZ() == 3.0f);
-		CHECK(copy.getK() == 4.0f);
+		CHECK(copy.m_x == 1.0f);
+		CHECK(copy.m_y == 2.0f);
+		CHECK(copy.m_z == 3.0f);
+		CHECK(copy.m_k == 4.0f);
 	}
 
 	SECTION("Assignment Operator")
@@ -806,10 +806,10 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		LibMath::Vector4 original(1.0f, 2.0f, 3.0f, 4.0f);
 		LibMath::Vector4 assigned = original;
 
-		CHECK(assigned.getX() == 1.0f);
-		CHECK(assigned.getY() == 2.0f);
-		CHECK(assigned.getZ() == 3.0f);
-		CHECK(assigned.getK() == 4.0f);
+		CHECK(assigned.m_x == 1.0f);
+		CHECK(assigned.m_y == 2.0f);
+		CHECK(assigned.m_z == 3.0f);
+		CHECK(assigned.m_k == 4.0f);
 	}
 
 	SECTION("Element Access (operator[])")
@@ -871,10 +871,10 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		LibMath::Vector4 vec(2.0f, 4.0f, 6.0f, 2.0f);
 		vec.homogenize();
 
-		CHECK(vec.getX() == 1.0f);
-		CHECK(vec.getY() == 2.0f);
-		CHECK(vec.getZ() == 3.0f);
-		CHECK(vec.getK() == 1.0f);
+		CHECK(vec.m_x == 1.0f);
+		CHECK(vec.m_y == 2.0f);
+		CHECK(vec.m_z == 3.0f);
+		CHECK(vec.m_k == 1.0f);
 	}
 
 	SECTION("Equality Operator (operator==)")
@@ -892,10 +892,10 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		LibMath::Vector4 vec(1.0f, 2.0f, 3.0f, 4.0f);
 		LibMath::Vector4 negated = -vec;
 
-		CHECK(negated.getX() == -1.0f);
-		CHECK(negated.getY() == -2.0f);
-		CHECK(negated.getZ() == -3.0f);
-		CHECK(negated.getK() == -4.0f);
+		CHECK(negated.m_x == -1.0f);
+		CHECK(negated.m_y == -2.0f);
+		CHECK(negated.m_z == -3.0f);
+		CHECK(negated.m_k == -4.0f);
 	}
 
 	SECTION("Addition Operator (operator+)")
@@ -904,10 +904,10 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		LibMath::Vector4 vec2(2.0f, 3.0f, 4.0f, 5.0f);
 		LibMath::Vector4 result = vec1 + vec2;
 
-		CHECK(result.getX() == 3.0f);
-		CHECK(result.getY() == 5.0f);
-		CHECK(result.getZ() == 7.0f);
-		CHECK(result.getK() == 9.0f);
+		CHECK(result.m_x == 3.0f);
+		CHECK(result.m_y == 5.0f);
+		CHECK(result.m_z == 7.0f);
+		CHECK(result.m_k == 9.0f);
 	}
 
 	SECTION("Subtraction Operator (operator-)")
@@ -916,10 +916,10 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		LibMath::Vector4 vec2(2.0f, 3.0f, 4.0f, 5.0f);
 		LibMath::Vector4 result = vec1 - vec2;
 
-		CHECK(result.getX() == -1.0f);
-		CHECK(result.getY() == -1.0f);
-		CHECK(result.getZ() == -1.0f);
-		CHECK(result.getK() == -1.0f);
+		CHECK(result.m_x == -1.0f);
+		CHECK(result.m_y == -1.0f);
+		CHECK(result.m_z == -1.0f);
+		CHECK(result.m_k == -1.0f);
 	}
 
 	SECTION("Scalar Multiplication (operator*)")
@@ -927,10 +927,10 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		LibMath::Vector4 vec(1.0f, 2.0f, 3.0f, 4.0f);
 		LibMath::Vector4 result = vec * 2.0f;
 
-		CHECK(result.getX() == 2.0f);
-		CHECK(result.getY() == 4.0f);
-		CHECK(result.getZ() == 6.0f);
-		CHECK(result.getK() == 8.0f);
+		CHECK(result.m_x == 2.0f);
+		CHECK(result.m_y == 4.0f);
+		CHECK(result.m_z == 6.0f);
+		CHECK(result.m_k == 8.0f);
 	}
 
 	SECTION("Scalar Division (operator/)")
@@ -938,10 +938,10 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		LibMath::Vector4 vec(2.0f, 4.0f, 6.0f, 8.0f);
 		LibMath::Vector4 result = vec / 2.0f;
 
-		CHECK(result.getX() == 1.0f);
-		CHECK(result.getY() == 2.0f);
-		CHECK(result.getZ() == 3.0f);
-		CHECK(result.getK() == 4.0f);
+		CHECK(result.m_x == 1.0f);
+		CHECK(result.m_y == 2.0f);
+		CHECK(result.m_z == 3.0f);
+		CHECK(result.m_k == 4.0f);
 
 		// Division by zero (if applicable)
 #ifdef _DEBUG

@@ -42,7 +42,7 @@ float LibMath::Geometry3D::Point::getDistance(const Point& other) const
 
 LibMath::Vector3 LibMath::Geometry3D::Point::operator-(const Point& point)
 {
-	return Vector3(m_x - point.getX(), m_y - point.getY(), m_z - point.getZ());
+	return Vector3(m_x - point.m_x, m_y - point.m_y, m_z - point.m_z);
 }
 
 #pragma endregion All functions Point 3D 
@@ -198,10 +198,6 @@ LibMath::Geometry3D::OBB& LibMath::Geometry3D::OBB::operator=(const OBB& other)
 	return *this;
 }
 
-LibMath::Radian LibMath::Geometry3D::OBB::rotation(void)
-{
-	return m_rotation;
-}
 
 #pragma endregion All function OBB
 
@@ -257,16 +253,16 @@ LibMath::Geometry3D::Capsule& LibMath::Geometry3D::Capsule::operator=(const Caps
 
 LibMath::Geometry3D::Point LibMath::Geometry3D::getClosestToAABB(const LibMath::Geometry3D::AABB& aabb, const Point& p)
 {
-	float aabbMinX = aabb.center().getX() - aabb.extentX();
-	float aabbMaxX = aabb.center().getX() + aabb.extentX();
-	float aabbMinY = aabb.center().getY() - aabb.extentY();
-	float aabbMaxY = aabb.center().getY() + aabb.extentY();
-	float aabbMinZ = aabb.center().getZ() - aabb.extentZ();
-	float aabbMaxZ = aabb.center().getZ() + aabb.extentZ();
+	float aabbMinX = aabb.m_center.m_x - aabb.extentX();
+	float aabbMaxX = aabb.m_center.m_x + aabb.extentX();
+	float aabbMinY = aabb.m_center.m_y - aabb.extentY();
+	float aabbMaxY = aabb.m_center.m_y + aabb.extentY();
+	float aabbMinZ = aabb.m_center.m_z - aabb.extentZ();
+	float aabbMaxZ = aabb.m_center.m_z + aabb.extentZ();
 
-	float x = std::max(aabbMinX, std::min(p.getX(), aabbMaxX));
-	float y = std::max(aabbMinY, std::min(p.getY(), aabbMaxY));
-	float z = std::max(aabbMinZ, std::min(p.getZ(), aabbMaxZ));
+	float x = std::max(aabbMinX, std::min(p.m_x, aabbMaxX));
+	float y = std::max(aabbMinY, std::min(p.m_y, aabbMaxY));
+	float z = std::max(aabbMinZ, std::min(p.m_z, aabbMaxZ));
 	return Geometry3D::Point(x, y, z);
 }
 
@@ -283,7 +279,7 @@ LibMath::Geometry3D::Point LibMath::Geometry3D::getClosestToSegment(const Point&
 	float t = (p.toVector3() - a.toVector3()).dot(ab) / abLengthSq;
 	t = std::max(0.0f, std::min(t, 1.0f)); // Clamp t to [0, 1] to stay on the segment
 
-	return Geometry3D::Point(a.getX() + t * ab.getX(),
-		a.getY() + t * ab.getY(),
-		a.getZ() + t * ab.getZ());
+	return Geometry3D::Point(a.m_x + t * ab.m_x,
+		a.m_y + t * ab.m_y,
+		a.m_z + t * ab.m_z);
 }
