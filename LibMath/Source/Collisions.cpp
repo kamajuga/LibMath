@@ -1,6 +1,18 @@
 #include "LibMath/Collisions.h"
 #include "LibMath/Arithmetic.h"
 
+
+#pragma region Collisions 2D
+
+#pragma region Collision Line2D
+
+
+
+#pragma endregion
+
+#pragma endregion
+
+#pragma region Collisions 3D
 #pragma region Sphere Collision 3D
 bool LibMath::Collisions3D::checkCollision(const Geometry3D::Sphere& sphere1, const Geometry3D::Sphere& sphere2)
 {
@@ -378,6 +390,8 @@ bool LibMath::Collisions3D::checkCollision(const Geometry3D::Capsule& capsule, c
 
 #pragma endregion 
 
+#pragma region AABB Collision 3D
+
 bool LibMath::Collisions3D::checkCollision(const Geometry3D::AABB& aabb, const Geometry3D::Line& line)
 {
 	// Tolerance for floating-point comparisons
@@ -475,3 +489,221 @@ bool LibMath::Collisions3D::checkCollision(const Geometry3D::AABB& aabb, const G
 
 	return shortestDistance <= sphere.m_radius * sphere.m_radius;
 }
+
+#pragma endregion 
+
+#pragma endregion
+
+bool LibMath::Collision2D::checkCollisionLinePoint(const Geometry2D::Line& line, const Geometry2D::Point& point)
+{
+	// Distance between the point and the 1st edge of the line
+	float distance1 = sqrtf(powf(point.m_x - line.m_p1.m_x, 2) + powf(point.m_y - line.m_p1.m_y, 2));
+
+	// Distance between the point and the 2nd edge of the line
+	float distance2 = sqrtf(powf(point.m_x - line.m_p2.m_x, 2) + powf(point.m_y - line.m_p2.m_y, 2));
+
+	float distSum = distance1 + distance2;
+
+	return LibMath::almostEqual(distSum, line.lenght());
+}
+
+bool LibMath::Collision2D::checkCollisionLineLine(const Geometry2D::Line& line1, const Geometry2D::Line& line2)
+{
+	/*
+		Parametric equation of a segment AB: AM = tAB, t [0, 1]
+
+		Let two segment AB and CD:
+			- AM = t AB
+			- CM' = u CD
+		If AB and CD collides, that means M = M'
+	*/
+	const float EPSILON = 1e-6f;
+
+	//float denominator = ((m_p2.m_x - m_p1.m_x) * (line.m_p1.m_y - line.m_p2.m_y)) -((m_p2.m_y - m_p1.m_y) * (line.m_p1.m_x - line.m_p2.m_x));
+	float temp2 = ((line1.m_p2.m_y - line1.m_p1.m_y) * (line2.m_p1.m_x - line2.m_p2.m_x)) - ((line1.m_p2.m_x - line1.m_p1.m_x) * (line2.m_p1.m_y - line2.m_p2.m_y));
+
+	// Check if lines are parallel or colinear
+	if (fabs(temp2) < EPSILON) {
+		// Check if the lines are colinear and overlap
+		if (LibMath::Geometry2D::isPointOnSegment(line1.m_p1, line2.m_p1, line2.m_p2) ||
+			LibMath::Geometry2D::isPointOnSegment(line1.m_p2, line2.m_p1, line2.m_p2) ||
+			LibMath::Geometry2D::isPointOnSegment(line2.m_p1, line1.m_p1, line1.m_p2) ||
+			LibMath::Geometry2D::isPointOnSegment(line2.m_p2, line1.m_p1, line1.m_p2)) {
+			return true;
+		}
+		return false;
+	}
+
+
+	float temp1 = ((line1.m_p2.m_x - line1.m_p1.m_x) * (line2.m_p2.m_y - line1.m_p1.m_y)) - ((line1.m_p2.m_y - line1.m_p1.m_y) * (line2.m_p2.m_x - line1.m_p1.m_x));
+
+	float temp3 = ((line2.m_p1.m_x - line2.m_p2.m_x) * (line2.m_p2.m_y - line1.m_p1.m_y)) - ((line2.m_p1.m_y - line2.m_p2.m_y) * (line2.m_p2.m_x - line1.m_p1.m_x));
+
+	float uA = temp1 / temp2;
+
+	float uB = temp3 / temp2;
+
+	// uA [0, 1] and uB [0, 1]
+	if ((uA >= 0 && uA <= 1) && (uB >= 0 && uB <= 1))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool LibMath::Collision2D::checkCollisionAABBPoint(const Geometry2D::AABB& aabb, const Geometry2D::Point& point)
+{
+	if (point.m_x >= aabb.getBottomLeftCorner().m_x &&
+		point.m_x <= aabb.getBottomRightCorner().m_x &&
+		point.m_y >= aabb.getBottomLeftCorner().m_y &&
+		point.m_y <= aabb.getTopLeftCorner().m_y)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool LibMath::Collision2D::checkCollisionAABBLine(const Geometry2D::AABB& aabb, const Geometry2D::Line& line)
+{
+	// create the lines of the rectangle
+	Geometry2D::Line leftLine(aabb.getTopLeftCorner(), aabb.getBottomLeftCorner());
+	Geometry2D::Line topLine(aabb.getTopRightCorner(), aabb.getTopLeftCorner());
+	Geometry2D::Line botLine(aabb.getBottomRightCorner(), aabb.getBottomLeftCorner());
+	Geometry2D::Line rightLine(aabb.getTopRightCorner(), aabb.getBottomRightCorner());
+
+	// check colllision with each line 
+	bool top = checkCollisionLineLine(line, topLine);
+	bool bot = checkCollisionLineLine(line, botLine);
+	bool left = checkCollisionLineLine(line, leftLine);
+	bool right = checkCollisionLineLine(line, rightLine);
+
+	if (top || bot || left || right)
+	{
+		return true;
+	}
+
+	// Check if the entire line is inside the rectangle
+	Geometry2D::Point p1 = line.m_p1;
+	Geometry2D::Point p2 = line.m_p2;
+
+	bool p1Inside = checkCollisionAABBPoint(aabb, p1);
+
+	bool p2Inside = checkCollisionAABBPoint(aabb, p2);
+
+	if (p1Inside && p2Inside)
+	{
+		return true; // The line is entirely inside the rectangle
+	}
+
+	return false; // No collision detected
+}
+
+bool LibMath::Collision2D::checkCollisionAABBAABB(const Geometry2D::AABB& aabb1, const Geometry2D::AABB& aabb2)
+{
+	if (abs(aabb1.m_center.m_x - aabb2.m_center.m_x) > (aabb1.extentX() + aabb2.extentX()))
+	{
+		return false;
+	}
+
+	if (abs(aabb1.m_center.m_y - aabb2.m_center.m_y) > (aabb1.extentY() + aabb2.extentY()))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool LibMath::Collision2D::checkCollisionOBBOBB(const Geometry2D::OBB& obb1, const Geometry2D::OBB& obb2)
+{
+	Geometry2D::Point center1 = obb1.m_center;
+	Geometry2D::Point center2 = obb2.m_center;
+
+	// Define the axes to test (normals to the edges of the rectangles)
+	LibMath::Vector2 axes[4] =
+	{
+		{normalVector(obb1.getTopRightCorner(), obb1.getTopLeftCorner())},
+		{normalVector(obb1.getTopLeftCorner(), obb1.getBotLeftCorner())},
+		{normalVector(obb2.getTopRightCorner(), obb2.getTopLeftCorner())},
+		{normalVector(obb2.getTopLeftCorner(), obb2.getBotLeftCorner())}
+	};
+
+	float min1, max1, min2, max2;
+
+	for (LibMath::Vector2& axis : axes)
+	{
+		axis.normalize();
+		Geometry2D::projectRectangleOnAxis(obb1, axis, min1, max1);
+		Geometry2D::projectRectangleOnAxis(obb2, axis, min2, max2);
+		if (!Geometry2D::overlapOnAxis(min1, max1, min2, max2))
+		{
+			return false; // Separation axis found, no collision
+		}
+	}
+	return true; // No separating axis found, collision occurs
+}
+
+bool LibMath::Collision2D::checkCollisionCirclePoint(const Geometry2D::Circle& circle, const Geometry2D::Point& point)
+{
+	// distance between circle radius and the point
+	float distance = sqrtf(powf(circle.m_center.m_x - point.m_x, 2) + powf(circle.m_center.m_y - point.m_y, 2));
+
+	if (distance <= circle.m_radius)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool LibMath::Collision2D::checkCollisionCircleLine(const Geometry2D::Circle& circle, const Geometry2D::Line& line)
+{
+	// Check if one of the edges of the line is in the circle
+	bool inside1 = checkCollisionCirclePoint(circle, line.m_p1);
+	bool inside2 = checkCollisionCirclePoint(circle, line.m_p2);
+
+	if (inside1 || inside2)
+	{
+		return true;
+	}
+
+	// compute the distance between the circle and it's closest point to the line
+	// dot product of the vectors v1(circle - edge1)
+	float dot = ((circle.m_center.m_x - line.m_p1.m_x) * (line.m_p2.m_x - line.m_p1.m_x)) +
+		((circle.m_center.m_y - line.m_p1.m_y)) * (line.m_p2.m_y - line.m_p1.m_y);
+
+	dot = (dot / line.lenghtSquare());
+
+	//Clamp the dot product to the range[0, 1] to keep the closest point on the segment
+	dot = std::max(0.0f, std::min(1.0f, dot));
+
+	float closestX = line.m_p1.m_x + (dot * (line.m_p2.m_x - line.m_p1.m_x));
+	float closestY = line.m_p1.m_y + (dot * (line.m_p2.m_y - line.m_p1.m_y));
+
+	//distance between the closest point and the circle
+	float distX = closestX - circle.m_center.m_x;
+	float distY = closestY - circle.m_center.m_y;
+
+	float distance = sqrtf(powf(distX, 2) + powf(distY, 2));
+
+	// check if the distance is smaller the circle's radius
+	if (distance <= circle.m_radius)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool LibMath::Collision2D::checkCollisionCircleCircle(const Geometry2D::Circle& circle1, const Geometry2D::Circle& circle2)
+{
+	// Distance between the center of the two circle
+	float distance = sqrtf(powf(circle1.m_center.m_x - circle2.m_center.m_x, 2) + powf(circle1.m_center.m_y - circle2.m_center.m_y, 2));
+
+	if (distance <= circle1.m_radius + circle2.m_radius)
+	{
+		return true;
+	}
+	return false;
+}
+

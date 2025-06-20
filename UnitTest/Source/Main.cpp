@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("[geometricObject]");
 	//arguments.push_back("[geometricObject3D]");
 	//arguments.push_back("[Collision3D]");
+	//arguments.push_back("[Collision2D]");
 	//arguments.push_back("[matrix]");
 
 
@@ -110,10 +111,14 @@ int main(int argc, char* argv[])
 	//arguments.push_back("Vector2");
 	//arguments.push_back("Vector3");
 	//arguments.push_back("Vector4");
-	arguments.push_back("Matrix2Dx2");
+	//arguments.push_back("Matrix2Dx2");
 	//arguments.push_back("Matrix2Dx3");
 	//arguments.push_back("Matrix3Dx3");
 	//arguments.push_back("Matrix4");
+	//arguments.push_back("[Line2D]");
+	//arguments.push_back("[AABB2D]");
+	//arguments.push_back("[OBB2D]");
+	arguments.push_back("[Circle2D]");
 	//arguments.push_back("Point3D");
 	//arguments.push_back("Line3D");
 	//arguments.push_back("Plan3D");

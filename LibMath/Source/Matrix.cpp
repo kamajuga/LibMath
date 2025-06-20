@@ -321,7 +321,7 @@ LibMath::Matrix2Dx3 LibMath::Matrix2Dx3::createRotation(LibMath::Geometry2D::Poi
 
 	Matrix2Dx3 rotation(                        cosR,                                            sinR,                    0,
 						                       -sinR,                                            cosR,                    0,
-						point.getX() * (1 - cosR) + point.getY() * sinR, point.getY() * (1 - cosR) - point.getY() * sinR, 1);
+						point.m_x * (1 - cosR) + point.m_y * sinR, point.m_y * (1 - cosR) - point.m_y * sinR, 1);
 	return rotation;
 }
 
