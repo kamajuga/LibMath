@@ -8,7 +8,7 @@ namespace LibMath
 {
 	namespace Geometry3D
 	{
-
+		class Vector3;
 		class Object3D
 		{
 		public:
@@ -20,23 +20,25 @@ namespace LibMath
 		class Point : public Object3D
 		{
 		public:
-			Point() = default;
-			Point(const float x, const float y, const float z);
-			Point(const Point& other);
-			~Point() = default;
+									Point() = default;
+									Point(const float x, const float y, const float z);
+									Point(const Point& other);
+									~Point() = default;
 
-			Point& operator=(const Point& other);
+			Point&					operator=(const Point& other);
 
-			const Vector3	toVector3(void) const { return Vector3(m_x, m_y, m_z); };
+			operator				LibMath::Vector3(void) const;
 
-			float			getDistanceSquared(const Point&) const;
-			float			getDistance(const Point&) const;
+			const LibMath::Vector3	toVector3(void) const { return  LibMath::Vector3(m_x, m_y, m_z); };
 
-			Vector3			operator-(const Point& point);
+			float					getDistanceSquared(const Point&) const;
+			float					getDistance(const Point&) const;
 
-			float			m_x = 0.0f;
-			float			m_y = 0.0f;
-			float			m_z = 0.0f;
+			LibMath::Vector3					operator-(const Point& point);
+
+			float					m_x = 0.0f;
+			float					m_y = 0.0f;
+			float					m_z = 0.0f;
 
 		private:
 			
@@ -47,8 +49,8 @@ namespace LibMath
 		{
 		public:
 			Line() = default;
-			Line(const Point& point, const Vector3& dir);   // Director vector should be a unit vector
-			Line(const Point& point, const Vector3& dir, const float& scalair);
+			Line(const Point& point, const LibMath::Vector3& dir);   // Director vector should be a unit vector
+			Line(const Point& point, const LibMath::Vector3& dir, const float& scalair);
 			Line(const Line& other);
 			~Line() = default;
 
@@ -57,7 +59,7 @@ namespace LibMath
 
 
 			Point			m_origin;
-			Vector3			m_direction;
+			LibMath::Vector3			m_direction;
 			float			m_length = 0.f;
 		private:
 
@@ -67,7 +69,7 @@ namespace LibMath
 		{
 		public:
 			Plan() = default;
-			Plan(const Vector3& normal, const float& distance);
+			Plan(const LibMath::Vector3& normal, const float& distance);
 			Plan(const Plan& other);
 			~Plan() = default;
 
@@ -75,7 +77,7 @@ namespace LibMath
 
 
 
-			Vector3			m_normal;
+			LibMath::Vector3			m_normal;
 			float			m_distance = 0.f;
 
 		private:

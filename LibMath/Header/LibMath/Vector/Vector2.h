@@ -5,10 +5,11 @@
 #include "LibMath/Angle/Radian.h"
 #endif // !LIBMATH_ANGLE_RADIAN_H_
 
+#include "LibMath/GeometricObject2.h"
 
 namespace LibMath
 {
-	class Degree;
+	class Point;
 	class Vector2
 	{
 	public:
@@ -27,6 +28,8 @@ namespace LibMath
 		Vector2&	operator-=(const Vector2& other);
 		Vector2&	operator*=(const Vector2& other);
 		Vector2&	operator/=(const Vector2& other);
+
+		operator	Geometry2D::Point(void) const;
 
 		float		magnitude(void) const;
 		bool		isUnit(void) const;

@@ -108,6 +108,11 @@ LibMath::Vector2& LibMath::Vector2::operator/=(const Vector2& other)
 	return *this;
 }
 
+LibMath::Vector2::operator Geometry2D::Point(void) const
+{
+	return Geometry2D::Point(m_x, m_y);
+}
+
 float LibMath::Vector2::magnitude(void) const
 {
 	return sqrtf(powf(m_x, 2) + powf(m_y, 2));
@@ -288,6 +293,11 @@ LibMath::Vector3 LibMath::Vector3::front(void)
 LibMath::Vector3 LibMath::Vector3::back(void)
 {
 	return Vector3(0.0f, 0.0f, -1.0f);
+}
+
+LibMath::Vector3::operator Geometry3D::Point(void) const
+{
+	return Geometry3D::Point(m_x, m_y, m_z);
 }
 
 float& LibMath::Vector3::operator[](int n)

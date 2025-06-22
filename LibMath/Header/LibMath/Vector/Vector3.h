@@ -6,10 +6,12 @@
 
 #include "LibMath/Angle/Radian.h"
 #include "LibMath/Trigonometry.h"
+#include "LibMath/GeometricObject3.h"
 
 namespace LibMath
 {
 	class Vector4;
+	class Point;
 	class Vector3
 	{
 	public:
@@ -29,6 +31,8 @@ namespace LibMath
 		static Vector3	back(void);											// return a unit vector pointing backward
 
 		Vector3&		operator=(Vector3 const& other) = default;
+
+		operator		Geometry3D::Point(void) const;
 
 		float&			operator[](int n);								// return this vector component value
 		float			operator[](int n) const;							// return this vector component value

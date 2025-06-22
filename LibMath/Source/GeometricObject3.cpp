@@ -26,6 +26,11 @@ LibMath::Geometry3D::Point& LibMath::Geometry3D::Point::operator=(const Point& o
 	return *this;
 }
 
+LibMath::Geometry3D::Point::operator LibMath::Vector3(void) const
+{
+	return LibMath::Vector3(m_x, m_y, m_z);
+}
+
 float LibMath::Geometry3D::Point::getDistanceSquared(const Point& other) const
 {
 	float dx = m_x - other.m_x;
@@ -42,7 +47,7 @@ float LibMath::Geometry3D::Point::getDistance(const Point& other) const
 
 LibMath::Vector3 LibMath::Geometry3D::Point::operator-(const Point& point)
 {
-	return Vector3(m_x - point.m_x, m_y - point.m_y, m_z - point.m_z);
+	return LibMath::Vector3(m_x - point.m_x, m_y - point.m_y, m_z - point.m_z);
 }
 
 #pragma endregion All functions Point 3D 
