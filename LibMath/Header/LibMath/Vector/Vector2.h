@@ -6,10 +6,10 @@
 #endif // !LIBMATH_ANGLE_RADIAN_H_
 
 #include "LibMath/GeometricObject2.h"
+#include "LibMath/LibMathFwd.h"
 
 namespace LibMath
 {
-	class Point;
 	class Vector2
 	{
 	public:
@@ -17,6 +17,7 @@ namespace LibMath
 		explicit	Vector2(float val);
 					Vector2(float valx, float valy);
 					Vector2(Vector2 const& other);
+					Vector2(Geometry2D::Point const& point);
 					~Vector2() = default;
 	
 		
@@ -28,8 +29,6 @@ namespace LibMath
 		Vector2&	operator-=(const Vector2& other);
 		Vector2&	operator*=(const Vector2& other);
 		Vector2&	operator/=(const Vector2& other);
-
-		operator	Geometry2D::Point(void) const;
 
 		float		magnitude(void) const;
 		bool		isUnit(void) const;

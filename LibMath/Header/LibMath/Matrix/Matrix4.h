@@ -2,6 +2,8 @@
 #define LIBMATH_MATRIX_MATRIX4_H_
 
 #include "LibMath/Vector/Vector4.h"
+#include "LibMath/Vector/Vector3.h"
+#include "LibMath/LibMathFwd.h"
 
 namespace LibMath
 {
@@ -67,18 +69,18 @@ namespace LibMath
 
 		Matrix4				perspective(float const fov, float const aspectRatio, float const near, float const far);
 
-		static		Matrix4			createTransform(LibMath::Vector3 const translate = LibMath::Vector3(0.0f, 0.0f, 0.0f), // returns T . R . S
-													LibMath::Radian const rotation = LibMath::Radian(0.0f),
-													LibMath::Vector3 const scale = LibMath::Vector3(1.0f, 1.0f, 1.0f));
+		static		Matrix4			createTransform(LibMath::Vector3 const& translate,
+													LibMath::Radian const& rotation,
+													LibMath::Vector3 const& scale);
 
-		static		Matrix4			createTranslate(LibMath::Vector3 const translate);
-		static		Matrix4			createRotationX(LibMath::Radian const angle);
-		static		Matrix4			createRotationY(LibMath::Radian const angle);
-		static		Matrix4			createRotationZ(LibMath::Radian const angle);
+		static		Matrix4			createTranslate(LibMath::Vector3 const& translate);
+		static		Matrix4			createRotationX(LibMath::Radian const& angle);
+		static		Matrix4			createRotationY(LibMath::Radian const& angle);
+		static		Matrix4			createRotationZ(LibMath::Radian const& angle);
 
 		static		Matrix4			RemoveTranslationComponent(const LibMath::Matrix4& matrix);
 
-		static		Matrix4			createScale(LibMath::Vector3 const scale);
+		static		Matrix4			createScale(LibMath::Vector3 const& scale);
 
 		static		Matrix4			identity(void);
 
@@ -88,10 +90,10 @@ namespace LibMath
 		float m_elements[4][4] = { 0.0f };
 	};
 
-	Matrix4					operator+(Matrix4 const mat1, Matrix4 const mat2);
-	Matrix4					operator*(Matrix4 const mat, float const val);
+	Matrix4					operator+(Matrix4 const& mat1, Matrix4 const& mat2);
+	Matrix4					operator*(Matrix4 const& mat, float const& val);
 	//LibMath::Vector4		operator*(Matrix4 mat, LibMath::Vector4 vec);
-	Matrix4				operator*(Matrix4 const mat1, Matrix4 const mat2);
+	Matrix4				operator*(Matrix4 const& mat1, Matrix4 const& mat2);
 }
 
 

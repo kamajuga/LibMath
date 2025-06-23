@@ -1,16 +1,18 @@
 #ifndef GEOMERTIC_OBJECT2_H_
 #define GEOMERTIC_OBJECT2_H_
 #include <iostream>
+
+#include "LibMath/LibMathFwd.h"
 #include "LibMath/Vector/Vector2.h"
 #include "LibMath/Angle/Radian.h"
 #include "LibMath/Trigonometry.h"
+
 
 
 namespace LibMath
 {
 	namespace Geometry2D
 	{
-		class Vector2;
 
 		class Point
 		{

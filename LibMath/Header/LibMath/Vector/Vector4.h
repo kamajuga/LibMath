@@ -1,9 +1,11 @@
 #ifndef LIBMATH_VECTOR_VECTOR4_H_
 #define LIBMATH_VECTOR_VECTOR4_H_
 
+#include "LibMath/LibMathFwd.h"
+#include "LibMath/Vector/Vector3.h"
+
 namespace LibMath
 {
-	class Vector3;
 	class Vector4
 	{
 	public:
@@ -11,7 +13,7 @@ namespace LibMath
 		explicit		Vector4(float val);
 						Vector4(float x, float y, float z, float k);
 						Vector4(Vector4 const& other);
-						Vector4(Vector3 const& vec3);
+						Vector4(LibMath::Vector3 const& vec3);
 
 
 		Vector4&		operator=(Vector4 const& other) = default;

@@ -348,28 +348,28 @@ TEST_CASE("Sphere Collisions", "[.all][Collision3D][sphere]")
         // Non-overlapping spheres
         Sphere sphere1({ 0.0f, 0.0f, 0.0f }, 5.0f);
         Sphere sphere2({ 20.0f, 20.0f, 20.0f }, 5.0f);
-        CHECK_FALSE(Collision::checkCollision(sphere1, sphere2));
+        CHECK_FALSE(Collision::checkCollisionSphereSphere(sphere1, sphere2));
         
 
         // Touching spheres (externally)
         Sphere sphere3({ 0.0f, 0.0f, 0.0f }, 5.0f);
         Sphere sphere4({ 10.0f, 0.0f, 0.0f }, 5.0f);
-        CHECK(Collision::checkCollision(sphere3, sphere4));
+        CHECK(Collision::checkCollisionSphereSphere(sphere3, sphere4));
 
         // Overlapping spheres
         Sphere sphere5({ 0.0f, 0.0f, 0.0f }, 5.0f);
         Sphere sphere6({ 3.0f, 0.0f, 0.0f }, 3.0f);
-        CHECK(Collision::checkCollision(sphere5, sphere6));
+        CHECK(Collision::checkCollisionSphereSphere(sphere5, sphere6));
 
         // One sphere contained within another
         Sphere sphereLarge({ 0.0f, 0.0f, 0.0f }, 10.0f);
         Sphere sphereSmall({ 2.0f, 2.0f, 2.0f }, 1.0f);
-        CHECK(Collision::checkCollision(sphereLarge, sphereSmall));
+        CHECK(Collision::checkCollisionSphereSphere(sphereLarge, sphereSmall));
 
         // Identical spheres
         Sphere sphereA({ 5.0f, 5.0f, 5.0f }, 3.0f);
         Sphere sphereB({ 5.0f, 5.0f, 5.0f }, 3.0f);
-        CHECK(Collision::checkCollision(sphereA, sphereB));
+        CHECK(Collision::checkCollisionSphereSphere(sphereA, sphereB));
     }
 
     SECTION("Sphere-Point Collision")
@@ -377,24 +377,24 @@ TEST_CASE("Sphere Collisions", "[.all][Collision3D][sphere]")
         Sphere sphere({ 0.0f, 0.0f, 0.0f }, 5.0f);
 
         // Point inside the sphere
-        Point pointInside({ 2.0f, 2.0f, 2.0f });
-        CHECK(Collision::checkCollision(sphere, pointInside));
+        LibMath::Geometry3D::Point pointInside(LibMath::Vector3{ 2.0f, 2.0f, 2.0f });
+        CHECK(Collision::checkCollisionSpherePoint(sphere, pointInside));
 
         // Point on the surface of the sphere
-        Point pointSurface({ 5.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(sphere, pointSurface));
+        Point pointSurface(LibMath::Vector3{ 5.0f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionSpherePoint(sphere, pointSurface));
 
         // Point outside the sphere
-        Point pointOutside({ 10.0f, 10.0f, 10.0f });
-        CHECK_FALSE(Collision::checkCollision(sphere, pointOutside));
+        Point pointOutside(LibMath::Vector3{ 10.0f, 10.0f, 10.0f });
+        CHECK_FALSE(Collision::checkCollisionSpherePoint(sphere, pointOutside));
 
         // Point at the center of the sphere
-        Point pointCenter({ 0.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(sphere, pointCenter));
+        Point pointCenter(LibMath::Vector3{ 0.0f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionSpherePoint(sphere, pointCenter));
 
         // Point very close but outside
-        Point pointClose({ 5.1f, 0.0f, 0.0f });
-        CHECK_FALSE(Collision::checkCollision(sphere, pointClose));
+        Point pointClose(LibMath::Vector3{ 5.1f, 0.0f, 0.0f });
+        CHECK_FALSE(Collision::checkCollisionSpherePoint(sphere, pointClose));
     }
 
     SECTION("Sphere-Line Collision")
@@ -403,23 +403,23 @@ TEST_CASE("Sphere Collisions", "[.all][Collision3D][sphere]")
 
         // Line passing through the center
         Line lineThrough({ -10.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(sphere, lineThrough));
+        CHECK(Collision::checkCollisionSphereLine(sphere, lineThrough));
 
         // Line tangent to the sphere
         Line lineTangent({ -10.0f, 5.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(sphere, lineTangent));
+        CHECK(Collision::checkCollisionSphereLine(sphere, lineTangent));
 
         // Line missing the sphere
         Line lineMissing({ -10.0f, 10.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK_FALSE(Collision::checkCollision(sphere, lineMissing));
+        CHECK_FALSE(Collision::checkCollisionSphereLine(sphere, lineMissing));
 
         // Line entirely inside the sphere
         Line lineInside({ -2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(sphere, lineInside));
+        CHECK(Collision::checkCollisionSphereLine(sphere, lineInside));
 
         // Diagonal line intersecting
         Line lineDiagonal({ -10.0f, -10.0f, -10.0f }, { 1.0f, 1.0f, 1.0f });
-        CHECK(Collision::checkCollision(sphere, lineDiagonal));
+        CHECK(Collision::checkCollisionSphereLine(sphere, lineDiagonal));
     }
 
     SECTION("Sphere-Plan Collision")
@@ -428,23 +428,23 @@ TEST_CASE("Sphere Collisions", "[.all][Collision3D][sphere]")
 
         // Plan cutting through the sphere
         Plan planCutting({ 0.0f, 1.0f, 0.0f }, 2.0f); // y = 2
-        CHECK(Collision::checkCollision(sphere, planCutting));
+        CHECK(Collision::checkCollisionSpherePlan(sphere, planCutting));
 
         // Plan tangent to the sphere
         Plan planTangent({ 0.0f, 1.0f, 0.0f }, 5.0f); // y = 5
-        CHECK(Collision::checkCollision(sphere, planTangent));
+        CHECK(Collision::checkCollisionSpherePlan(sphere, planTangent));
 
         // Plan not touching the sphere
         Plan planDistant({ 0.0f, 1.0f, 0.0f }, 10.0f); // y = 10
-        CHECK_FALSE(Collision::checkCollision(sphere, planDistant));
+        CHECK_FALSE(Collision::checkCollisionSpherePlan(sphere, planDistant));
 
         // Plan passing through the center
         Plan planCenter({ 1.0f, 0.0f, 0.0f }, 0.0f); // x = 0
-        CHECK(Collision::checkCollision(sphere, planCenter));
+        CHECK(Collision::checkCollisionSpherePlan(sphere, planCenter));
 
         // Diagonal plan
         Plan planDiagonal({ 1.0f, 1.0f, 1.0f }, 3.0f);
-        CHECK(Collision::checkCollision(sphere, planDiagonal));
+        CHECK(Collision::checkCollisionSpherePlan(sphere, planDiagonal));
     }
 }
 
@@ -455,27 +455,27 @@ TEST_CASE("Plan Collisions", "[.all][Collision3D][plan]")
         // Parallel plans (same normal, different distances)
         Plan plan1({ 0.0f, 1.0f, 0.0f }, 5.0f);  // y = 5
         Plan plan2({ 0.0f, 1.0f, 0.0f }, 10.0f); // y = 10
-        CHECK_FALSE(Collision::checkCollision(plan1, plan2));
+        CHECK_FALSE(Collision::checkCollisionPlanPlan(plan1, plan2));
 
         // Identical plans
         Plan plan3({ 0.0f, 1.0f, 0.0f }, 5.0f);
         Plan plan4({ 0.0f, 1.0f, 0.0f }, 5.0f);
-        CHECK(Collision::checkCollision(plan3, plan4));
+        CHECK(Collision::checkCollisionPlanPlan(plan3, plan4));
 
         // Intersecting plans (different normals)
         Plan planXY({ 0.0f, 0.0f, 1.0f }, 0.0f); // z = 0
         Plan planYZ({ 1.0f, 0.0f, 0.0f }, 0.0f); // x = 0
-        CHECK(Collision::checkCollision(planXY, planYZ));
+        CHECK(Collision::checkCollisionPlanPlan(planXY, planYZ));
 
         // Perpendicular plans
         Plan planHorizontal({ 0.0f, 1.0f, 0.0f }, 0.0f); // y = 0
         Plan planVertical({ 1.0f, 0.0f, 0.0f }, 0.0f);   // x = 0
-        CHECK(Collision::checkCollision(planHorizontal, planVertical));
+        CHECK(Collision::checkCollisionPlanPlan(planHorizontal, planVertical));
 
         // Plans with opposite normals but same plane
         Plan plan5({ 0.0f, 1.0f, 0.0f }, 5.0f);
         Plan plan6({ 0.0f, -1.0f, 0.0f }, -5.0f);
-        CHECK(Collision::checkCollision(plan5, plan6));
+        CHECK(Collision::checkCollisionPlanPlan(plan5, plan6));
     }
 
     SECTION("Plan-Line Collision")
@@ -484,23 +484,23 @@ TEST_CASE("Plan Collisions", "[.all][Collision3D][plan]")
 
         // Line contained in the plan
         Line lineInPlan({ 0.0f, 5.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(plan, lineInPlan));
+        CHECK(Collision::checkCollisionPlanLine(plan, lineInPlan));
 
         // Line crossing the plan
         Line lineCrossing({ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-        CHECK(Collision::checkCollision(plan, lineCrossing));
+        CHECK(Collision::checkCollisionPlanLine(plan, lineCrossing));
 
         // Line parallel to the plan (above)
         Line lineParallelAbove({ 0.0f, 10.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK_FALSE(Collision::checkCollision(plan, lineParallelAbove));
+        CHECK_FALSE(Collision::checkCollisionPlanLine(plan, lineParallelAbove));
 
         // Line parallel to the plan (below)
         Line lineParallelBelow({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK_FALSE(Collision::checkCollision(plan, lineParallelBelow));
+        CHECK_FALSE(Collision::checkCollisionPlanLine(plan, lineParallelBelow));
 
         // Line touching the plan at one point
         Line lineTouching({ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-        CHECK(Collision::checkCollision(plan, lineTouching));
+        CHECK(Collision::checkCollisionPlanLine(plan, lineTouching));
     }
 }
 
@@ -513,32 +513,32 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
         Capsule capsule({ 0.0f, -3.0f, 0.0f }, { 0.0f, 3.0f, 0.0f }, 2.0f);
 
         // Point inside the cylindrical part
-        Point pointCylinder({ 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsule, pointCylinder));
+        Point pointCylinder(LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(capsule, pointCylinder));
 
         // Point inside the top hemisphere
-        Point pointTopSphere({ 0.0f, 4.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsule, pointTopSphere));
+        Point pointTopSphere(LibMath::Vector3{ 0.0f, 4.0f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(capsule, pointTopSphere));
 
         // Point inside the bottom hemisphere
-        Point pointBottomSphere({ 0.0f, -4.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsule, pointBottomSphere));
+        Point pointBottomSphere(LibMath::Vector3{ 0.0f, -4.0f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(capsule, pointBottomSphere));
 
         // Point on the surface of the cylinder
-        Point pointSurface({ 2.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsule, pointSurface));
+        Point pointSurface(LibMath::Vector3{ 2.0f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(capsule, pointSurface));
 
         // Point outside the capsule
-        Point pointOutside({ 5.0f, 0.0f, 0.0f });
-        CHECK_FALSE(Collision::checkCollision(capsule, pointOutside));
+        Point pointOutside(LibMath::Vector3{ 5.0f, 0.0f, 0.0f });
+        CHECK_FALSE(Collision::checkCollisionCapsulePoint(capsule, pointOutside));
 
         // Point at the exact tip of the capsule
-        Point pointTip({ 0.0f, 5.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsule, pointTip));
+        Point pointTip(LibMath::Vector3{ 0.0f, 5.0f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(capsule, pointTip));
 
         // Point just outside the tip
-        Point pointOutsideTip({ 0.0f, 5.1f, 0.0f });
-        CHECK_FALSE(Collision::checkCollision(capsule, pointOutsideTip));
+        Point pointOutsideTip(LibMath::Vector3{ 0.0f, 5.1f, 0.0f });
+        CHECK_FALSE(Collision::checkCollisionCapsulePoint(capsule, pointOutsideTip));
     }
 
     SECTION("Capsule-Line Collision")
@@ -548,49 +548,49 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
         // Line passing through the center horizontally
         Line lineHorizontal({ -5.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsuleH, lineHorizontal));
+        CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineHorizontal));
 
         // Line passing through vertically
         Line lineVertical({ 0.0f, -5.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsuleH, lineVertical));
+        CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineVertical));
 
         // Line tangent to the cylindrical part
         Line lineTangentCylinder({ -5.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsuleH, lineTangentCylinder));
+        CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineTangentCylinder));
 
         // Line hitting one of the spherical ends
         Line lineToEnd({ 3.0f, -2.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsuleH, lineToEnd));
+        CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineToEnd));
 
         // Line missing the capsule entirely
         Line lineMissing({ -5.0f, 3.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK_FALSE(Collision::checkCollision(capsuleH, lineMissing));
+        CHECK_FALSE(Collision::checkCollisionCapsuleLine(capsuleH, lineMissing));
 
         // Line entirely inside the capsule
         Line lineInside({ -1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsuleH, lineInside));
+        CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineInside));
 
         // Diagonal line intersecting
         Line lineDiagonal({ -5.0f, -5.0f, 0.0f }, { 1.0f, 1.0f, 0.0f });
-        CHECK(Collision::checkCollision(capsuleH, lineDiagonal));
+        CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineDiagonal));
     }
 
     SECTION("Edge Cases for Capsule")
     {
         // Zero-length capsule (essentially a sphere)
         Capsule sphereCapsule({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 3.0f);
-        Point pointInSphere({ 2.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(sphereCapsule, pointInSphere));
+        Point pointInSphere(LibMath::Vector3{ 2.0f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(sphereCapsule, pointInSphere));
 
         // Very long thin capsule
         Capsule thinCapsule({ -100.0f, 0.0f, 0.0f }, { 100.0f, 0.0f, 0.0f }, 0.1f);
-        Point pointOnThin({ 50.0f, 0.05f, 0.0f });
-        CHECK(Collision::checkCollision(thinCapsule, pointOnThin));
+        Point pointOnThin(LibMath::Vector3{ 50.0f, 0.05f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(thinCapsule, pointOnThin));
 
         // Capsule with very large radius
         Capsule fatCapsule({ 0.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 50.0f);
-        Point pointInFat({ 30.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(fatCapsule, pointInFat));
+        Point pointInFat(LibMath::Vector3{ 30.0f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionCapsulePoint(fatCapsule, pointInFat));
     }
 
     SECTION("Basic Capsule-AABB Collision")
@@ -600,23 +600,23 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
         // AABB centered at origin with extent 1
         AABB aabb({ 0.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-        CHECK(Collision::checkCollision(capsule, aabb));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsule, aabb));
 
         // AABB touching the cylindrical part
         AABB aabbTouchingCylinder({ 1.25f, 0.0f, 0.0f }, 0.5f, 0.5f, 0.5f);
-        CHECK(Collision::checkCollision(capsule, aabbTouchingCylinder));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsule, aabbTouchingCylinder));
 
         // AABB touching the top spherical part
         AABB aabbTouchingTop({ 0.0f, 2.5f, 0.0f }, 0.5f, 0.5f, 0.5f);
-        CHECK(Collision::checkCollision(capsule, aabbTouchingTop));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsule, aabbTouchingTop));
 
         // AABB touching the bottom spherical part
         AABB aabbTouchingBottom({ 0.0f, -2.5f, 0.0f }, 0.5f, 0.5f, 0.5f);
-        CHECK(Collision::checkCollision(capsule, aabbTouchingBottom));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsule, aabbTouchingBottom));
 
         // AABB clearly outside
         AABB aabbOutside({ 5.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-        CHECK_FALSE(Collision::checkCollision(capsule, aabbOutside));
+        CHECK_FALSE(Collision::checkCollisionCapsuleAABB(capsule, aabbOutside));
     }
 
     SECTION("Capsule-AABB Edge Cases")
@@ -626,19 +626,19 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
         // AABB at the exact edge of capsule radius
         AABB aabbEdge({ 0.0f, 1.0f, 0.0f }, 0.1f, 0.1f, 0.1f);
-        CHECK(Collision::checkCollision(capsuleH, aabbEdge));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsuleH, aabbEdge));
 
         // AABB just outside the radius
         AABB aabbJustOutside({ 0.0f, 1.2f, 0.0f }, 0.1f, 0.1f, 0.1f);
-        CHECK_FALSE(Collision::checkCollision(capsuleH, aabbJustOutside));
+        CHECK_FALSE(Collision::checkCollisionCapsuleAABB(capsuleH, aabbJustOutside));
 
         // Large AABB encompassing the entire capsule
         AABB aabbLarge({ 0.0f, 0.0f, 0.0f }, 10.0f, 10.0f, 10.0f);
-        CHECK(Collision::checkCollision(capsuleH, aabbLarge));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsuleH, aabbLarge));
 
         // Very small AABB inside capsule
         AABB aabbSmall({ 0.0f, 0.0f, 0.0f }, 0.1f, 0.1f, 0.1f);
-        CHECK(Collision::checkCollision(capsuleH, aabbSmall));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsuleH, aabbSmall));
     }
 
     SECTION("Capsule-AABB 3D Cases")
@@ -648,11 +648,11 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
         // AABB intersecting the diagonal
         AABB aabb3D({ 0.0f, 0.0f, 0.0f }, 0.5f, 0.5f, 0.5f);
-        CHECK(Collision::checkCollision(capsule3D, aabb3D));
+        CHECK(Collision::checkCollisionCapsuleAABB(capsule3D, aabb3D));
 
         // AABB offset in Z direction
         AABB aabbZ({ 0.0f, 0.0f, 3.0f }, 1.0f, 1.0f, 1.0f);
-        CHECK_FALSE(Collision::checkCollision(capsule3D, aabbZ));
+        CHECK_FALSE(Collision::checkCollisionCapsuleAABB(capsule3D, aabbZ));
     }
 
     SECTION("Capsule-Capsule Collision")
@@ -662,22 +662,22 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Parallel capsules, same axis, overlapping
             Capsule capsule1({ 0.0f, -2.0f, 0.0f }, { 0.0f, 2.0f, 0.0f }, 1.0f);
             Capsule capsule2({ 0.0f, -1.0f, 0.0f }, { 0.0f, 3.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsule1, capsule2));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsule1, capsule2));
 
             // Parallel capsules, same axis, touching end-to-end
             Capsule capsule3({ 0.0f, -2.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1.0f);
             Capsule capsule4({ 0.0f, 0.0f, 0.0f }, { 0.0f, 2.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsule3, capsule4));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsule3, capsule4));
 
             // Parallel capsules, same axis, separated
             Capsule capsule5({ 0.0f, -3.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }, 0.9f);
             Capsule capsule6({ 0.0f, 1.0f, 0.0f }, { 0.0f, 3.0f, 0.0f }, 0.9f);
-            CHECK_FALSE(Collision::checkCollision(capsule5, capsule6));
+            CHECK_FALSE(Collision::checkCollisionCapsuleCapsule(capsule5, capsule6));
 
             // Identical capsules
             Capsule capsuleA({ 1.0f, 1.0f, 1.0f }, { 3.0f, 3.0f, 3.0f }, 2.0f);
             Capsule capsuleB({ 1.0f, 1.0f, 1.0f }, { 3.0f, 3.0f, 3.0f }, 2.0f);
-            CHECK(Collision::checkCollision(capsuleA, capsuleB));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsuleA, capsuleB));
         }
 
         SECTION("Perpendicular Capsules")
@@ -685,17 +685,17 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Perpendicular capsules intersecting at center
             Capsule capsuleVertical({ 0.0f, -2.0f, 0.0f }, { 0.0f, 2.0f, 0.0f }, 1.0f);
             Capsule capsuleHorizontal({ -2.0f, 0.0f, 0.0f }, { 2.0f, 0.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsuleVertical, capsuleHorizontal));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsuleVertical, capsuleHorizontal));
 
             // Perpendicular capsules, cylinder touching sphere end
             Capsule capsuleV({ 0.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 0.5f);
             Capsule capsuleH({ -2.0f, 1.2f, 0.0f }, { 2.0f, 1.2f, 0.0f }, 0.5f);
-            CHECK(Collision::checkCollision(capsuleV, capsuleH));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsuleV, capsuleH));
 
             // Perpendicular capsules, just missing
             Capsule capsuleV2({ 0.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 0.2f);
             Capsule capsuleH2({ -2.0f, 1.5f, 0.0f }, { 2.0f, 1.5f, 0.0f }, 0.2f);
-            CHECK_FALSE(Collision::checkCollision(capsuleV2, capsuleH2));
+            CHECK_FALSE(Collision::checkCollisionCapsuleCapsule(capsuleV2, capsuleH2));
         }
 
         SECTION("Diagonal and 3D Capsules")
@@ -703,17 +703,17 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Diagonal capsules intersecting
             Capsule capsule1({ -2.0f, -2.0f, -2.0f }, { 2.0f, 2.0f, 2.0f }, 1.0f);
             Capsule capsule2({ -2.0f, 2.0f, -2.0f }, { 2.0f, -2.0f, 2.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsule1, capsule2));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsule1, capsule2));
 
             // Parallel diagonal capsules, offset and overlapping
             Capsule capsule3({ -3.0f, -3.0f, -3.0f }, { 3.0f, 3.0f, 3.0f }, 1.0f);
             Capsule capsule4({ -2.0f, -2.0f, -1.0f }, { 4.0f, 4.0f, 5.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsule3, capsule4));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsule3, capsule4));
 
             // Parallel diagonal capsules, separated
             Capsule capsule5({ -2.0f, -2.0f, -2.0f }, { 0.0f, 0.0f, 0.0f }, 0.5f);
             Capsule capsule6({ 3.0f, 3.0f, 3.0f }, { 5.0f, 5.0f, 5.0f }, 0.5f);
-            CHECK_FALSE(Collision::checkCollision(capsule5, capsule6));
+            CHECK_FALSE(Collision::checkCollisionCapsuleCapsule(capsule5, capsule6));
         }
 
         SECTION("Capsule-Capsule Edge Cases")
@@ -721,22 +721,22 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // One capsule much larger than the other
             Capsule capsuleLarge({ -5.0f, -5.0f, -5.0f }, { 5.0f, 5.0f, 5.0f }, 3.0f);
             Capsule capsuleSmall({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 0.5f);
-            CHECK(Collision::checkCollision(capsuleLarge, capsuleSmall));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsuleLarge, capsuleSmall));
 
             // Zero-length capsules (spheres)
             Capsule sphere1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 2.0f);
             Capsule sphere2({ 3.0f, 0.0f, 0.0f }, { 3.0f, 0.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(sphere1, sphere2));
+            CHECK(Collision::checkCollisionCapsuleCapsule(sphere1, sphere2));
 
             // Very thin capsules
             Capsule thinCapsule1({ -10.0f, 0.0f, 0.0f }, { 10.0f, 0.0f, 0.0f }, 0.1f);
             Capsule thinCapsule2({ 0.0f, -10.0f, 0.0f }, { 0.0f, 10.0f, 0.0f }, 0.1f);
-            CHECK(Collision::checkCollision(thinCapsule1, thinCapsule2));
+            CHECK(Collision::checkCollisionCapsuleCapsule(thinCapsule1, thinCapsule2));
 
             // Capsules with spherical ends touching
             Capsule capsuleLeft({ -3.0f, 0.0f, 0.0f }, { -1.0f, 0.0f, 0.0f }, 1.0f);
             Capsule capsuleRight({ 1.0f, 0.0f, 0.0f }, { 3.0f, 0.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsuleLeft, capsuleRight));
+            CHECK(Collision::checkCollisionCapsuleCapsule(capsuleLeft, capsuleRight));
         }
 
         SECTION("Capsule-Capsule Symmetry")
@@ -745,8 +745,8 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             Capsule capsule1({ 1.0f, 2.0f, 3.0f }, { 4.0f, 5.0f, 6.0f }, 1.5f);
             Capsule capsule2({ 2.0f, 3.0f, 4.0f }, { 5.0f, 6.0f, 7.0f }, 1.0f);
 
-            bool result1 = Collision::checkCollision(capsule1, capsule2);
-            bool result2 = Collision::checkCollision(capsule2, capsule1);
+            bool result1 = Collision::checkCollisionCapsuleCapsule(capsule1, capsule2);
+            bool result2 = Collision::checkCollisionCapsuleCapsule(capsule2, capsule1);
             CHECK(result1 == result2);
         }
     }
@@ -758,22 +758,22 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Vertical capsule intersecting horizontal plan
             Capsule capsule({ 0.0f, -2.0f, 0.0f }, { 0.0f, 2.0f, 0.0f }, 1.0f);
             Plan plan({ 0.0f, 1.0f, 0.0f }, 1.0f); // y = 1
-            CHECK(Collision::checkCollision(capsule, plan));
+            CHECK(Collision::checkCollisionCapsulePlan(capsule, plan));
 
             // Capsule completely above plan
             Capsule capsuleAbove({ 0.0f, 3.0f, 0.0f }, { 0.0f, 5.0f, 0.0f }, 1.0f);
             Plan planBelow({ 0.0f, 1.0f, 0.0f }, 1.5f); // y = 1.5
-            CHECK_FALSE(Collision::checkCollision(capsuleAbove, planBelow));
+            CHECK_FALSE(Collision::checkCollisionCapsulePlan(capsuleAbove, planBelow));
 
             // Capsule completely below plan
             Capsule capsuleBelow({ 0.0f, -5.0f, 0.0f }, { 0.0f, -3.0f, 0.0f }, 1.0f);
             Plan planAbove({ 0.0f, 1.0f, 0.0f }, -1.5f); // y = -1.5
-            CHECK_FALSE(Collision::checkCollision(capsuleBelow, planAbove));
+            CHECK_FALSE(Collision::checkCollisionCapsulePlan(capsuleBelow, planAbove));
 
             // Capsule tangent to plan
             Capsule capsuleTangent({ 0.0f, 1.0f, 0.0f }, { 0.0f, 3.0f, 0.0f }, 1.0f);
             Plan planTangent({ 0.0f, 1.0f, 0.0f }, 0.0f); // y = 0
-            CHECK(Collision::checkCollision(capsuleTangent, planTangent));
+            CHECK(Collision::checkCollisionCapsulePlan(capsuleTangent, planTangent));
         }
 
         SECTION("Capsule-Plan Different Orientations")
@@ -781,22 +781,22 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Horizontal capsule with vertical plan
             Capsule capsuleH({ -2.0f, 0.0f, 0.0f }, { 2.0f, 0.0f, 0.0f }, 1.0f);
             Plan planV({ 1.0f, 0.0f, 0.0f }, 1.5f); // x = 1.5
-            CHECK(Collision::checkCollision(capsuleH, planV));
+            CHECK(Collision::checkCollisionCapsulePlan(capsuleH, planV));
 
             // Diagonal capsule with diagonal plan
             Capsule capsuleDiag({ -2.0f, -2.0f, -2.0f }, { 2.0f, 2.0f, 2.0f }, 1.0f);
             Plan planDiag({ 1.0f, 1.0f, 1.0f }, 2.0f);
-            CHECK(Collision::checkCollision(capsuleDiag, planDiag));
+            CHECK(Collision::checkCollisionCapsulePlan(capsuleDiag, planDiag));
 
             // Capsule parallel to plan
             Capsule capsuleParallel({ -2.0f, 1.0f, 0.0f }, { 2.0f, 1.0f, 0.0f }, 0.5f);
             Plan planParallel({ 0.0f, 1.0f, 0.0f }, 0.4f); // y = 0.4
-            CHECK_FALSE(Collision::checkCollision(capsuleParallel, planParallel));
+            CHECK_FALSE(Collision::checkCollisionCapsulePlan(capsuleParallel, planParallel));
 
             // Z-oriented capsule with XY plan
             Capsule capsuleZ({ 0.0f, 0.0f, -3.0f }, { 0.0f, 0.0f, 3.0f }, 1.0f);
             Plan planXY({ 0.0f, 0.0f, 1.0f }, 2.0f); // z = 2
-            CHECK(Collision::checkCollision(capsuleZ, planXY));
+            CHECK(Collision::checkCollisionCapsulePlan(capsuleZ, planXY));
         }
 
         SECTION("Capsule-Plan Edge Cases")
@@ -804,22 +804,22 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Very thin capsule crossing plan
             Capsule thinCapsule({ -5.0f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f }, 0.01f);
             Plan plan({ 0.0f, 1.0f, 0.0f }, 0.005f); // y = 0.005
-            CHECK(Collision::checkCollision(thinCapsule, plan));
+            CHECK(Collision::checkCollisionCapsulePlan(thinCapsule, plan));
 
             // Zero-length capsule (sphere) with plan
             Capsule sphereCapsule({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 2.0f);
             Plan planSphere({ 0.0f, 1.0f, 0.0f }, 1.5f); // y = 1.5
-            CHECK(Collision::checkCollision(sphereCapsule, planSphere));
+            CHECK(Collision::checkCollisionCapsulePlan(sphereCapsule, planSphere));
 
             // Capsule endpoint exactly on plan
             Capsule capsuleOnPlan({ 0.0f, -2.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1.0f);
             Plan planExact({ 0.0f, 1.0f, 0.0f }, -1.0f); // y = -1
-            CHECK(Collision::checkCollision(capsuleOnPlan, planExact));
+            CHECK(Collision::checkCollisionCapsulePlan(capsuleOnPlan, planExact));
 
             // Very large capsule with plan
             Capsule hugeCapsule({ -100.0f, 0.0f, 0.0f }, { 100.0f, 0.0f, 0.0f }, 50.0f);
             Plan smallPlan({ 0.0f, 1.0f, 0.0f }, 25.0f); // y = 25
-            CHECK(Collision::checkCollision(hugeCapsule, smallPlan));
+            CHECK(Collision::checkCollisionCapsulePlan(hugeCapsule, smallPlan));
         }
 
         SECTION("Capsule-Plan Boundary Tests")
@@ -828,22 +828,22 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
             // Plan just touching the spherical end
             Plan planTouchTop({ 0.0f, 1.0f, 0.0f }, 2.0f); // y = 2 (touches sphere at y = 1 + radius)
-            CHECK(Collision::checkCollision(capsule, planTouchTop));
+            CHECK(Collision::checkCollisionCapsulePlan(capsule, planTouchTop));
 
             // Plan just missing the spherical end
             Plan planMissTop({ 0.0f, 1.0f, 0.0f }, 2.1f); // y = 2.1
-            CHECK_FALSE(Collision::checkCollision(capsule, planMissTop));
+            CHECK_FALSE(Collision::checkCollisionCapsulePlan(capsule, planMissTop));
 
             // Plan cutting through cylindrical part
             Plan planCylinder({ 0.0f, 1.0f, 0.0f }, 0.5f); // y = 0.5
-            CHECK(Collision::checkCollision(capsule, planCylinder));
+            CHECK(Collision::checkCollisionCapsulePlan(capsule, planCylinder));
 
             // Multiple plan orientations
             Plan planX({ 1.0f, 0.0f, 0.0f }, 0.8f); // x = 0.8
-            CHECK(Collision::checkCollision(capsule, planX));
+            CHECK(Collision::checkCollisionCapsulePlan(capsule, planX));
 
             Plan planZ({ 0.0f, 0.0f, 1.0f }, 0.8f); // z = 0.8
-            CHECK(Collision::checkCollision(capsule, planZ));
+            CHECK(Collision::checkCollisionCapsulePlan(capsule, planZ));
         }
     }
 
@@ -854,23 +854,23 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Sphere intersecting capsule's cylindrical part
             Capsule capsule({ 0.0f, -2.0f, 0.0f }, { 0.0f, 2.0f, 0.0f }, 1.0f);
             Sphere sphere({ 2.0f, 0.0f, 0.0f }, 1.5f);
-            CHECK(Collision::checkCollision(capsule, sphere));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsule, sphere));
 
             // Sphere intersecting capsule's spherical end
             Sphere sphereTop({ 0.0f, 4.0f, 0.0f }, 1.5f);
-            CHECK(Collision::checkCollision(capsule, sphereTop));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsule, sphereTop));
 
             // Sphere completely inside capsule
             Sphere sphereInside({ 0.0f, 0.0f, 0.0f }, 0.5f);
-            CHECK(Collision::checkCollision(capsule, sphereInside));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsule, sphereInside));
 
             // Sphere completely outside capsule
             Sphere sphereOutside({ 5.0f, 5.0f, 5.0f }, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(capsule, sphereOutside));
+            CHECK_FALSE(Collision::checkCollisionCapsuleSphere(capsule, sphereOutside));
 
             // Sphere touching capsule externally
             Sphere sphereTouching({ 3.0f, 0.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(capsule, sphereTouching));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsule, sphereTouching));
         }
 
         SECTION("Capsule-Sphere Different Positions")
@@ -880,23 +880,23 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
             // Sphere above cylindrical part
             Sphere sphereAbove({ 0.0f, 2.0f, 0.0f }, 1.2f);
-            CHECK(Collision::checkCollision(capsuleH, sphereAbove));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsuleH, sphereAbove));
 
             // Sphere below cylindrical part
             Sphere sphereBelow({ 0.0f, -2.0f, 0.0f }, 1.2f);
-            CHECK(Collision::checkCollision(capsuleH, sphereBelow));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsuleH, sphereBelow));
 
             // Sphere at one end of capsule
             Sphere sphereEnd({ -4.0f, 0.0f, 0.0f }, 1.5f);
-            CHECK(Collision::checkCollision(capsuleH, sphereEnd));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsuleH, sphereEnd));
 
             // Sphere in front/back of capsule (Z direction)
             Sphere sphereFront({ 0.0f, 0.0f, 2.0f }, 1.2f);
-            CHECK(Collision::checkCollision(capsuleH, sphereFront));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsuleH, sphereFront));
 
             // Sphere far away
             Sphere sphereFar({ 0.0f, 5.0f, 0.0f }, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(capsuleH, sphereFar));
+            CHECK_FALSE(Collision::checkCollisionCapsuleSphere(capsuleH, sphereFar));
         }
 
         SECTION("Capsule-Sphere Edge Cases")
@@ -904,22 +904,22 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
             // Zero-length capsule (sphere) with sphere
             Capsule sphereCapsule({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 2.0f);
             Sphere sphere({ 3.0f, 0.0f, 0.0f }, 1.5f);
-            CHECK(Collision::checkCollision(sphereCapsule, sphere));
+            CHECK(Collision::checkCollisionCapsuleSphere(sphereCapsule, sphere));
 
             // Very thin capsule with large sphere
             Capsule thinCapsule({ -10.0f, 0.0f, 0.0f }, { 10.0f, 0.0f, 0.0f }, 0.1f);
             Sphere largeSphere({ 0.0f, 0.0f, 0.0f }, 5.0f);
-            CHECK(Collision::checkCollision(thinCapsule, largeSphere));
+            CHECK(Collision::checkCollisionCapsuleSphere(thinCapsule, largeSphere));
 
             // Very small sphere with large capsule
             Capsule largeCapsule({ -5.0f, -5.0f, -5.0f }, { 5.0f, 5.0f, 5.0f }, 3.0f);
             Sphere smallSphere({ 0.0f, 0.0f, 0.0f }, 0.1f);
-            CHECK(Collision::checkCollision(largeCapsule, smallSphere));
+            CHECK(Collision::checkCollisionCapsuleSphere(largeCapsule, smallSphere));
 
             // Identical sphere and capsule radius, endpoints coinciding
             Capsule capsulePoint({ 2.0f, 2.0f, 2.0f }, { 2.0f, 2.0f, 2.0f }, 1.5f);
             Sphere spherePoint({ 2.0f, 2.0f, 2.0f }, 1.5f);
-            CHECK(Collision::checkCollision(capsulePoint, spherePoint));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsulePoint, spherePoint));
         }
 
         SECTION("Capsule-Sphere Precision Cases")
@@ -928,23 +928,23 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
             // Sphere exactly touching cylindrical surface
             Sphere sphereTouchSide({ 2.0f, 0.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsule, sphereTouchSide));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsule, sphereTouchSide));
 
             // Sphere just inside touching distance
             Sphere sphereJustInside({ 1.9f, 0.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsule, sphereJustInside));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsule, sphereJustInside));
 
             // Sphere just outside touching distance
             Sphere sphereJustOutside({ 2.1f, 0.0f, 0.0f }, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(capsule, sphereJustOutside));
+            CHECK_FALSE(Collision::checkCollisionCapsuleSphere(capsule, sphereJustOutside));
 
             // Sphere touching spherical end exactly
             Sphere sphereTouchEnd({ 0.0f, 3.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsule, sphereTouchEnd));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsule, sphereTouchEnd));
 
             // Sphere just missing spherical end
             Sphere sphereMissEnd({ 0.0f, 3.1f, 0.0f }, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(capsule, sphereMissEnd));
+            CHECK_FALSE(Collision::checkCollisionCapsuleSphere(capsule, sphereMissEnd));
         }
 
         SECTION("Capsule-Sphere 3D Diagonal Cases")
@@ -954,19 +954,19 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
 
             // Sphere intersecting diagonal capsule
             Sphere sphereDiag({ 0.0f, 0.0f, 3.0f }, 1.5f);
-            CHECK(Collision::checkCollision(capsuleDiag, sphereDiag));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsuleDiag, sphereDiag));
 
             // Sphere parallel to diagonal capsule
             Sphere sphereParallel({ 1.0f, 1.0f, 0.0f }, 1.0f);
-            CHECK(Collision::checkCollision(capsuleDiag, sphereParallel));
+            CHECK(Collision::checkCollisionCapsuleSphere(capsuleDiag, sphereParallel));
 
             // Sphere offset from diagonal capsule
             Sphere sphereOffset({ 3.0f, -1.0f, 1.0f }, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(capsuleDiag, sphereOffset));
+            CHECK_FALSE(Collision::checkCollisionCapsuleSphere(capsuleDiag, sphereOffset));
 
             // Sphere far from diagonal capsule
             Sphere sphereFarDiag({ 10.0f, -10.0f, 5.0f }, 2.0f);
-            CHECK_FALSE(Collision::checkCollision(capsuleDiag, sphereFarDiag));
+            CHECK_FALSE(Collision::checkCollisionCapsuleSphere(capsuleDiag, sphereFarDiag));
         }
     }
 }
@@ -989,7 +989,7 @@ TEST_CASE("Advanced Collision Scenarios", "[.all][Collision3D][advanced]")
         bool expected[] = { true, false, true, true, false };
 
         for (int i = 0; i < 5; ++i) {
-            CHECK(Collision::checkCollision(centralSphere, points[i]) == expected[i]);
+            CHECK(Collision::checkCollisionSpherePoint(centralSphere, points[i]) == expected[i]);
         }
     }
 
@@ -997,13 +997,13 @@ TEST_CASE("Advanced Collision Scenarios", "[.all][Collision3D][advanced]")
     {
         // Very small sphere
         Sphere microSphere({ 0.0f, 0.0f, 0.0f }, 0.001f);
-        Point microPoint({ 0.0005f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(microSphere, microPoint));
+        Point microPoint(LibMath::Vector3{ 0.0005f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionSpherePoint(microSphere, microPoint));
 
         // Very large sphere
         Sphere megaSphere({ 0.0f, 0.0f, 0.0f }, 1000000.0f);
-        Point megaPoint({ 500000.0f, 0.0f, 0.0f });
-        CHECK(Collision::checkCollision(megaSphere, megaPoint));
+        Point megaPoint(LibMath::Vector3{ 500000.0f, 0.0f, 0.0f });
+        CHECK(Collision::checkCollisionSpherePoint(megaSphere, megaPoint));
     }
 
     SECTION("Boundary Conditions")
@@ -1012,16 +1012,16 @@ TEST_CASE("Advanced Collision Scenarios", "[.all][Collision3D][advanced]")
 
         // Points exactly on the boundary
         Point boundaryPoints[] = {
-            {5.0f, 0.0f, 0.0f},
-            {0.0f, 5.0f, 0.0f},
-            {0.0f, 0.0f, 5.0f},
-            {-5.0f, 0.0f, 0.0f},
-            {0.0f, -5.0f, 0.0f},
-            {0.0f, 0.0f, -5.0f}
+            LibMath::Vector3{5.0f, 0.0f, 0.0f},
+            LibMath::Vector3{0.0f, 5.0f, 0.0f},
+            LibMath::Vector3{0.0f, 0.0f, 5.0f},
+            LibMath::Vector3{-5.0f, 0.0f, 0.0f},
+            LibMath::Vector3{0.0f, -5.0f, 0.0f},
+            LibMath::Vector3{0.0f, 0.0f, -5.0f}
         };
 
         for (const auto& point : boundaryPoints) {
-            CHECK(Collision::checkCollision(sphere, point));
+            CHECK(Collision::checkCollisionSpherePoint(sphere, point));
         }
     }
 }
@@ -1037,38 +1037,38 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
             // Line passing through center
             Line lineCenter({ -2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 4.0f);
-            CHECK(Collision::checkCollision(aabb, lineCenter));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineCenter));
 
             // Line hitting corner
             Line lineCorner({ -2.0f, -2.0f, -2.0f }, { 1.0f, 1.0f, 1.0f }, 6.0f);
-            CHECK(Collision::checkCollision(aabb, lineCorner));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineCorner));
 
             // Line hitting face
             Line lineFace({ 0.0f, 0.0f, -2.0f }, { 0.0f, 0.0f, 1.0f }, 4.0f);
-            CHECK(Collision::checkCollision(aabb, lineFace));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineFace));
 
             Line lineTopEdge({ -1.0f, 0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(aabb, lineTopEdge));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineTopEdge));
 
             // Test 2: Ligne qui touche le bord inférieur (Y = -0.5)  
             Line lineBottomEdge({ -1.0f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(aabb, lineBottomEdge));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineBottomEdge));
 
             // Test 3: Ligne qui touche le bord droit (X = 0.5)
             Line lineRightEdge({ 0.5f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(aabb, lineRightEdge));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineRightEdge));
 
             // Test 4: Ligne qui touche le bord gauche (X = -0.5)
             Line lineLeftEdge({ -0.5f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(aabb, lineLeftEdge));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineLeftEdge));
 
             // Test 5: Ligne qui touche une arête (intersection de deux faces)
             Line lineCornerEdge({ -1.0f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(aabb, lineCornerEdge));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineCornerEdge));
 
             // Line missing the AABB
             Line lineMiss({ -2.0f, 2.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 4.0f);
-            CHECK_FALSE(Collision::checkCollision(aabb, lineMiss));
+            CHECK_FALSE(Collision::checkCollisionAABBLine(aabb, lineMiss));
         }
 
         SECTION("AABB-Line Edge Cases")
@@ -1077,23 +1077,23 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
             // Line starting inside AABB
             Line lineInside({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 2.0f);
-            CHECK(Collision::checkCollision(aabb, lineInside));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineInside));
 
             // Line ending exactly at AABB boundary
             Line lineToEdge({ -2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 1.5f);
-            CHECK(Collision::checkCollision(aabb, lineToEdge));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineToEdge));
 
             // Line too short to reach AABB
             Line lineShort({ -2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 0.5f);
-            CHECK_FALSE(Collision::checkCollision(aabb, lineShort));
+            CHECK_FALSE(Collision::checkCollisionAABBLine(aabb, lineShort));
 
             // Line parallel to AABB face but missing
             Line lineParallelMiss({ -2.0f, 1.1f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 4.0f);
-            CHECK_FALSE(Collision::checkCollision(aabb, lineParallelMiss));
+            CHECK_FALSE(Collision::checkCollisionAABBLine(aabb, lineParallelMiss));
 
             // Line tangent to AABB corner
             Line lineTangent({ -2.0f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, 4.0f);
-            CHECK(Collision::checkCollision(aabb, lineTangent));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineTangent));
         }
 
         SECTION("AABB-Line with Different Directions")
@@ -1102,19 +1102,19 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
             // Line in X direction
             Line lineX({ 0.0f, 3.0f, -2.0f }, { 1.0f, 0.0f, 0.0f }, 10.0f);
-            CHECK(Collision::checkCollision(aabb, lineX));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineX));
 
             // Line in Y direction
             Line lineY({ 5.0f, 0.0f, -2.0f }, { 0.0f, 1.0f, 0.0f }, 10.0f);
-            CHECK(Collision::checkCollision(aabb, lineY));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineY));
 
             // Line in Z direction
             Line lineZ({ 5.0f, 3.0f, -10.0f }, { 0.0f, 0.0f, 1.0f }, 20.0f);
-            CHECK(Collision::checkCollision(aabb, lineZ));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineZ));
 
             // Diagonal line missing
             Line lineDiagMiss({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 3.0f);
-            CHECK_FALSE(Collision::checkCollision(aabb, lineDiagMiss));
+            CHECK_FALSE(Collision::checkCollisionAABBLine(aabb, lineDiagMiss));
         }
 
         SECTION("AABB-Line Zero Direction Components")
@@ -1123,15 +1123,15 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
             // Line with zero X component
             Line lineZeroX({ 0.0f, -2.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, 4.0f);
-            CHECK(Collision::checkCollision(aabb, lineZeroX));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineZeroX));
 
             // Line with zero Y component
             Line lineZeroY({ -2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, 4.0f);
-            CHECK(Collision::checkCollision(aabb, lineZeroY));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineZeroY));
 
             // Line with zero Z component
             Line lineZeroZ({ 0.0f, 0.0f, -2.0f }, { 0.0f, 0.0f, 1.0f }, 4.0f);
-            CHECK(Collision::checkCollision(aabb, lineZeroZ));
+            CHECK(Collision::checkCollisionAABBLine(aabb, lineZeroZ));
         }
     }
 
@@ -1142,19 +1142,19 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
             // Two unit AABBs at origin (extent = 0.5, so they span from -0.5 to +0.5)
             AABB aabb1({ 0.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
             AABB aabb2({ 0.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabb1, aabb2));
+            CHECK(Collision::checkCollisionAABBAABB  (aabb1, aabb2));
 
             // Overlapping AABBs
             AABB aabbOverlap({ 0.5f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabb1, aabbOverlap));
+            CHECK(Collision::checkCollisionAABBAABB(aabb1, aabbOverlap));
 
             // Touching AABBs (sharing a face) - aabb1 spans [-0.5,0.5], aabbTouching spans [0.5,1.5]
             AABB aabbTouching({ 1.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabb1, aabbTouching));
+            CHECK(Collision::checkCollisionAABBAABB(aabb1, aabbTouching));
 
             // Separated AABBs - gap between them
             AABB aabbSeparated({ 1.5f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(aabb1, aabbSeparated));
+            CHECK_FALSE(Collision::checkCollisionAABBAABB(aabb1, aabbSeparated));
         }
 
         SECTION("AABB-AABB Different Sizes")
@@ -1162,21 +1162,21 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
             // Small AABB inside large AABB (large: extent=2.5, small: extent=0.5)
             AABB aabbLarge({ 0.0f, 0.0f, 0.0f }, 5.0f, 5.0f, 5.0f);
             AABB aabbSmall({ 0.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabbLarge, aabbSmall));
+            CHECK(Collision::checkCollisionAABBAABB(aabbLarge, aabbSmall));
 
             // Large AABB partially overlapping small AABB
             // Large spans [-2.5,2.5], small at x=2.0 spans [1.5,2.5] - they overlap
             AABB aabbSmallOffset({ 2.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabbLarge, aabbSmallOffset));
+            CHECK(Collision::checkCollisionAABBAABB(aabbLarge, aabbSmallOffset));
 
             // Large AABB not overlapping small AABB
             // Large spans [-2.5,2.5], small at x=3.0 spans [2.5,3.5] - just touching
             AABB aabbSmallTouching({ 3.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabbLarge, aabbSmallTouching));
+            CHECK(Collision::checkCollisionAABBAABB(aabbLarge, aabbSmallTouching));
 
             // Large AABB truly not overlapping small AABB
             AABB aabbSmallFar({ 4.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(aabbLarge, aabbSmallFar));
+            CHECK_FALSE(Collision::checkCollisionAABBAABB(aabbLarge, aabbSmallFar));
         }
 
         SECTION("AABB-AABB Edge Cases")
@@ -1185,20 +1185,20 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
             // AABBs touching at corner - aabb1 spans [-0.5,0.5], aabbCorner spans [0.5,1.5]
             AABB aabbCorner({ 1.0f, 1.0f, 1.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabb1, aabbCorner));
+            CHECK(Collision::checkCollisionAABBAABB(aabb1, aabbCorner));
 
             // AABBs touching at edge
             AABB aabbEdge({ 1.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabb1, aabbEdge));
+            CHECK(Collision::checkCollisionAABBAABB(aabb1, aabbEdge));
 
             // AABBs almost touching (very small gap)
             AABB aabbAlmost({ 1.01f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(aabb1, aabbAlmost));
+            CHECK_FALSE(Collision::checkCollisionAABBAABB(aabb1, aabbAlmost));
 
             // AABBs with different aspect ratios
             AABB aabbThin({ 0.0f, 0.0f, 0.0f }, 0.1f, 5.0f, 0.1f);
             AABB aabbFlat({ 0.0f, 0.0f, 0.0f }, 5.0f, 0.1f, 5.0f);
-            CHECK(Collision::checkCollision(aabbThin, aabbFlat));
+            CHECK(Collision::checkCollisionAABBAABB(aabbThin, aabbFlat));
         }
 
         SECTION("AABB-AABB 3D Positioning")
@@ -1207,23 +1207,23 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
             // aabb1 spans [-0.5,0.5] in Z, aabb2 at z=1.5 spans [1.0,2.0] in Z - no overlap in Z
             AABB aabb1({ 0.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
             AABB aabb2({ 0.5f, 0.5f, 1.5f }, 1.0f, 1.0f, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(aabb1, aabb2));
+            CHECK_FALSE(Collision::checkCollisionAABBAABB(aabb1, aabb2));
 
             // AABBs overlapping in all three dimensions
             AABB aabb3({ 0.5f, 0.5f, 0.5f }, 1.0f, 1.0f, 1.0f);
-            CHECK(Collision::checkCollision(aabb1, aabb3));
+            CHECK(Collision::checkCollisionAABBAABB(aabb1, aabb3));
 
             // AABBs in opposite corners of 3D space
             AABB aabbNeg({ -5.0f, -5.0f, -5.0f }, 1.0f, 1.0f, 1.0f);
             AABB aabbPos({ 5.0f, 5.0f, 5.0f }, 1.0f, 1.0f, 1.0f);
-            CHECK_FALSE(Collision::checkCollision(aabbNeg, aabbPos));
+            CHECK_FALSE(Collision::checkCollisionAABBAABB(aabbNeg, aabbPos));
 
             // Very large AABBs that should overlap despite distance
             // Large1 at (-2,-2,-2) with extent=5 spans [-7,3] in each axis
             // Large2 at (2,2,2) with extent=5 spans [-3,7] in each axis - they overlap
             AABB aabbLarge1({ -2.0f, -2.0f, -2.0f }, 10.0f, 10.0f, 10.0f);
             AABB aabbLarge2({ 2.0f, 2.0f, 2.0f }, 10.0f, 10.0f, 10.0f);
-            CHECK(Collision::checkCollision(aabbLarge1, aabbLarge2));
+            CHECK(Collision::checkCollisionAABBAABB(aabbLarge1, aabbLarge2));
         }
 
         SECTION("AABB-AABB Symmetry Test")
@@ -1231,16 +1231,16 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
             // Test that collision detection is symmetric
             AABB aabb1({ 1.0f, 2.0f, 3.0f }, 1.5f, 2.5f, 0.5f);
             AABB aabb2({ 2.0f, 1.0f, 3.2f }, 2.0f, 1.0f, 1.0f);
-            bool result1 = Collision::checkCollision(aabb1, aabb2);
-            bool result2 = Collision::checkCollision(aabb2, aabb1);
+            bool result1 = Collision::checkCollisionAABBAABB(aabb1, aabb2);
+            bool result2 = Collision::checkCollisionAABBAABB(aabb2, aabb1);
             CHECK(result1 == result2);
 
             // Another symmetry test with non-overlapping AABBs
             // aabb3 spans [-0.5,0.5], aabb4 at (2.5,2.5,2.5) spans [2.0,3.0] - no overlap
             AABB aabb3({ 0.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
             AABB aabb4({ 2.5f, 2.5f, 2.5f }, 1.0f, 1.0f, 1.0f);
-            bool result3 = Collision::checkCollision(aabb3, aabb4);
-            bool result4 = Collision::checkCollision(aabb4, aabb3);
+            bool result3 = Collision::checkCollisionAABBAABB(aabb3, aabb4);
+            bool result4 = Collision::checkCollisionAABBAABB(aabb4, aabb3);
             CHECK(result3 == result4);
             CHECK_FALSE(result3); // Should be false since they don't overlap
         }
@@ -1255,31 +1255,31 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Point at center
     //        Point pointCenter({ 0.0f, 0.0f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabb, pointCenter));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointCenter));
 
     //        // Point inside AABB
     //        Point pointInside({ 0.25f, -0.25f, 0.3f });
-    //        CHECK(Collision::checkCollision(aabb, pointInside));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointInside));
 
     //        // Point on the surface (face center)
     //        Point pointOnFace({ 0.5f, 0.0f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabb, pointOnFace));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointOnFace));
 
     //        // Point on edge
     //        Point pointOnEdge({ 0.5f, 0.5f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabb, pointOnEdge));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointOnEdge));
 
     //        // Point on corner
     //        Point pointOnCorner({ 0.5f, 0.5f, 0.5f });
-    //        CHECK(Collision::checkCollision(aabb, pointOnCorner));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointOnCorner));
 
     //        // Point outside AABB
     //        Point pointOutside({ 1.0f, 0.0f, 0.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabb, pointOutside));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabb, pointOutside));
 
     //        // Point clearly outside
     //        Point pointFarOutside({ 5.0f, 5.0f, 5.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabb, pointFarOutside));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabb, pointFarOutside));
     //    }
 
     //    SECTION("AABB-Point Edge Cases")
@@ -1288,32 +1288,32 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Points exactly on each face
     //        Point pointRightFace({ 0.5f, 0.0f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabb, pointRightFace));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointRightFace));
 
     //        Point pointLeftFace({ -0.5f, 0.0f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabb, pointLeftFace));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointLeftFace));
 
     //        Point pointTopFace({ 0.0f, 0.5f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabb, pointTopFace));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointTopFace));
 
     //        Point pointBottomFace({ 0.0f, -0.5f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabb, pointBottomFace));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointBottomFace));
 
     //        Point pointFrontFace({ 0.0f, 0.0f, 0.5f });
-    //        CHECK(Collision::checkCollision(aabb, pointFrontFace));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointFrontFace));
 
     //        Point pointBackFace({ 0.0f, 0.0f, -0.5f });
-    //        CHECK(Collision::checkCollision(aabb, pointBackFace));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabb, pointBackFace));
 
     //        // Points just outside each face
     //        Point pointJustOutsideRight({ 0.51f, 0.0f, 0.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabb, pointJustOutsideRight));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabb, pointJustOutsideRight));
 
     //        Point pointJustOutsideLeft({ -0.51f, 0.0f, 0.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabb, pointJustOutsideLeft));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabb, pointJustOutsideLeft));
 
     //        Point pointJustOutsideTop({ 0.0f, 0.51f, 0.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabb, pointJustOutsideTop));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabb, pointJustOutsideTop));
     //    }
 
     //    SECTION("AABB-Point with Different AABB Sizes")
@@ -1321,21 +1321,21 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
     //        // Large AABB
     //        AABB aabbLarge({ 0.0f, 0.0f, 0.0f }, 10.0f, 10.0f, 10.0f);
     //        Point pointInLarge({ 3.0f, -3.0f, 4.0f });
-    //        CHECK(Collision::checkCollision(aabbLarge, pointInLarge));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabbLarge, pointInLarge));
 
     //        Point pointOnLargeBoundary({ 5.0f, 0.0f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabbLarge, pointOnLargeBoundary));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabbLarge, pointOnLargeBoundary));
 
     //        Point pointOutsideLarge({ 6.0f, 0.0f, 0.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabbLarge, pointOutsideLarge));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabbLarge, pointOutsideLarge));
 
     //        // Small AABB
     //        AABB aabbSmall({ 0.0f, 0.0f, 0.0f }, 0.2f, 0.2f, 0.2f);
     //        Point pointInSmall({ 0.05f, -0.05f, 0.08f });
-    //        CHECK(Collision::checkCollision(aabbSmall, pointInSmall));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabbSmall, pointInSmall));
 
     //        Point pointOutsideSmall({ 0.15f, 0.0f, 0.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabbSmall, pointOutsideSmall));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabbSmall, pointOutsideSmall));
     //    }
 
     //    SECTION("AABB-Point with Non-Centered AABB")
@@ -1346,18 +1346,18 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Point inside offset AABB
     //        Point pointInsideOffset({ 5.5f, -2.0f, 2.0f });
-    //        CHECK(Collision::checkCollision(aabbOffset, pointInsideOffset));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabbOffset, pointInsideOffset));
 
     //        // Point on boundary of offset AABB
     //        Point pointOnOffsetBoundary({ 6.0f, -3.0f, 1.5f });
-    //        CHECK(Collision::checkCollision(aabbOffset, pointOnOffsetBoundary));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabbOffset, pointOnOffsetBoundary));
 
     //        // Point outside offset AABB
     //        Point pointOutsideOffset({ 7.0f, -2.0f, 2.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabbOffset, pointOutsideOffset));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabbOffset, pointOutsideOffset));
 
     //        Point pointOutsideOffsetY({ 5.0f, 0.0f, 2.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabbOffset, pointOutsideOffsetY));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabbOffset, pointOutsideOffsetY));
     //    }
 
     //    SECTION("AABB-Point Precision Cases")
@@ -1365,15 +1365,15 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
     //        // Very small AABB
     //        AABB aabbMicro({ 0.0f, 0.0f, 0.0f }, 0.001f, 0.001f, 0.001f);
     //        Point pointInMicro({ 0.0002f, 0.0f, 0.0f });
-    //        CHECK(Collision::checkCollision(aabbMicro, pointInMicro));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabbMicro, pointInMicro));
 
     //        Point pointOutMicro({ 0.001f, 0.0f, 0.0f });
-    //        CHECK_FALSE(Collision::checkCollision(aabbMicro, pointOutMicro));
+    //        CHECK_FALSE(Collision::checkCollisionAABBPoint(aabbMicro, pointOutMicro));
 
     //        // Very large AABB
     //        AABB aabbMega({ 0.0f, 0.0f, 0.0f }, 1000000.0f, 1000000.0f, 1000000.0f);
     //        Point pointInMega({ 400000.0f, -300000.0f, 200000.0f });
-    //        CHECK(Collision::checkCollision(aabbMega, pointInMega));
+    //        CHECK(Collision::checkCollisionAABBPoint(aabbMega, pointInMega));
     //    }
 
     //}
@@ -1387,27 +1387,27 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Sphere centered at origin, smaller than AABB
     //        Sphere sphereInside({ 0.0f, 0.0f, 0.0f }, 0.3f);
-    //        CHECK(Collision::checkCollision(aabb, sphereInside));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereInside));
 
     //        // Sphere centered at origin, larger than AABB (encompasses it)
     //        Sphere sphereEncompassing({ 0.0f, 0.0f, 0.0f }, 2.0f);
-    //        CHECK(Collision::checkCollision(aabb, sphereEncompassing));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereEncompassing));
 
     //        // Sphere intersecting AABB from outside
     //        Sphere sphereIntersecting({ 1.0f, 0.0f, 0.0f }, 0.8f);
-    //        CHECK(Collision::checkCollision(aabb, sphereIntersecting));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereIntersecting));
 
     //        // Sphere touching AABB externally
     //        Sphere sphereTouching({ 1.0f, 0.0f, 0.0f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereTouching));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereTouching));
 
     //        // Sphere completely outside AABB
     //        Sphere sphereOutside({ 2.0f, 0.0f, 0.0f }, 0.5f);
-    //        CHECK_FALSE(Collision::checkCollision(aabb, sphereOutside));
+    //        CHECK_FALSE(Collision::checkCollisionAABBSphere(aabb, sphereOutside));
 
     //        // Sphere far outside AABB
     //        Sphere sphereFarOutside({ 10.0f, 10.0f, 10.0f }, 1.0f);
-    //        CHECK_FALSE(Collision::checkCollision(aabb, sphereFarOutside));
+    //        CHECK_FALSE(Collision::checkCollisionAABBSphere(aabb, sphereFarOutside));
     //    }
 
     //    SECTION("AABB-Sphere Edge Cases")
@@ -1416,28 +1416,28 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Sphere touching each face of AABB
     //        Sphere sphereTouchingRight({ 1.0f, 0.0f, 0.0f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereTouchingRight));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereTouchingRight));
 
     //        Sphere sphereTouchingLeft({ -1.0f, 0.0f, 0.0f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereTouchingLeft));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereTouchingLeft));
 
     //        Sphere sphereTouchingTop({ 0.0f, 1.0f, 0.0f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereTouchingTop));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereTouchingTop));
 
     //        Sphere sphereTouchingBottom({ 0.0f, -1.0f, 0.0f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereTouchingBottom));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereTouchingBottom));
 
     //        // Sphere just barely touching corner
     //        Sphere sphereTouchingCorner({ 1.0f, 1.0f, 1.0f }, std::sqrt(3.0f) * 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereTouchingCorner));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereTouchingCorner));
 
     //        // Sphere just missing corner
     //        Sphere sphereMissingCorner({ 1.0f, 1.0f, 1.0f }, std::sqrt(3.0f) * 0.5f - 0.01f);
-    //        CHECK_FALSE(Collision::checkCollision(aabb, sphereMissingCorner));
+    //        CHECK_FALSE(Collision::checkCollisionAABBSphere(aabb, sphereMissingCorner));
 
     //        // Very small sphere on AABB edge
     //        Sphere sphereSmallOnEdge({ 0.5f, 0.5f, 0.0f }, 0.01f);
-    //        CHECK(Collision::checkCollision(aabb, sphereSmallOnEdge));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereSmallOnEdge));
     //    }
 
     //    SECTION("AABB-Sphere with Different Sizes")
@@ -1447,26 +1447,26 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Small sphere inside large AABB
     //        Sphere sphereSmallInside({ 2.0f, -2.0f, 3.0f }, 1.0f);
-    //        CHECK(Collision::checkCollision(aabbLarge, sphereSmallInside));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbLarge, sphereSmallInside));
 
     //        // Medium sphere intersecting large AABB boundary
     //        Sphere sphereMediumIntersecting({ 6.0f, 0.0f, 0.0f }, 2.0f);
-    //        CHECK(Collision::checkCollision(aabbLarge, sphereMediumIntersecting));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbLarge, sphereMediumIntersecting));
 
     //        // Large sphere encompassing large AABB
     //        Sphere sphereLargeEncompassing({ 0.0f, 0.0f, 0.0f }, 15.0f);
-    //        CHECK(Collision::checkCollision(aabbLarge, sphereLargeEncompassing));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbLarge, sphereLargeEncompassing));
 
     //        // Small AABB with various sphere sizes
     //        AABB aabbSmall({ 0.0f, 0.0f, 0.0f }, 0.5f, 0.5f, 0.5f);
 
     //        // Tiny sphere inside small AABB
     //        Sphere sphereTinyInside({ 0.1f, 0.1f, 0.1f }, 0.1f);
-    //        CHECK(Collision::checkCollision(aabbSmall, sphereTinyInside));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbSmall, sphereTinyInside));
 
     //        // Large sphere encompassing small AABB
     //        Sphere sphereLargeWithSmallAABB({ 0.0f, 0.0f, 0.0f }, 2.0f);
-    //        CHECK(Collision::checkCollision(aabbSmall, sphereLargeWithSmallAABB));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbSmall, sphereLargeWithSmallAABB));
     //    }
 
     //    SECTION("AABB-Sphere with Non-Centered Positions")
@@ -1477,19 +1477,19 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Sphere inside offset AABB
     //        Sphere sphereInsideOffset({ 5.0f, -3.0f, 2.0f }, 0.8f);
-    //        CHECK(Collision::checkCollision(aabbOffset, sphereInsideOffset));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbOffset, sphereInsideOffset));
 
     //        // Sphere intersecting offset AABB from side
     //        Sphere sphereIntersectingOffset({ 7.0f, -3.0f, 2.0f }, 1.5f);
-    //        CHECK(Collision::checkCollision(aabbOffset, sphereIntersectingOffset));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbOffset, sphereIntersectingOffset));
 
     //        // Sphere touching offset AABB corner
     //        Sphere sphereTouchingOffsetCorner({ 7.0f, 0.0f, 3.0f }, std::sqrt(3.0f));
-    //        CHECK(Collision::checkCollision(aabbOffset, sphereTouchingOffsetCorner));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbOffset, sphereTouchingOffsetCorner));
 
     //        // Sphere outside offset AABB
     //        Sphere sphereOutsideOffset({ 10.0f, -3.0f, 2.0f }, 1.0f);
-    //        CHECK_FALSE(Collision::checkCollision(aabbOffset, sphereOutsideOffset));
+    //        CHECK_FALSE(Collision::checkCollisionAABBSphere(aabbOffset, sphereOutsideOffset));
     //    }
 
     //    SECTION("AABB-Sphere Corner and Edge Cases")
@@ -1501,19 +1501,19 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Sphere touching corner from outside
     //        Sphere sphereCorner1({ cornerDistance + 0.5f, cornerDistance + 0.5f, cornerDistance + 0.5f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereCorner1));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereCorner1));
 
     //        // Sphere just missing corner
     //        Sphere sphereMissCorner({ cornerDistance + 1.0f, cornerDistance + 1.0f, cornerDistance + 1.0f }, 0.5f);
-    //        CHECK_FALSE(Collision::checkCollision(aabb, sphereMissCorner));
+    //        CHECK_FALSE(Collision::checkCollisionAABBSphere(aabb, sphereMissCorner));
 
     //        // Sphere intersecting edge
     //        Sphere sphereEdge({ 1.5f, 1.0f, 0.0f }, 0.8f);
-    //        CHECK(Collision::checkCollision(aabb, sphereEdge));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereEdge));
 
     //        // Sphere touching face center
     //        Sphere sphereFaceCenter({ 1.5f, 0.0f, 0.0f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabb, sphereFaceCenter));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabb, sphereFaceCenter));
     //    }
 
     //    SECTION("AABB-Sphere Precision Cases")
@@ -1521,17 +1521,17 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
     //        // Very small AABB and sphere
     //        AABB aabbMicro({ 0.0f, 0.0f, 0.0f }, 0.002f, 0.002f, 0.002f);
     //        Sphere sphereMicro({ 0.0f, 0.0f, 0.0f }, 0.0005f);
-    //        CHECK(Collision::checkCollision(aabbMicro, sphereMicro));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbMicro, sphereMicro));
 
     //        // Very large AABB and sphere
     //        AABB aabbMega({ 0.0f, 0.0f, 0.0f }, 1000000.0f, 1000000.0f, 1000000.0f);
     //        Sphere sphereMega({ 800000.0f, 0.0f, 0.0f }, 300000.0f);
-    //        CHECK(Collision::checkCollision(aabbMega, sphereMega));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbMega, sphereMega));
 
     //        // Floating point precision edge case
     //        AABB aabbPrecision({ 0.0f, 0.0f, 0.0f }, 1.0f, 1.0f, 1.0f);
     //        Sphere spherePrecision({ 1.0000001f, 0.0f, 0.0f }, 0.5f);
-    //        CHECK(Collision::checkCollision(aabbPrecision, spherePrecision));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbPrecision, spherePrecision));
     //    }
 
     //    SECTION("AABB-Sphere Asymmetric AABB")
@@ -1542,19 +1542,19 @@ TEST_CASE("AABB Collisions", "[.all][Collision3D][aabb]")
 
     //        // Sphere intersecting along longest axis
     //        Sphere sphereLongAxis({ 3.0f, 0.0f, 0.0f }, 1.5f);
-    //        CHECK(Collision::checkCollision(aabbAsymmetric, sphereLongAxis));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbAsymmetric, sphereLongAxis));
 
     //        // Sphere intersecting along shortest axis
     //        Sphere sphereShortAxis({ 0.0f, 1.0f, 0.0f }, 0.8f);
-    //        CHECK(Collision::checkCollision(aabbAsymmetric, sphereShortAxis));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbAsymmetric, sphereShortAxis));
 
     //        // Sphere missing due to asymmetry
     //        Sphere sphereMissAsymmetric({ 0.0f, 2.0f, 0.0f }, 1.0f);
-    //        CHECK_FALSE(Collision::checkCollision(aabbAsymmetric, sphereMissAsymmetric));
+    //        CHECK_FALSE(Collision::checkCollisionAABBSphere(aabbAsymmetric, sphereMissAsymmetric));
 
     //        // Sphere encompassing asymmetric AABB
     //        Sphere sphereEncompassAsymmetric({ 0.0f, 0.0f, 0.0f }, 5.0f);
-    //        CHECK(Collision::checkCollision(aabbAsymmetric, sphereEncompassAsymmetric));
+    //        CHECK(Collision::checkCollisionAABBSphere(aabbAsymmetric, sphereEncompassAsymmetric));
     //    }
     //}
 }

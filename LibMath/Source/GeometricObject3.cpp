@@ -17,6 +17,13 @@ LibMath::Geometry3D::Point::Point(const Point& other)
 	m_z = other.m_z;
 }
 
+LibMath::Geometry3D::Point::Point(LibMath::Vector3 const& vec)
+{
+	m_x = vec.m_x;
+	m_y = vec.m_y;
+	m_z = vec.m_z;
+}
+
 LibMath::Geometry3D::Point& LibMath::Geometry3D::Point::operator=(const Point& other)
 {
 	m_x = other.m_x;
@@ -26,9 +33,9 @@ LibMath::Geometry3D::Point& LibMath::Geometry3D::Point::operator=(const Point& o
 	return *this;
 }
 
-LibMath::Geometry3D::Point::operator LibMath::Vector3(void) const
+LibMath::Vector3 LibMath::Geometry3D::Point::toVector3(void) const
 {
-	return LibMath::Vector3(m_x, m_y, m_z);
+	return  LibMath::Vector3(m_x, m_y, m_z);
 }
 
 float LibMath::Geometry3D::Point::getDistanceSquared(const Point& other) const
@@ -45,7 +52,7 @@ float LibMath::Geometry3D::Point::getDistance(const Point& other) const
 	return std::sqrt(getDistanceSquared(other));
 }
 
-LibMath::Vector3 LibMath::Geometry3D::Point::operator-(const Point& point)
+LibMath::Vector3 LibMath::Geometry3D::Point::operator-(const Point& point) const
 {
 	return LibMath::Vector3(m_x - point.m_x, m_y - point.m_y, m_z - point.m_z);
 }

@@ -4,14 +4,14 @@
 #include <iostream>
 #include <string>
 
+#include "LibMath/LibMathFwd.h"
+
 #include "LibMath/Angle/Radian.h"
 #include "LibMath/Trigonometry.h"
-#include "LibMath/GeometricObject3.h"
+
 
 namespace LibMath
 {
-	class Vector4;
-	class Point;
 	class Vector3
 	{
 	public:
@@ -19,6 +19,7 @@ namespace LibMath
 		explicit		Vector3(float val);									// set all component to the same value
 						Vector3(float val_x, float val_y, float val_z);					// set all component individually
 						Vector3(Vector3 const& other);						// copy all component
+						Vector3(LibMath::Geometry3D::Point const& point);
 						~Vector3() = default;
 
 		static Vector3	zero(void);											// return a vector with all its component set to 0
@@ -32,7 +33,6 @@ namespace LibMath
 
 		Vector3&		operator=(Vector3 const& other) = default;
 
-		operator		Geometry3D::Point(void) const;
 
 		float&			operator[](int n);								// return this vector component value
 		float			operator[](int n) const;							// return this vector component value

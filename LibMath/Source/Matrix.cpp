@@ -1007,7 +1007,9 @@ LibMath::Matrix4 LibMath::Matrix4::perspective(float const fov, float const aspe
 	return result;
 }
 
-LibMath::Matrix4 LibMath::Matrix4::createTransform(LibMath::Vector3 const translate, LibMath::Radian const rotation, LibMath::Vector3 const scale)
+LibMath::Matrix4 LibMath::Matrix4::createTransform(Vector3 const& translate = Vector3(0.f, 0.f, 0.f),
+	Radian const& rotation = Radian(0.f),
+	Vector3 const& scale = Vector3(1.f, 1.f, 1.f))
 {
 	// Create translation, rotation, and scale matrices
 	Matrix4 translationMatrix = createTranslate(translate);
@@ -1018,7 +1020,7 @@ LibMath::Matrix4 LibMath::Matrix4::createTransform(LibMath::Vector3 const transl
 	return translationMatrix * rotationMatrix * scaleMatrix;
 }
 
-LibMath::Matrix4 LibMath::Matrix4::createTranslate(LibMath::Vector3 const  translate)
+LibMath::Matrix4 LibMath::Matrix4::createTranslate(LibMath::Vector3 const&  translate)
 {
 	return Matrix4(
 				1.f,			  0.f,				0.f,	  0.f,
@@ -1028,7 +1030,7 @@ LibMath::Matrix4 LibMath::Matrix4::createTranslate(LibMath::Vector3 const  trans
 	);
 }
 
-LibMath::Matrix4 LibMath::Matrix4::createRotationX(LibMath::Radian const angle)
+LibMath::Matrix4 LibMath::Matrix4::createRotationX(LibMath::Radian const& angle)
 {
 	float const cosR = LibMath::cos(angle);
 	float const sinR = LibMath::sin(angle);
@@ -1041,7 +1043,7 @@ LibMath::Matrix4 LibMath::Matrix4::createRotationX(LibMath::Radian const angle)
 	);
 }
 
-LibMath::Matrix4 LibMath::Matrix4::createRotationY(LibMath::Radian const angle)
+LibMath::Matrix4 LibMath::Matrix4::createRotationY(LibMath::Radian const& angle)
 {
 	float const cosR = LibMath::cos(angle);
 	float const sinR = LibMath::sin(angle);
@@ -1054,7 +1056,7 @@ LibMath::Matrix4 LibMath::Matrix4::createRotationY(LibMath::Radian const angle)
 	);
 }
 
-LibMath::Matrix4 LibMath::Matrix4::createRotationZ(LibMath::Radian const angle)
+LibMath::Matrix4 LibMath::Matrix4::createRotationZ(LibMath::Radian const& angle)
 {
 	float const cosR = LibMath::cos(angle);
 	float const sinR = LibMath::sin(angle);
@@ -1082,7 +1084,7 @@ LibMath::Matrix4 LibMath::Matrix4::RemoveTranslationComponent(const LibMath::Mat
 	return temp;
 }
 
-LibMath::Matrix4 LibMath::Matrix4::createScale(LibMath::Vector3 const scale)
+LibMath::Matrix4 LibMath::Matrix4::createScale(LibMath::Vector3 const& scale)
 {
 
 	return Matrix4(
@@ -1103,7 +1105,7 @@ LibMath::Matrix4 LibMath::Matrix4::identity(void)
 	);
 }
 
-LibMath::Matrix4 LibMath::operator+(Matrix4 const m1, Matrix4 const m2)
+LibMath::Matrix4 LibMath::operator+(Matrix4 const& m1, Matrix4 const& m2)
 {
 	return Matrix4(
 		m1[0][0] + m2[0][0], m1[0][1] + m2[0][1], m1[0][2] + m2[0][2], m1[0][3] + m2[0][3],
@@ -1113,7 +1115,7 @@ LibMath::Matrix4 LibMath::operator+(Matrix4 const m1, Matrix4 const m2)
 	);
 }
 
-LibMath::Matrix4 LibMath::operator*(Matrix4 const m, float const scalar)
+LibMath::Matrix4 LibMath::operator*(Matrix4 const& m, float const& scalar)
 {
 	return Matrix4(
 		scalar * m[0][0], scalar * m[0][1], scalar * m[0][2], scalar * m[0][3],
@@ -1133,7 +1135,7 @@ LibMath::Vector4 LibMath::operator*(const Matrix4 & m, const LibMath::Vector4 & 
 	);
 }
 
-LibMath::Matrix4 LibMath::operator*(Matrix4 const m1, Matrix4 const m2)
+LibMath::Matrix4 LibMath::operator*(Matrix4 const& m1, Matrix4 const& m2)
 {
 	float comp00 = (m1[0][0] * m2[0][0]) + (m1[1][0] * m2[0][1]) + (m1[2][0] * m2[0][2]) + (m1[3][0] * m2[0][3]);
     float comp01 = (m1[0][1] * m2[0][0]) + (m1[1][1] * m2[0][1]) + (m1[2][1] * m2[0][2]) + (m1[3][1] * m2[0][3]);

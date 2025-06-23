@@ -1,5 +1,6 @@
 #include "LibMath/Vector.h"
 #include "LibMath/Matrix/Matrix3.h"
+#include "LibMath/GeometricObject3.h"
 #include <cmath>
 
 #define EPSILON 1e-5
@@ -27,6 +28,12 @@ LibMath::Vector2::Vector2(Vector2 const& other)
 {
 	m_x = other.m_x;
 	m_y = other.m_y;
+}
+
+LibMath::Vector2::Vector2(Geometry2D::Point const& point)
+{
+	m_x = point.m_x;
+	m_y = point.m_y;
 }
 
 
@@ -106,11 +113,6 @@ LibMath::Vector2& LibMath::Vector2::operator/=(const Vector2& other)
 	m_y /= other.m_y;
 
 	return *this;
-}
-
-LibMath::Vector2::operator Geometry2D::Point(void) const
-{
-	return Geometry2D::Point(m_x, m_y);
 }
 
 float LibMath::Vector2::magnitude(void) const
@@ -255,6 +257,13 @@ LibMath::Vector3::Vector3(Vector3 const& other)
 	m_z = other.m_z;
 }
 
+LibMath::Vector3::Vector3(LibMath::Geometry3D::Point const& point)
+{
+	m_x = point.m_x;
+	m_y = point.m_y;
+	m_z = point.m_z;
+}
+
 LibMath::Vector3 LibMath::Vector3::zero(void)
 {
 	return Vector3(0.0f);
@@ -293,11 +302,6 @@ LibMath::Vector3 LibMath::Vector3::front(void)
 LibMath::Vector3 LibMath::Vector3::back(void)
 {
 	return Vector3(0.0f, 0.0f, -1.0f);
-}
-
-LibMath::Vector3::operator Geometry3D::Point(void) const
-{
-	return Geometry3D::Point(m_x, m_y, m_z);
 }
 
 float& LibMath::Vector3::operator[](int n)
@@ -786,7 +790,7 @@ LibMath::Vector4::Vector4(Vector4 const& other)
 	m_k = other.m_k;
 }
 
-LibMath::Vector4::Vector4(Vector3 const& vec3)
+LibMath::Vector4::Vector4(LibMath::Vector3 const& vec3)
 {
 	m_x = vec3.m_x;
 	m_y = vec3.m_y;

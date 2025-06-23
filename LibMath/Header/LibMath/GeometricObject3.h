@@ -1,14 +1,13 @@
 #ifndef GEOMETRIC_OBJECT3_H
 #define	GEOMETRIC_OBJECT3_H
 
+#include "LibMath/Angle/Radian.h"
 #include "LibMath/Vector/Vector3.h"
-#include "LibMath/Matrix/Matrix4.h"
-
 namespace LibMath
 {
 	namespace Geometry3D
 	{
-		class Vector3;
+		
 		class Object3D
 		{
 		public:
@@ -23,18 +22,17 @@ namespace LibMath
 									Point() = default;
 									Point(const float x, const float y, const float z);
 									Point(const Point& other);
+									Point(Vector3 const& vec);
 									~Point() = default;
 
 			Point&					operator=(const Point& other);
 
-			operator				LibMath::Vector3(void) const;
-
-			const LibMath::Vector3	toVector3(void) const { return  LibMath::Vector3(m_x, m_y, m_z); };
+			Vector3		toVector3() const;
 
 			float					getDistanceSquared(const Point&) const;
 			float					getDistance(const Point&) const;
 
-			LibMath::Vector3					operator-(const Point& point);
+			LibMath::Vector3					operator-(const Point& point) const;
 
 			float					m_x = 0.0f;
 			float					m_y = 0.0f;
@@ -77,7 +75,7 @@ namespace LibMath
 
 
 
-			LibMath::Vector3			m_normal;
+			Vector3			m_normal;
 			float			m_distance = 0.f;
 
 		private:
@@ -125,7 +123,7 @@ namespace LibMath
 			float			m_width = 0.f;
 			float			m_height = 0.f;
 			float			m_depth = 0.f;
-			LibMath::Radian m_rotation;
+			Radian m_rotation;
 
 		private:
 			
