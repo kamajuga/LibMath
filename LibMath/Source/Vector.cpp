@@ -107,10 +107,36 @@ LibMath::Vector2& LibMath::Vector2::operator*=(const Vector2& other)
 	return *this;
 }
 
+LibMath::Vector2& LibMath::Vector2::operator*=(const float& val)
+{
+	m_x *= val;
+	m_y *= val;
+
+	return *this;
+}
+
 LibMath::Vector2& LibMath::Vector2::operator/=(const Vector2& other)
 {
+	if (other.m_x == 0.f || other.m_y == 0.f)
+	{
+		throw std::runtime_error("Error: Division by zero \n x or y component is null.");
+	}
+
 	m_x /= other.m_x;
 	m_y /= other.m_y;
+
+	return *this;
+}
+
+LibMath::Vector2& LibMath::Vector2::operator/=(const float& val)
+{
+	if (val == 0.f)
+	{
+		throw std::runtime_error("Error: Division by zero");
+	}
+
+	m_x /= val;
+	m_y /= val;
 
 	return *this;
 }
@@ -736,11 +762,30 @@ LibMath::Vector3& LibMath::operator*=(Vector3& vec, float val)
 
 LibMath::Vector3& LibMath::operator/=(Vector3& vec1, Vector3 const& vec2)
 {
+	if (vec2.m_x == 0.f || vec2.m_y == 0.f || vec2.m_z == 0.f)
+	{
+		throw std::runtime_error("Error: Division by zero. \n x, y or z component is zero");
+	}
+
 	vec1.m_x /= vec2.m_x;
 	vec1.m_y /= vec2.m_y;
 	vec1.m_z /= vec2.m_z;
 
 	return vec1;
+}
+
+LibMath::Vector3& LibMath::operator/=(Vector3& vec, float val)
+{
+	if (val == 0.f)
+	{
+		throw std::runtime_error("Error: Division by zero");
+	}
+
+	vec.m_x /= val;
+	vec.m_y /= val;
+	vec.m_z /= val;
+
+	return vec;
 }
 
 std::ostream& LibMath::operator<<(std::ostream& os, Vector3 const& vec)
@@ -790,12 +835,12 @@ LibMath::Vector4::Vector4(Vector4 const& other)
 	m_k = other.m_k;
 }
 
-LibMath::Vector4::Vector4(LibMath::Vector3 const& vec3)
+LibMath::Vector4::Vector4(LibMath::Vector3 const& vec3, const float& val)
 {
 	m_x = vec3.m_x;
 	m_y = vec3.m_y;
 	m_z = vec3.m_z;
-	m_k = 1.f;
+	m_k = val;
 }
 
 float& LibMath::Vector4::operator[](int n)

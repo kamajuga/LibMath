@@ -1,4 +1,4 @@
-#include <LibMath/Angle.h>
+﻿#include <LibMath/Angle.h>
 
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -14,404 +14,356 @@ constexpr float radianCircle = glm::two_pi<float>();
 
 TEST_CASE("Degree", "[.all][angle]")
 {
-	SECTION("Instantiation")
+	using namespace LibMath;
+
+	SECTION("Constructors and Assignment")
 	{
-		// destructor
-		{
-			LibMath::Degree temp;
-		}
+		Degree def;
+		CHECK(def.raw() == 0.f);
 
-		// default constructor
-		LibMath::Degree empty;
-		CHECK(empty.raw() == 0.f);
+		Degree fromValue{ 90.f };
+		CHECK(fromValue.raw() == 90.f);
 
-		// basic constructor
-		float value = 60.f;
-		LibMath::Degree angle{ value };
-		CHECK(angle.raw() == value);
+		Degree copied{ fromValue };
+		CHECK(copied.raw() == 90.f);
 
-		// copy constructor
-		LibMath::Degree copy{ angle };
-		CHECK(copy.raw() == value);
+		Degree assigned;
+		assigned = copied;
+		CHECK(assigned.raw() == 90.f);
 
-		// assignment operator
-		empty = angle;
-		CHECK(empty.raw() == value);
-
-		LibMath::Degree literal = 60_deg;
-		CHECK(literal.raw() == value);
-		literal = 22.5_deg;
-		[[maybe_unused]] float f = literal.raw();
-		CHECK(literal.raw() == 22.5f);
-
-
-		CHECK(sizeof LibMath::Degree == sizeof(float));
+		CHECK(sizeof(Degree) == sizeof(float));
 	}
 
-	SECTION("Accessor")
+	SECTION("Accessors and Wrapping")
 	{
-		{
-			// 0 value
-			LibMath::Degree zeroDegree;
-			CHECK(zeroDegree.degree(true) == 0.f);
-			CHECK(zeroDegree.degree(false) == 0.f);
-			CHECK(zeroDegree.radian(true) == 0.f);
-			CHECK(zeroDegree.radian(false) == 0.f);
-		}
+		Degree zero{ 0.f };
+		CHECK(zero.degree(false) == 0.f);
+		CHECK(zero.degree(true) == 0.f);
+		CHECK(zero.radian(false) == Catch::Approx(0.f));
+		CHECK(zero.radian(true) == Catch::Approx(0.f));
 
-		{
-			// no change value
-			LibMath::Degree sixtyDegree{ 60.f };
-			CHECK(sixtyDegree.degree(true) == 60.f);
-			CHECK(sixtyDegree.degree(false) == 60.f);
-			CHECK(sixtyDegree.radian(true) == Catch::Approx(glm::radians(60.f)));
-			CHECK(sixtyDegree.radian(false) == Catch::Approx(glm::radians(60.f)));
-		}
+		Degree angle1{ 360.f };
+		CHECK(angle1.degree(false) == 0.f);
+		CHECK(angle1.degree(true) == 0.f);
 
-		{
-			// wrap when true value
-			LibMath::Degree threeHundredDegree{ 300.f };
-			CHECK(threeHundredDegree.degree(true) == -60.f);
-			CHECK(threeHundredDegree.degree(false) == 300.f);
-			CHECK(threeHundredDegree.radian(true) == Catch::Approx(glm::radians(-60.f)));
-			CHECK(threeHundredDegree.radian(false) == Catch::Approx(glm::radians(300.f)));
-		}
+		Degree angle2{ -90.f };
+		CHECK(angle2.degree(false) == 270.f);
+		CHECK(angle2.degree(true) == -90.f);
 
-		{
-			// wrap when false value
-			LibMath::Degree minusSixtyDegree{ -60.f };
-			CHECK(minusSixtyDegree.degree(true) == -60.f);
-			CHECK(minusSixtyDegree.degree(false) == 300.f);
-			CHECK(minusSixtyDegree.radian(true) == Catch::Approx(glm::radians(-60.f)));
-			CHECK(minusSixtyDegree.radian(false) == Catch::Approx(glm::radians(300.f)));
-		}
+		Degree angle3{ 450.f };
+		CHECK(angle3.degree(false) == 90.f);
+		CHECK(angle3.degree(true) == 90.f);
 
-		{
-			// positive wrap value
-			LibMath::Degree oneThousandDegree{ 1000.f };
-			CHECK(oneThousandDegree.degree(true) == -80.f);
-			CHECK(oneThousandDegree.degree(false) == 280.f);
-			CHECK(oneThousandDegree.radian(true) == Catch::Approx(glm::radians(-80.f)));
-			CHECK(oneThousandDegree.radian(false) == Catch::Approx(glm::radians(280.f)));
-		}
-
-		{
-			// negative wrap value
-			LibMath::Degree minusOneThousandDegree{ -1000.f };
-			CHECK(minusOneThousandDegree.degree(true) == 80.f);
-			CHECK(minusOneThousandDegree.degree(false) == 80.f);
-			CHECK(minusOneThousandDegree.radian(true) == Catch::Approx(glm::radians(80.f)));
-			CHECK(minusOneThousandDegree.radian(false) == Catch::Approx(glm::radians(80.f)));
-		}
+		Degree angle4{ -450.f };
+		CHECK(angle4.degree(false) == 270.f);
+		CHECK(angle4.degree(true) == -90.f);
 	}
 
-	SECTION("Comparator")
+	SECTION("wrap() method modifies internal state")
 	{
-		// compare with self
-		LibMath::Degree self{ 60.f };
-		CHECK(self == self);
+		Degree a{ 900.f };
+		a.wrap(false);
+		CHECK(a.raw() == 180.f);
 
-		// compare with same
-		CHECK(LibMath::Degree{ 60.f } == LibMath::Degree{ 60.f });
+		a = Degree{ 900.f };
+		a.wrap(true);
+		CHECK(a.raw() == -180.f);
 
-		// compare with wrapped value
-		CHECK(LibMath::Degree{ 90.f } == LibMath::Degree(450.f));
+		Degree b{ -1000.f };
+		b.wrap(false);
+		CHECK(b.raw() == 80.f);
 
-		// compare with wrap edge value
-		CHECK(LibMath::Degree{ 0.f } == LibMath::Degree{ 360.f });
-		CHECK(LibMath::Degree{ -180.f } == LibMath::Degree{ 180.f });
+		b = Degree{ -1000.f };
+		b.wrap(true);
+		CHECK(b.raw() == 80.f); // in [-180, 180[
 	}
 
-	SECTION("Arithmetic")
+	SECTION("Arithmetic operators")
 	{
-		{
-			// operator +
-			LibMath::Degree sum = LibMath::Degree(45.f) + LibMath::Degree(30.f);
-			CHECK(sum.degree() == 75.f);
-		}
+		CHECK((Degree{ 30.f } + Degree{ 60.f }).degree() == 90.f);
+		CHECK((Degree{ 90.f } - Degree{ 45.f }).degree() == 45.f);
+		CHECK((-Degree{ 45.f }).degree() == 315.f);
 
-		{
-			// operator +=
-			LibMath::Degree sum(45.f);
-			sum += LibMath::Degree(30.f);
-			CHECK(sum.degree() == 75.f);
-		}
+		CHECK((Degree{ 90.f } *2.f).degree() == 180.f);
+		CHECK((Degree{ 90.f } / 3.f).degree() == 30.f);
 
-		{
-			// operator -
-			LibMath::Degree opposite = -LibMath::Degree(45.f);
-			CHECK(opposite.degree() == 315.f);
-		}
+		Degree d1{ 45.f }; d1 += Degree{ 45.f };
+		CHECK(d1.degree() == 90.f);
 
-		{
-			// operator -
-			LibMath::Degree difference = LibMath::Degree(45.f) - LibMath::Degree(30.f);
-			CHECK(difference.degree() == 15.f);
-		}
+		Degree d2{ 90.f }; d2 -= Degree{ 30.f };
+		CHECK(d2.degree() == 60.f);
 
-		{
-			// operator -=
-			LibMath::Degree difference(45.f);
-			difference -= LibMath::Degree(30.f);
-			CHECK(difference.degree() == 15.f);
-		}
+		Degree d3{ 90.f }; d3 *= 2.f;
+		CHECK(d3.degree() == 180.f);
 
-		{
-			// operator *
-			LibMath::Degree product = LibMath::Degree(45.f) * 10.f;
-			CHECK(product.degree() == 90.f);
-		}
-
-		{
-			// operator *=
-			LibMath::Degree product(45.f);
-			product *= 10.f;
-			CHECK(product.degree() == 90.f);
-		}
-
-		{
-			// operator /
-			LibMath::Degree quotient = LibMath::Degree(45.f) / 5.f;
-			CHECK(quotient.degree() == 9.f);
-		}
-
-		{
-			// operator /=
-			LibMath::Degree quotient(45.f);
-			quotient /= 5.f;
-			CHECK(quotient.degree() == 9.f);
-		}
+		Degree d4{ 90.f }; d4 /= 2.f;
+		CHECK(d4.degree() == 45.f);
 	}
 
-	SECTION("Functionality")
+	SECTION("Comparators")
 	{
-		{
-			// wrap value
-			LibMath::Degree wrapAngle{ 900.f };
-			wrapAngle.wrap(false);
-			CHECK(wrapAngle.raw() == 180.f);
-		}
+		CHECK(Degree{ 60.f } == Degree{ 60.f });
+		CHECK(Degree{ 60.f } == 60.f);
+		CHECK(Degree{ 450.f } == Degree{ 90.f });
+		CHECK(Degree{ 0.f } == Degree{ 360.f });
+		CHECK(Degree{ -180.f } == Degree{ 180.f });
+	}
 
-		{
-			// prefere lower edge value
-			LibMath::Degree wrapEdge{ 360.f };
-			wrapEdge.wrap(false);
-			CHECK(wrapEdge.raw() == 0.f);
+	SECTION("Conversion to Radian")
+	{
+	
+		CHECK(Degree{ 180.f } == Radian{ glm::pi<float>() });
 
-			wrapEdge = LibMath::Degree{ 900.f };
-			wrapEdge.wrap(true);
-			CHECK(wrapEdge.raw() == -180.f);
-		}
+		CHECK_FALSE(Degree{ 90.f } == Radian{ glm::pi<float>() });
+
+	}
+
+	SECTION("Comparison with Radian")
+	{
+		Radian pi{ glm::pi<float>() };
+		CHECK(Degree{ 180.f } == pi);
+		CHECK_FALSE(Degree{ 90.f } == pi);
+	}
+
+	SECTION("Conversion to Radian (const operator)")
+	{
+		const Degree deg{ 180.f };
+		Radian rad = deg; // conversion implicite
+		CHECK(rad.raw() == Catch::Approx(glm::pi<float>()));
+	}
+
+	SECTION("User-defined literal _deg")
+	{
+		auto a = 90_deg;
+		CHECK(a.raw() == 90.f);
+
+		auto b = -270_deg;
+		CHECK(b.degree(true) == 90.f);
+		CHECK(b.degree(false) == 90.f);
+
+		auto c = 1080_deg;
+		CHECK(c.degree(false) == 0.f);
+		CHECK(c.degree(true) == 0.f);
+	}
+
+	SECTION("Edge Cases")
+	{
+		Degree big{ 100000.f };
+		CHECK(big.degree(false) == Catch::Approx(280.f));
+
+		Degree small{ -100000.f };
+		CHECK(small.degree(false) == Catch::Approx(80.f));
+
+		Degree nearWrapHigh{ 359.999f };
+		CHECK(nearWrapHigh.degree(false) == Catch::Approx(359.999f));
+		CHECK(nearWrapHigh.degree(true) == Catch::Approx(-0.001f).margin(0.0001f));
+
+		Degree nearWrapLow{ -0.001f };
+		CHECK(nearWrapLow.degree(false) == Catch::Approx(359.999f));
+		CHECK(nearWrapLow.degree(true) == Catch::Approx(-0.001f));
+	}
+
+	SECTION("User-defined literal")
+	{
+		auto angle = 90_deg;
+		CHECK(angle.raw() == 90.f);
+
+		angle = 370_deg;
+		CHECK(angle.degree() == 10.f);
+
+		CHECK(angle == Degree{ 370.f });
 	}
 }
 
 TEST_CASE("Radian", "[.all][angle]")
-{	
+{
+	using namespace LibMath;
 
 	SECTION("Instantiation")
 	{
-		// destructor
 		{
-			[[maybe_unused]] LibMath::Radian temp;
+			[[maybe_unused]] Radian temp;
 		}
 
-		// default constructor
-		LibMath::Radian empty;
+		Radian empty;
 		CHECK(empty.raw() == 0.f);
 
-		// basic constructor
 		float value = 1.2f;
-		LibMath::Radian angle{ value };
+		Radian angle{ value };
 		CHECK(angle.raw() == value);
 
-		// copy constructor
-		LibMath::Radian copy{ angle };
+		Radian copy{ angle };
 		CHECK(copy.raw() == value);
 
-		// assignment operator
 		empty = angle;
 		CHECK(empty.raw() == value);
 
-		LibMath::Radian literal = 1.2_rad;
+		Radian literal = 1.2_rad;
 		CHECK(literal.raw() == value);
 		literal = 1_rad;
 		CHECK(literal.raw() == 1.f);
 
-		CHECK(sizeof LibMath::Radian == sizeof(float));
+		CHECK(sizeof Radian == sizeof(float));
 	}
 
-	SECTION("Accessor")
+	SECTION("Accessors")
 	{
+		Radian zero;
+		CHECK(zero.degree(true) == 0.f);
+		CHECK(zero.degree(false) == 0.f);
+		CHECK(zero.radian(true) == 0.f);
+		CHECK(zero.radian(false) == 0.f);
+
+		Radian oneRadian{ 1.2f };
+		CHECK(oneRadian.degree(true) == Catch::Approx(glm::degrees(1.2f)));
+		CHECK(oneRadian.degree(false) == Catch::Approx(glm::degrees(1.2f)));
+		CHECK(oneRadian.radian(true) == 1.2f);
+		CHECK(oneRadian.radian(false) == 1.2f);
+
 		{
-			// 0 value
-			LibMath::Radian zeroRadian;
-			CHECK(zeroRadian.degree(true) == 0.f);
-			CHECK(zeroRadian.degree(false) == 0.f);
-			CHECK(zeroRadian.radian(true) == 0.f);
-			CHECK(zeroRadian.radian(false) == 0.f);
+			const float wrapRadian = 5.8f - radianCircle;
+			Radian six{ 5.8f };
+			CHECK(six.degree(true) == Catch::Approx(glm::degrees(wrapRadian)));
+			CHECK(six.degree(false) == Catch::Approx(glm::degrees(5.8f)));
+			CHECK(six.radian(true) == Catch::Approx(wrapRadian));
+			CHECK(six.radian(false) == 5.8f);
 		}
 
 		{
-			// no change value
-			LibMath::Radian oneRadian{ 1.2f };
-			CHECK(oneRadian.degree(true) == Catch::Approx(glm::degrees(1.2f)));
-			CHECK(oneRadian.degree(false) == Catch::Approx(glm::degrees(1.2f)));
-			CHECK(oneRadian.radian(true) == 1.2f);
-			CHECK(oneRadian.radian(false) == 1.2f);
+			const float wrapRadian = radianCircle - 1.2f;
+			Radian minusOne{ -1.2f };
+			CHECK(minusOne.degree(true) == Catch::Approx(glm::degrees(-1.2f)));
+			CHECK(minusOne.degree(false) == Catch::Approx(glm::degrees(wrapRadian)));
+			CHECK(minusOne.radian(true) == -1.2f);
+			CHECK(minusOne.radian(false) == Catch::Approx(wrapRadian));
 		}
 
 		{
-			// wrap when true value
-			const/*expr*/ float wrapRadian = 5.8f - radianCircle;
-
-			LibMath::Radian sixRadian{ 5.8f };
-			CHECK(sixRadian.degree(true) == Catch::Approx(glm::degrees(wrapRadian)));
-			CHECK(sixRadian.degree(false) == Catch::Approx(glm::degrees(5.8f)));
-			CHECK(sixRadian.radian(true) == Catch::Approx(wrapRadian));
-			CHECK(sixRadian.radian(false) == 5.8f);
+			const float wrap = 15.f - 2.f * radianCircle;
+			Radian fifteen{ 15.f };
+			CHECK(fifteen.radian(true) == Catch::Approx(wrap));
+			CHECK(fifteen.radian(false) == Catch::Approx(wrap));
+			CHECK(fifteen.degree(true) == Catch::Approx(glm::degrees(wrap)));
+			CHECK(fifteen.degree(false) == Catch::Approx(glm::degrees(wrap)));
 		}
 
 		{
-			// wrap when false value
-			const/*expr*/ float wrapRadian = radianCircle - 1.2f;
-
-			LibMath::Radian minusOneRadian{ -1.2f };
-			CHECK(minusOneRadian.degree(true) == Catch::Approx(glm::degrees(-1.2f)));
-			CHECK(minusOneRadian.degree(false) == Catch::Approx(glm::degrees(wrapRadian)));
-			CHECK(minusOneRadian.radian(true) == -1.2f);
-			CHECK(minusOneRadian.radian(false) == Catch::Approx(wrapRadian));
+			const float wrap = -15.f + 3.f * radianCircle;
+			const float wrapMod = -15.f + 2.f * radianCircle;
+			Radian minusFifteen{ -15.f };
+			CHECK(minusFifteen.radian(true) == Catch::Approx(wrapMod));
+			CHECK(minusFifteen.radian(false) == Catch::Approx(wrap));
+			CHECK(minusFifteen.degree(true) == Catch::Approx(glm::degrees(wrapMod)));
+			CHECK(minusFifteen.degree(false) == Catch::Approx(glm::degrees(wrap)));
 		}
+	}
 
-		{
-			// positive wrap value
-			const/*expr*/ float radian = 15.f - 2.f * radianCircle;
+	SECTION("Edge Wrapping Values")
+	{
+		const float pi = glm::pi<float>();
+		const float twoPi = glm::two_pi<float>();
 
-			LibMath::Radian fifteenRadian{ 15.f };
-			CHECK(fifteenRadian.degree(true) == Catch::Approx(glm::degrees(radian)));
-			CHECK(fifteenRadian.degree(false) == Catch::Approx(glm::degrees(radian)));
-			CHECK(fifteenRadian.radian(true) == Catch::Approx(radian));
-			CHECK(fifteenRadian.radian(false) == Catch::Approx(radian));
-		}
+		CHECK(Radian{ twoPi }.radian(false) == Catch::Approx(0.f));
+		CHECK(Radian{ -twoPi }.radian(false) == Catch::Approx(0.f));
 
-		{
-			// negative wrap value
-			const/*expr*/ float radian = -15.f + 3.f * radianCircle;
-			const/*expr*/ float wrapRadian = -15.f + 2.f * radianCircle;
+		CHECK(Radian{ pi } == Radian{ -pi });
 
-			LibMath::Radian minusFifteenRadian{ -15.f };
-			CHECK(minusFifteenRadian.degree(true) == Catch::Approx(glm::degrees(wrapRadian)));
-			CHECK(minusFifteenRadian.degree(false) == Catch::Approx(glm::degrees(radian)));
-			CHECK(minusFifteenRadian.radian(true) == Catch::Approx(wrapRadian));
-			CHECK(minusFifteenRadian.radian(false) == Catch::Approx(radian));
-		}
+		CHECK(Radian{ pi - 0.0001f }.radian(true) == Catch::Approx(pi - 0.0001f));
+		CHECK(Radian{ pi + 0.0001f }.radian(true) == Catch::Approx(-pi + 0.0001f).margin(0.0002f));
+
+		CHECK(Radian{ -pi - 0.0001f }.radian(true) == Catch::Approx(pi - 0.0001f).margin(0.0002f));
 	}
 
 	SECTION("Comparator")
 	{
-		// compare with self
-		LibMath::Radian self{ 1.2f };
+		Radian self{ 1.2f };
 		CHECK(self == self);
+		CHECK(Radian{ 1.2f } == Radian{ 1.2f });
+		CHECK(Radian{ 1.2f } == Radian{ 1.2f + radianCircle });
+		CHECK(Radian{ 0.f } == Radian{ radianCircle });
+		CHECK(Radian{ -halfRadianCircle } == Radian{ halfRadianCircle });
+	}
 
-		// compare with same
-		CHECK(LibMath::Radian{ 1.2f } == LibMath::Radian{ 1.2f });
-
-		// compare with wrapped value
-		CHECK(LibMath::Radian{ 1.2f } == LibMath::Radian(1.2f + radianCircle));
-
-		// compare with wrap edge value
-		CHECK(LibMath::Radian{ 0.f } == LibMath::Radian{ radianCircle });
-
-		CHECK(LibMath::Radian{ -halfRadianCircle } == LibMath::Radian{ halfRadianCircle });
+	SECTION("Comparison with Degree")
+	{
+		CHECK(Radian{ glm::radians(90.f) } == Degree{ 90.f });
+		CHECK_FALSE(Radian{ glm::radians(45.f) } == Degree{ 90.f });
 	}
 
 	SECTION("Arithmetic")
 	{
-		{
-			// operator +
-			LibMath::Radian sum = LibMath::Radian(0.75f) + LibMath::Radian(0.5f);
-			CHECK(sum.radian() == 1.25f);
-		}
+		Radian sum = Radian(0.75f) + Radian(0.5f);
+		CHECK(sum.radian() == 1.25f);
 
-		{
-			// operator +=
-			LibMath::Radian sum(0.75f);
-			sum += LibMath::Radian(0.5f);
-			CHECK(sum.radian() == 1.25f);
-		}
+		Radian acc(0.75f);
+		acc += Radian(0.5f);
+		CHECK(acc.radian() == 1.25f);
 
-		{
-			// operator -
-			LibMath::Radian opposite = -LibMath::Radian(0.75f);
-			CHECK(opposite.radian() == -0.75f);
-		}
+		Radian neg = -Radian(0.75f);
+		CHECK(neg.radian() == -0.75f);
 
-		{
-			// operator -
-			LibMath::Radian difference = LibMath::Radian(0.75f) - LibMath::Radian(0.5f);
-			CHECK(difference.radian() == 0.25f);
-		}
+		Radian diff = Radian(0.75f) - Radian(0.5f);
+		CHECK(diff.radian() == 0.25f);
 
-		{
-			// operator -=
-			LibMath::Radian difference(0.75f);
-			difference -= LibMath::Radian(0.5f);
-			CHECK(difference.radian() == 0.25f);
-		}
+		Radian acc2(0.75f);
+		acc2 -= Radian(0.5f);
+		CHECK(acc2.radian() == 0.25f);
 
-		{
-			// operator *
-			LibMath::Radian product = LibMath::Radian(0.75f) * 10.f;
-			CHECK(product.radian() == 7.5f - radianCircle);
-		}
+		Radian prod = Radian(0.75f) * 10.f;
+		CHECK(prod.radian() == 7.5f - radianCircle);
 
-		{
-			// operator *=
-			LibMath::Radian product(0.75f);
-			product *= 10.f;
-			CHECK(product.radian() == 7.5f - radianCircle);
-		}
+		Radian prod2(0.75f);
+		prod2 *= 10.f;
+		CHECK(prod2.radian() == 7.5f - radianCircle);
 
-		{
-			// operator /
-			LibMath::Radian quotient = LibMath::Radian(0.75f) / 4.f;
-			CHECK(quotient.radian() == 0.1875f);
-		}
+		Radian quot = Radian(0.75f) / 4.f;
+		CHECK(quot.radian() == 0.1875f);
 
-		{
-			// operator /=
-			LibMath::Radian quotient(0.75f);
-			quotient /= 4.f;
-			CHECK(quotient.radian() == 0.1875f);
-		}
+		Radian quot2(0.75f);
+		quot2 /= 4.f;
+		CHECK(quot2.radian() == 0.1875f);
 	}
 
 	SECTION("Functionality")
 	{
-		{
-			// wrap value
-			LibMath::Radian wrapAngle{ halfRadianCircle * 5.f };
-			wrapAngle.wrap(false);
-			CHECK(wrapAngle.raw() == Catch::Approx(halfRadianCircle));
-		}
+		Radian wrapAngle{ halfRadianCircle * 5.f };
+		wrapAngle.wrap(false);
+		CHECK(wrapAngle.raw() == Catch::Approx(halfRadianCircle));
 
-		{
-			// prefere lower edge value
-			LibMath::Radian wrapEdge{ radianCircle };
-			wrapEdge.wrap(false);
-			CHECK(wrapEdge.raw() == 0.f);
+		Radian wrapEdge{ radianCircle };
+		wrapEdge.wrap(false);
+		CHECK(wrapEdge.raw() == 0.f);
 
-			wrapEdge = LibMath::Radian{ halfRadianCircle };
-			wrapEdge.wrap(true);
-			CHECK(wrapEdge.raw() == Catch::Approx(-halfRadianCircle));
-		}
+		wrapEdge = Radian{ halfRadianCircle };
+		wrapEdge.wrap(true);
+		CHECK(wrapEdge.raw() == Catch::Approx(-halfRadianCircle));
 	}
 
-	SECTION("Conversion")
+	SECTION("Conversion from Degree and to Degree")
 	{
-		LibMath::Radian radian{ LibMath::Degree{ 60.f } };
-		CHECK(radian.raw() == Catch::Approx(glm::radians(60.f)));
+		Radian rad{ Degree{ 60.f } };
+		CHECK(rad.raw() == Catch::Approx(glm::radians(60.f)));
 
-		LibMath::Degree degree{ LibMath::Radian{ 1.2f } };
-		CHECK(degree.raw() == Catch::Approx(glm::degrees(1.2f)));
+		Degree deg{ Radian{ 1.2f } };
+		CHECK(deg.raw() == Catch::Approx(glm::degrees(1.2f)));
+	}
+
+	SECTION("Const Conversion to Degree")
+	{
+		const Radian rad{ glm::half_pi<float>() }; // π/2
+		Degree deg = rad; // conversion implicite
+		CHECK(deg.raw() == Catch::Approx(90.f));
+	}
+
+	SECTION("User-defined literal _rad")
+	{
+		auto a = 1.570796_rad;
+		CHECK(a.raw() == Catch::Approx(glm::half_pi<float>()));
+
+		auto b = 6_rad;
+		CHECK(b.raw() == 6.f);
+
+		auto wrapped = 7_rad;
+		CHECK(wrapped.radian(true) == Catch::Approx(7.f - glm::two_pi<float>()));
 	}
 }

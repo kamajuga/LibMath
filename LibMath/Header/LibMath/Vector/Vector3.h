@@ -103,6 +103,7 @@ namespace LibMath
 	Vector3&		operator*=(Vector3& vec1, Vector3 const& vec2);				// multiplication component wise
 	Vector3&		operator*=(Vector3& vec, float val);
 	Vector3&		operator/=(Vector3& vec1, Vector3 const& vec2);				// division component wise
+	Vector3&		operator/=(Vector3& vec1, float val);
 
 	std::ostream&	operator<<(std::ostream& os, Vector3 const& vec);			// cout << Vector3{ .5, 1.5, -2.5 }				// add a vector string representation to an output stream
 	std::istream&	operator>>(std::istream& is, Vector3& vec);				// ifstream file{ save.txt }; file >> vector;	// parse a string representation from an input stream into a vector

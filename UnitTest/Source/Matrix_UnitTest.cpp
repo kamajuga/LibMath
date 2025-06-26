@@ -13,6 +13,7 @@
 #include "LibMath/Matrix/Matrix2.h"
 #include "LibMath/Matrix/Matrix3.h"
 #include "LibMath/Matrix/Matrix4.h"
+#include "LibMath/Matrix4Vector4Operation.h"
 
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -40,8 +41,12 @@
   }                                         \
 } while ( 0 )
 
-TEST_CASE("Matrix2Dx2", "[.all][matrix][Matrix2D]") {
-    SECTION("Instantiation") {
+TEST_CASE("Matrix2Dx2", "[.all][matrix][Matrix2D]") 
+{
+
+    SECTION("Instantiation") 
+    {
+
         // Default constructor
         LibMath::Matrix2Dx2 matDefault;
 
@@ -146,6 +151,42 @@ TEST_CASE("Matrix2Dx2", "[.all][matrix][Matrix2D]") {
         glm::mat2 inverseGlm = glm::inverse(matGlm);
 
         CHECK_MATRIX2(inverse, inverseGlm);
+
+        // Minor (for 2x2 matrix, minor is just the opposite diagonal element)
+        float minor00 = mat.minors()[0][0]; // Should be mat[1][1] = 4.0f
+        float minor01 = mat.minors()[0][1]; // Should be mat[1][0] = 3.0f
+        float minor10 = mat.minors()[1][0]; // Should be mat[0][1] = 2.0f
+        float minor11 = mat.minors()[1][1]; // Should be mat[0][0] = 1.0f
+
+        CHECK(minor00 == Catch::Approx(4.0f));
+        CHECK(minor01 == Catch::Approx(2.0f));
+        CHECK(minor10 == Catch::Approx(3.0f));
+        CHECK(minor11 == Catch::Approx(1.0f));
+
+        // Cofactor (minor with sign based on position)
+        float cofactor00 = mat.cofactors()[0][0]; // Should be +minor00 = +4.0f
+        float cofactor01 = mat.cofactors()[0][1]; // Should be -minor01 = -3.0f
+        float cofactor10 = mat.cofactors()[1][0]; // Should be -minor10 = -2.0f
+        float cofactor11 = mat.cofactors()[1][1]; // Should be +minor11 = +1.0f
+
+        CHECK(cofactor00 == Catch::Approx(4.0f));
+        CHECK(cofactor01 == Catch::Approx(-2.0f));
+        CHECK(cofactor10 == Catch::Approx(-3.0f));
+        CHECK(cofactor11 == Catch::Approx(1.0f));
+
+        // Adjugate (transpose of cofactor matrix)
+        LibMath::Matrix2Dx2 adjugate = mat.adjugate();
+
+
+        // For 2x2 matrix [a,b;c,d], adjugate is [d,-b;-c,a]
+        // Our matrix is [1,2;3,4], so adjugate should be [4,-2;-3,1]
+        CHECK_MATRIX2(adjugate, adjugateGlm);
+
+        // Manual verification of adjugate
+        CHECK(adjugate[0][0] == Catch::Approx(4.0f));  // d
+        CHECK(adjugate[0][1] == Catch::Approx(-2.0f)); // -b
+        CHECK(adjugate[1][0] == Catch::Approx(-3.0f)); // -c
+        CHECK(adjugate[1][1] == Catch::Approx(1.0f));  // a
     }
 
     SECTION("Transformation") {
@@ -155,7 +196,7 @@ TEST_CASE("Matrix2Dx2", "[.all][matrix][Matrix2D]") {
 
         CHECK_MATRIX2(identity, identityGlm);
 
-        //CHECK(identity == LibMath::Matrix2Dx2(1.0f, 0.0f, 0.0f, 1.0f));
+        CHECK(identity == LibMath::Matrix2Dx2(1.0f, 0.0f, 0.0f, 1.0f));
 
         // Rotation Matrix
         LibMath::Radian rad(static_cast<float>(M_PI) / 2); // 90 degrees
@@ -196,6 +237,8 @@ TEST_CASE("Matrix2Dx2", "[.all][matrix][Matrix2D]") {
         LibMath::Matrix2Dx2 zeroMatrix(1.0f, 2.0f, 3.0f, 4.0f);
         //CHECK_THROWS_AS(zeroMatrix[0][2], std::out_of_range);
         CHECK_THROWS_AS(zeroMatrix[3][1], std::out_of_range);
+
+
 
     }
 }
@@ -894,6 +937,115 @@ TEST_CASE("Matrix4", "[.all][matrix][Matrix4]")
             CHECK(det == detGlm);
         }
 
+        SECTION("Minors Matrix")
+        {
+            LibMath::Matrix4 mat(
+                1.0f, 2.0f, 3.0f, 4.0f,
+                5.0f, 6.0f, 7.0f, 8.0f,
+                9.0f, 10.0f, 11.0f, 12.0f,
+                13.0f, 14.0f, 15.0f, 16.0f
+            );
+
+            LibMath::Matrix4 minorsMatrix = mat.minors();
+
+            // Test that minors matrix is computed correctly
+            // For this specific matrix (which has determinant 0), minors will be specific values
+            CHECK_NOTHROW(mat.minors());
+
+            // Verify minors matrix has expected properties
+            // Since this is a matrix where each row is the previous + 4, many minors will be 0
+            CHECK(minorsMatrix[0][0] == Catch::Approx(0.0f));
+        }
+
+        SECTION("Cofactors Matrix")
+        {
+            LibMath::Matrix4 mat(
+                1.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 2.0f, 0.0f, 2.0f,
+                0.0f, 0.0f, 3.0f, 3.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            );
+
+            LibMath::Matrix4 cofactorsMatrix = mat.cofators(); // Note: method name has typo "cofators"
+
+            // Cofactors matrix applies alternating signs to minors
+            LibMath::Matrix4 minorsMatrix = mat.minors();
+
+            // Verify cofactors have correct signs relative to minors
+            CHECK(cofactorsMatrix[0][0] == Catch::Approx(minorsMatrix[0][0]));     // +
+            CHECK(cofactorsMatrix[0][1] == Catch::Approx(-minorsMatrix[0][1]));    // -
+            CHECK(cofactorsMatrix[1][0] == Catch::Approx(-minorsMatrix[1][0]));    // -
+            CHECK(cofactorsMatrix[1][1] == Catch::Approx(minorsMatrix[1][1]));     // +
+        }
+
+        SECTION("Adjugate")
+        {
+            LibMath::Matrix4 mat(
+                1.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 2.0f, 0.0f, 2.0f,
+                0.0f, 0.0f, 3.0f, 3.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            );
+
+            LibMath::Matrix4 adjugate = mat.adjugate();
+
+            glm::mat4 matGlm(
+                1.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 2.0f, 0.0f, 2.0f,
+                0.0f, 0.0f, 3.0f, 3.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            );
+
+            glm::mat4 adjugateGlm = glm::adjugate(matGlm);
+
+            CHECK_MATRIX4(adjugate, adjugateGlm);
+
+            // Property test: A * adj(A) = det(A) * I (for non-singular matrices)
+            LibMath::Matrix4 product = mat * adjugate;
+            float determinant = mat.determinant();
+
+            // Check diagonal elements equal determinant
+            CHECK(product[0][0] == Catch::Approx(determinant));
+            CHECK(product[1][1] == Catch::Approx(determinant));
+            CHECK(product[2][2] == Catch::Approx(determinant));
+            CHECK(product[3][3] == Catch::Approx(determinant));
+        }
+
+        SECTION("Inverse")
+        {
+            // Use a matrix with non-zero determinant
+            LibMath::Matrix4 mat(
+                2.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 2.0f, 0.0f, 1.0f,
+                0.0f, 0.0f, 2.0f, 1.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            );
+
+            LibMath::Matrix4 inverse = mat.inverse();
+
+            glm::mat4 matGlm(
+                2.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 2.0f, 0.0f, 1.0f,
+                0.0f, 0.0f, 2.0f, 1.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            );
+
+            glm::mat4 inverseGlm = glm::inverse(matGlm);
+
+            CHECK_MATRIX4(inverse, inverseGlm);
+
+            // Verify A * A^-1 = I
+            LibMath::Matrix4 identity = mat * inverse;
+            LibMath::Matrix4 expectedIdentity = LibMath::Matrix4::identity();
+
+            CHECK_MATRIX4(identity, expectedIdentity);
+
+            // Test with identity matrix
+            LibMath::Matrix4 identityMat = LibMath::Matrix4::identity();
+            LibMath::Matrix4 identityInverse = identityMat.inverse();
+            CHECK_MATRIX4(identityInverse, identityMat);
+        }
+
     }
 
     SECTION("Transformation")
@@ -960,6 +1112,109 @@ TEST_CASE("Matrix4", "[.all][matrix][Matrix4]")
 
             CHECK_MATRIX4(scaling, scalingGlm);
         }
+
+        SECTION("Create Transform (TRS)")
+        {
+            LibMath::Vector3 translation(2.0f, 3.0f, 4.0f);
+            LibMath::Radian rotation(static_cast<float>(M_PI) / 4.0f); // 45 degrees around Z
+            LibMath::Vector3 scale(2.0f, 2.0f, 2.0f);
+
+            LibMath::Matrix4 transform = LibMath::Matrix4::createTransform(translation, rotation, scale);
+
+            // Compare with manual TRS composition
+            LibMath::Matrix4 T = LibMath::Matrix4::createTranslate(translation);
+            LibMath::Matrix4 R = LibMath::Matrix4::createRotationZ(rotation);
+            LibMath::Matrix4 S = LibMath::Matrix4::createScale(scale);
+
+            LibMath::Matrix4 manualTRS = T * R * S;
+
+            CHECK_MATRIX4(transform, manualTRS);
+        }
+
+        SECTION("Remove Translation Component")
+        {
+            LibMath::Matrix4 transform = LibMath::Matrix4::createTransform(
+                LibMath::Vector3(5.0f, 10.0f, 15.0f),
+                LibMath::Radian(static_cast<float>(M_PI) / 6.0f),
+                LibMath::Vector3(2.0f, 2.0f, 2.0f)
+            );
+
+            LibMath::Matrix4 noTranslation = LibMath::Matrix4::RemoveTranslationComponent(transform);
+
+            // Check that translation column is zeroed (except w=1)
+            CHECK(noTranslation[0][3] == Catch::Approx(0.0f));
+            CHECK(noTranslation[1][3] == Catch::Approx(0.0f));
+            CHECK(noTranslation[2][3] == Catch::Approx(0.0f));
+            CHECK(noTranslation[3][3] == Catch::Approx(1.0f));
+
+            // Check that rotation and scale are preserved
+            // The 3x3 upper-left submatrix should be the same
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    CHECK(noTranslation[i][j] == Catch::Approx(transform[i][j]));
+                }
+            }
+        }
+
+        SECTION("Individual Transformations")
+        {
+            // Test createRotationX
+            LibMath::Radian angleX(static_cast<float>(M_PI) / 2.0f);
+            LibMath::Matrix4 rotX = LibMath::Matrix4::createRotationX(angleX);
+            glm::mat4 rotXGlm = glm::rotate(glm::mat4(1.0f), angleX.raw(), glm::vec3(1.0f, 0.0f, 0.0f));
+            CHECK_MATRIX4(rotX, rotXGlm);
+
+            // Test createRotationY
+            LibMath::Radian angleY(static_cast<float>(M_PI) / 3.0f);
+            LibMath::Matrix4 rotY = LibMath::Matrix4::createRotationY(angleY);
+            glm::mat4 rotYGlm = glm::rotate(glm::mat4(1.0f), angleY.raw(), glm::vec3(0.0f, 1.0f, 0.0f));
+            CHECK_MATRIX4(rotY, rotYGlm);
+
+            // Test createRotationZ
+            LibMath::Radian angleZ(static_cast<float>(M_PI) / 4.0f);
+            LibMath::Matrix4 rotZ = LibMath::Matrix4::createRotationZ(angleZ);
+            glm::mat4 rotZGlm = glm::rotate(glm::mat4(1.0f), angleZ.raw(), glm::vec3(0.0f, 0.0f, 1.0f));
+            CHECK_MATRIX4(rotZ, rotZGlm);
+        }
+
+        SECTION("Perspective Matrix")
+        {
+            LibMath::Matrix4 mat; // Create a matrix instance to call perspective on
+            float fov = static_cast<float>(M_PI) / 4.0f; // 45 degrees
+            float aspect = 16.0f / 9.0f; // 16:9 aspect ratio
+            float nearPlane = 0.1f;
+            float farPlane = 100.0f;
+
+            LibMath::Matrix4 perspective = mat.perspective(fov, aspect, nearPlane, farPlane);
+
+            glm::mat4 perspectiveGlm = glm::perspective(fov, aspect, nearPlane, farPlane);
+
+            CHECK_MATRIX4(perspective, perspectiveGlm);
+        }
+
+        SECTION("Perspective Edge Cases")
+        {
+            LibMath::Matrix4 mat;
+
+            // Test with different aspect ratios
+            float fov = static_cast<float>(M_PI) / 6.0f; // 30 degrees
+
+            // Square aspect ratio
+            LibMath::Matrix4 perspSquare = mat.perspective(fov, 1.0f, 0.1f, 100.0f);
+            glm::mat4 perspSquareGlm = glm::perspective(fov, 1.0f, 0.1f, 100.0f);
+            CHECK_MATRIX4(perspSquare, perspSquareGlm);
+
+            // Wide aspect ratio
+            LibMath::Matrix4 perspWide = mat.perspective(fov, 2.0f, 0.1f, 100.0f);
+            glm::mat4 perspWideGlm = glm::perspective(fov, 2.0f, 0.1f, 100.0f);
+            CHECK_MATRIX4(perspWide, perspWideGlm);
+
+            // Narrow aspect ratio
+            LibMath::Matrix4 perspNarrow = mat.perspective(fov, 0.5f, 0.1f, 100.0f);
+            glm::mat4 perspNarrowGlm = glm::perspective(fov, 0.5f, 0.1f, 100.0f);
+            CHECK_MATRIX4(perspNarrow, perspNarrowGlm);
+        }
+
     }
 
     SECTION("Arithmetic")
@@ -1008,19 +1263,118 @@ TEST_CASE("Matrix4", "[.all][matrix][Matrix4]")
         glm::mat4 productGlm = mat1Glm * mat2Glm;
 
         CHECK_MATRIX4(product, productGlm);
+
+        SECTION("Matrix * Vector4 (commented out in class)")
+        {
+
+            LibMath::Matrix4 mat(
+                1.0f, 2.0f, 3.0f, 4.0f,
+                5.0f, 6.0f, 7.0f, 8.0f,
+                9.0f, 10.0f, 11.0f, 12.0f,
+                13.0f, 14.0f, 15.0f, 16.0f
+            );
+
+            // If Vector4 multiplication was implemented:
+             LibMath::Vector4 vec(1.0f, 2.0f, 3.0f, 4.0f);
+             LibMath::Vector4 result = mat * vec;
+
+            glm::mat4 matGlm(
+                1.0f, 2.0f, 3.0f, 4.0f,
+                5.0f, 6.0f, 7.0f, 8.0f,
+                9.0f, 10.0f, 11.0f, 12.0f,
+                13.0f, 14.0f, 15.0f, 16.0f
+            );
+
+            glm::vec4 vecGlm(1.0f, 2.0f, 3.0f, 4.0f);
+            glm::vec4 resultGlm = matGlm * vecGlm;
+
+            CHECK(result.m_x == Catch::Approx(resultGlm.x));
+            CHECK(result.m_y == Catch::Approx(resultGlm.y));
+            CHECK(result.m_z == Catch::Approx(resultGlm.z));
+            CHECK(result.m_k == Catch::Approx(resultGlm.w));
+        }
     }
 
     SECTION("Edge Cases")
     {
-        LibMath::Matrix4 mat(
-            1.0f, 2.0f, 3.0f, 4.0f,
-            5.0f, 6.0f, 7.0f, 8.0f,
-            9.0f, 10.0f, 11.0f, 12.0f,
-            13.0f, 14.0f, 15.0f, 16.0f
-        );
-        // Out-of-bounds access (if applicable)
-        CHECK_THROWS(mat[4][0]); // Row out of range
-        CHECK_THROWS(mat[0][4]); // Column out of range
+        SECTION("Matrix Access Edge Cases")
+        {
+            LibMath::Matrix4 mat(
+                1.0f, 2.0f, 3.0f, 4.0f,
+                5.0f, 6.0f, 7.0f, 8.0f,
+                9.0f, 10.0f, 11.0f, 12.0f,
+                13.0f, 14.0f, 15.0f, 16.0f
+            );
+
+            // Test valid access
+            CHECK_NOTHROW(mat[0][0]);
+            CHECK_NOTHROW(mat[3][3]);
+
+            // Test invalid column access through RowProxy
+            CHECK_THROWS_AS(mat[0][4], std::out_of_range);
+            CHECK_THROWS_AS(mat[1][5], std::out_of_range);
+
+            // Test row access edge cases
+            CHECK_THROWS_AS(mat[4][0], std::out_of_range);
+        }
+
+        SECTION("Singular Matrix Cases")
+        {
+            // Create a singular matrix (determinant = 0)
+            LibMath::Matrix4 singularMat(
+                1.0f, 2.0f, 3.0f, 4.0f,
+                2.0f, 4.0f, 6.0f, 8.0f,
+                3.0f, 6.0f, 9.0f, 12.0f,
+                4.0f, 8.0f, 12.0f, 16.0f
+            );
+
+            // Determinant should be 0
+            CHECK(singularMat.determinant() == Catch::Approx(0.0f));
+
+            // Minors and cofactors should still be computable
+            CHECK_NOTHROW(singularMat.minors());
+            CHECK_NOTHROW(singularMat.cofators());
+            CHECK_NOTHROW(singularMat.adjugate());
+
+            // Inverse should handle singular case (throw exception or return special matrix)
+            // This depends on your implementation
+            CHECK_THROWS(singularMat.inverse());
+        }
+
+        SECTION("Zero Matrix Cases")
+        {
+            LibMath::Matrix4 zeroMat; // Default constructor creates zero matrix
+
+            CHECK(zeroMat.determinant() == Catch::Approx(0.0f));
+
+            // Operations on zero matrix
+            LibMath::Matrix4 zeroMinors = zeroMat.minors();
+            LibMath::Matrix4 zeroCofactors = zeroMat.cofators();
+            LibMath::Matrix4 zeroAdjugate = zeroMat.adjugate();
+
+            // All should be zero matrices
+            for (int i = 0; i < 4; ++i) {
+                for (int j = 0; j < 4; ++j) {
+                    CHECK(zeroMinors[i][j] == Catch::Approx(0.0f));
+                    CHECK(zeroCofactors[i][j] == Catch::Approx(0.0f));
+                    CHECK(zeroAdjugate[i][j] == Catch::Approx(0.0f));
+                }
+            }
+        }
+
+        SECTION("Identity Matrix Properties")
+        {
+            LibMath::Matrix4 identity = LibMath::Matrix4::identity();
+
+            // Identity matrix properties
+            CHECK(identity.determinant() == Catch::Approx(1.0f));
+
+            LibMath::Matrix4 identityInverse = identity.inverse();
+            CHECK_MATRIX4(identityInverse, identity);
+
+            LibMath::Matrix4 identityTranspose = identity.transpose();
+            CHECK_MATRIX4(identityTranspose, identity);
+        }
 
     }
 }

@@ -180,6 +180,27 @@ TEST_CASE("Vector2", "[.all][vector][Vector2]")
 
 				CHECK_VECTOR2(product, productGlm);
 			}
+
+			{
+				const float scalar = 2.f;
+
+				{
+					LibMath::Vector2 product = small * scalar;
+					glm::vec2 productGlm = smallGlm * scalar;
+
+					CHECK_VECTOR2(product, productGlm);
+				}
+
+				{
+					LibMath::Vector2 productAssignment = small;
+					productAssignment *= scalar;
+
+					glm::vec2 productAssignmentGlm = smallGlm;
+					productAssignmentGlm *= scalar;
+
+					CHECK_VECTOR2(productAssignment, productAssignmentGlm);
+				}
+			}
 		}
 
 		SECTION("Division")
@@ -200,6 +221,27 @@ TEST_CASE("Vector2", "[.all][vector][Vector2]")
 				glm::vec2 quotientGlm = bigGlm / smallGlm;
 
 				CHECK_VECTOR2(quotient, quotientGlm);
+			}
+
+			{
+				const float scalar = 2.f;
+
+				{
+					LibMath::Vector2 quotient = small / scalar;
+					glm::vec2 quotientGlm = smallGlm / scalar;
+
+					CHECK_VECTOR2(quotient, quotientGlm);
+				}
+
+				{
+					LibMath::Vector2 quotientAssignment = small;
+					quotientAssignment /= scalar;
+
+					glm::vec2 quotientAssignmentGlm = smallGlm;
+					quotientAssignmentGlm /= scalar;
+
+					CHECK_VECTOR2(quotientAssignment, quotientAssignmentGlm);
+				}
 			}
 		}
 	}
@@ -525,6 +567,27 @@ TEST_CASE("Vector3", "[.all][vector][Vector3]")
 
 				CHECK_VECTOR3(product, productGlm);
 			}
+
+			{
+				const float scalar = 2.f;
+
+				{
+					LibMath::Vector3 product = small * scalar;
+					glm::vec3 productGlm = smallGlm * scalar;
+
+					CHECK_VECTOR3(product, productGlm);
+				}
+
+				{
+					LibMath::Vector3 productAssignment = small;
+					productAssignment *= scalar;
+
+					glm::vec3 productAssignmentGlm = smallGlm;
+					productAssignmentGlm *= scalar;
+
+					CHECK_VECTOR3(productAssignment, productAssignmentGlm);
+				}
+			}
 		}
 
 		SECTION("Division")
@@ -545,6 +608,27 @@ TEST_CASE("Vector3", "[.all][vector][Vector3]")
 				glm::vec3 quotientGlm = bigGlm / smallGlm;
 
 				CHECK_VECTOR3(quotient, quotientGlm);
+			}
+
+			{
+				const float scalar = 2.f;
+
+				{
+					LibMath::Vector3 quotient = small / scalar;
+					glm::vec3 quotientGlm = smallGlm / scalar;
+
+					CHECK_VECTOR3(quotient, quotientGlm);
+				}
+
+				{
+					LibMath::Vector3 quotientAssignment = small;
+					quotientAssignment /= scalar;
+
+					glm::vec3 quotientAssignmentGlm = smallGlm;
+					quotientAssignmentGlm /= scalar;
+
+					CHECK_VECTOR3(quotientAssignment, quotientAssignmentGlm);
+				}
 			}
 		}
 	}
@@ -799,6 +883,14 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(copy.m_y == 2.0f);
 		CHECK(copy.m_z == 3.0f);
 		CHECK(copy.m_k == 4.0f);
+
+		// Vector3 + float constructor
+		LibMath::Vector3 v3{ 1.f, 2.f, 3.f };
+		LibMath::Vector4 fromV3{ v3, 4.f };
+		CHECK(fromV3.m_x == 1.f);
+		CHECK(fromV3.m_y == 2.f);
+		CHECK(fromV3.m_z == 3.f);
+		CHECK(fromV3.m_k == 4.f);
 	}
 
 	SECTION("Assignment Operator")
@@ -866,7 +958,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(mag == Catch::Approx(std::sqrt(magSquared)));
 	}
 
-	SECTION("Homogenize (homogenize)")
+	SECTION("Homogenize")
 	{
 		LibMath::Vector4 vec(2.0f, 4.0f, 6.0f, 2.0f);
 		vec.homogenize();

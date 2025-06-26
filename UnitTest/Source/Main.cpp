@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("[vector],");
 	//arguments.push_back("[geometricObject]");
 	//arguments.push_back("[geometricObject3D]");
-	arguments.push_back("[Collision3D]");
+	//arguments.push_back("[Collision3D]");
 	//arguments.push_back("[Collision2D]");
 	//arguments.push_back("[matrix]");
 
@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
 	*    from this section               *
 	*                                    *
 	\************************************/
-	//arguments.push_back("Degree,");
+	//arguments.push_back("Degree");
 	//arguments.push_back("Radian,");
 	//arguments.push_back("Trigonometry,");
 	//arguments.push_back("Point");
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("Matrix2Dx2");
 	//arguments.push_back("Matrix2Dx3");
 	//arguments.push_back("Matrix3Dx3");
-	//arguments.push_back("Matrix4");
+	arguments.push_back("Matrix4");
 	//arguments.push_back("[Line2D]");
 	//arguments.push_back("[AABB2D]");
 	//arguments.push_back("[OBB2D]");
