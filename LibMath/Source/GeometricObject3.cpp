@@ -38,6 +38,17 @@ LibMath::Vector3 LibMath::Geometry3D::Point::toVector3(void) const
 	return  LibMath::Vector3(m_x, m_y, m_z);
 }
 
+void LibMath::Geometry3D::Point::update(LibMath::Matrix4& transMat)
+{
+	LibMath::Vector4 vecPoint(toVector3());
+
+	LibMath::Vector4 transformedPoint = transMat * vecPoint;
+
+	m_x = transformedPoint.m_x;
+	m_y = transformedPoint.m_y;
+	m_z = transformedPoint.m_z;
+}
+
 float LibMath::Geometry3D::Point::getDistanceSquared(const Point& other) const
 {
 	float dx = m_x - other.m_x;
@@ -64,10 +75,22 @@ LibMath::Geometry3D::Line::Line(const Point& point, const Vector3& dir)
 {
 	m_origin = point;
 	m_direction = dir;
-	if (!m_direction.isUnitVector())
-	{
-		m_direction.normalize();
-	}
+	m_direction.normalize();
+
+	
+}
+
+LibMath::Geometry3D::Line::Line(const Point& pointStart, const Point& pointEnd)
+{
+	m_origin = pointStart;
+
+	LibMath::Vector3 lineVec(pointEnd - pointStart);
+
+	m_length = lineVec.magnitude();
+
+	m_direction = lineVec;
+	m_direction.normalize();
+
 	
 }
 
@@ -102,6 +125,17 @@ LibMath::Geometry3D::Line LibMath::Geometry3D::Line::operator*(const float& scal
 	return line;
 }
 
+void LibMath::Geometry3D::Line::update(LibMath::Matrix4& transMat)
+{
+	LibMath::Vector4 vecPoint(m_origin.toVector3());
+
+	LibMath::Vector4 transformedPoint = transMat * vecPoint;
+
+	m_origin.m_x = transformedPoint.m_x;
+	m_origin.m_y = transformedPoint.m_y;
+	m_origin.m_z = transformedPoint.m_z;
+}
+
 #pragma endregion All functions Line 3D
 
 #pragma region Plan 3D
@@ -109,11 +143,7 @@ LibMath::Geometry3D::Plan::Plan(const Vector3& normal, const float& distance)
 {
 	m_normal = normal;
 	m_distance = distance;
-
-	if (!m_normal.isUnitVector())
-	{
-		m_normal.normalize();
-	}
+	m_normal.normalize();
 	
 }
 
@@ -161,6 +191,17 @@ LibMath::Geometry3D::AABB& LibMath::Geometry3D::AABB::operator=(const AABB& othe
 	return *this;
 }
 
+void LibMath::Geometry3D::AABB::update(LibMath::Matrix4& transMat)
+{
+	LibMath::Vector4 vecPoint(m_center.toVector3());
+
+	LibMath::Vector4 transformedPoint = transMat * vecPoint;
+
+	m_center.m_x = transformedPoint.m_x;
+	m_center.m_y = transformedPoint.m_y;
+	m_center.m_z = transformedPoint.m_z;
+}
+
 float LibMath::Geometry3D::AABB::extentX(void) const
 {
 	return m_width / 2.f;
@@ -199,6 +240,17 @@ LibMath::Geometry3D::OBB::OBB(const OBB& other)
 	m_rotation = other.m_rotation;
 }
 
+void LibMath::Geometry3D::OBB::update(LibMath::Matrix4& transMat)
+{
+	LibMath::Vector4 vecPoint(m_center.toVector3());
+
+	LibMath::Vector4 transformedPoint = transMat * vecPoint;
+
+	m_center.m_x = transformedPoint.m_x;
+	m_center.m_y = transformedPoint.m_y;
+	m_center.m_z = transformedPoint.m_z;
+}
+
 LibMath::Geometry3D::OBB& LibMath::Geometry3D::OBB::operator=(const OBB& other)
 {
 	m_center = other.m_center;
@@ -227,6 +279,17 @@ LibMath::Geometry3D::Sphere::Sphere(const Sphere& other)
 	m_radius = other.m_radius;
 }
 
+void LibMath::Geometry3D::Sphere::update(LibMath::Matrix4& transMat)
+{
+	LibMath::Vector4 vecPoint(m_center.toVector3());
+
+	LibMath::Vector4 transformedPoint = transMat * vecPoint;
+
+	m_center.m_x = transformedPoint.m_x;
+	m_center.m_y = transformedPoint.m_y;
+	m_center.m_z = transformedPoint.m_z;
+}
+
 LibMath::Geometry3D::Sphere& LibMath::Geometry3D::Sphere::operator=(const Sphere& other)
 {
 	m_center = other.m_center;
@@ -250,6 +313,23 @@ LibMath::Geometry3D::Capsule::Capsule(const Capsule& other)
 	m_pointA = other.m_pointA;
 	m_pointB = other.m_pointB;
 	m_radius = other.m_radius;
+}
+
+void LibMath::Geometry3D::Capsule::update(LibMath::Matrix4& transMat)
+{
+	LibMath::Vector4 vecPointA(m_pointA.toVector3());
+	LibMath::Vector4 vecPointB(m_pointB.toVector3());
+
+	LibMath::Vector4 transformedPointA = transMat * vecPointA;
+	LibMath::Vector4 transformedPointB = transMat * vecPointB;
+
+	m_pointA.m_x = transformedPointA.m_x;
+	m_pointA.m_y = transformedPointA.m_y;
+	m_pointA.m_z = transformedPointA.m_z;
+
+	m_pointB.m_x = transformedPointB.m_x;
+	m_pointB.m_y = transformedPointB.m_y;
+	m_pointB.m_z = transformedPointB.m_z;
 }
 
 LibMath::Geometry3D::Capsule& LibMath::Geometry3D::Capsule::operator=(const Capsule& other)

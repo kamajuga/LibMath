@@ -3,6 +3,8 @@
 
 #include "LibMath/Angle/Radian.h"
 #include "LibMath/Vector/Vector3.h"
+#include "LibMath/Matrix/Matrix4.h"
+
 namespace LibMath
 {
 	namespace Geometry3D
@@ -11,6 +13,7 @@ namespace LibMath
 		class Object3D
 		{
 		public:
+			virtual void update(LibMath::Matrix4& transMat) = 0;
 			virtual ~Object3D() = default;
 
 		};
@@ -27,7 +30,9 @@ namespace LibMath
 
 			Point&					operator=(const Point& other);
 
-			Vector3		toVector3() const;
+			Vector3					toVector3() const;
+
+			virtual void			update(LibMath::Matrix4& transMat) override;
 
 			float					getDistanceSquared(const Point&) const;
 			float					getDistance(const Point&) const;
@@ -48,6 +53,7 @@ namespace LibMath
 		public:
 			Line() = default;
 			Line(const Point& point, const LibMath::Vector3& dir);   // Director vector should be a unit vector
+			Line(const Point& pointStart, const Point& pointEnd);
 			Line(const Point& point, const LibMath::Vector3& dir, const float& scalair);
 			Line(const Line& other);
 			~Line() = default;
@@ -55,6 +61,7 @@ namespace LibMath
 			Line& operator=(const Line& other);
 			Line operator*(const float& scalair);
 
+			virtual void			update(LibMath::Matrix4& transMat) override;
 
 			Point			m_origin;
 			LibMath::Vector3			m_direction;
@@ -93,8 +100,7 @@ namespace LibMath
 
 			AABB& operator=(const AABB& other);
 
-			Point& center(void) { return m_center; };
-			const Point& center(void) const { return m_center; };
+			virtual void			update(LibMath::Matrix4& transMat) override;
 
 			float			extentX(void) const;
 			float			extentY(void) const;
@@ -117,6 +123,8 @@ namespace LibMath
 			OBB(const OBB& other);
 			~OBB() = default;
 
+			virtual void			update(LibMath::Matrix4& transMat) override;
+
 			OBB& operator=(const OBB& other);
 
 			Point			m_center;
@@ -137,6 +145,8 @@ namespace LibMath
 			Sphere(const Sphere& other);
 			~Sphere() = default;
 
+			virtual void			update(LibMath::Matrix4& transMat) override;
+
 			Sphere& operator=(const Sphere& other);
 
 			Point			m_center;
@@ -153,6 +163,8 @@ namespace LibMath
 			Capsule(const Point& pointA, const Point& pointB, const float& radius);
 			Capsule(const Capsule& other);
 			~Capsule() = default;
+
+			virtual void			update(LibMath::Matrix4& transMat) override;
 
 			Capsule& operator=(const Capsule& other);
 

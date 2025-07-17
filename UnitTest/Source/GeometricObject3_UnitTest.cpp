@@ -402,23 +402,23 @@ TEST_CASE("Sphere Collisions", "[.all][Collision3D][sphere]")
         Sphere sphere({ 0.0f, 0.0f, 0.0f }, 5.0f);
 
         // Line passing through the center
-        Line lineThrough({ -10.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineThrough(LibMath::Geometry3D::Point{-10.0f, 0.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK(Collision::checkCollisionSphereLine(sphere, lineThrough));
 
         // Line tangent to the sphere
-        Line lineTangent({ -10.0f, 5.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineTangent(LibMath::Geometry3D::Point{ -10.0f, 5.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK(Collision::checkCollisionSphereLine(sphere, lineTangent));
 
         // Line missing the sphere
-        Line lineMissing({ -10.0f, 10.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineMissing(LibMath::Geometry3D::Point{ -10.0f, 10.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK_FALSE(Collision::checkCollisionSphereLine(sphere, lineMissing));
 
         // Line entirely inside the sphere
-        Line lineInside({ -2.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineInside(LibMath::Geometry3D::Point{ -2.0f, 0.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK(Collision::checkCollisionSphereLine(sphere, lineInside));
 
         // Diagonal line intersecting
-        Line lineDiagonal({ -10.0f, -10.0f, -10.0f }, { 1.0f, 1.0f, 1.0f });
+        Line lineDiagonal(LibMath::Geometry3D::Point{ -10.0f, -10.0f, -10.0f }, LibMath::Vector3{ 1.0f, 1.0f, 1.0f });
         CHECK(Collision::checkCollisionSphereLine(sphere, lineDiagonal));
     }
 
@@ -483,23 +483,23 @@ TEST_CASE("Plan Collisions", "[.all][Collision3D][plan]")
         Plan plan({ 0.0f, 1.0f, 0.0f }, 5.0f); // y = 5
 
         // Line contained in the plan
-        Line lineInPlan({ 0.0f, 5.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineInPlan(LibMath::Geometry3D::Point{ 0.0f, 5.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK(Collision::checkCollisionPlanLine(plan, lineInPlan));
 
         // Line crossing the plan
-        Line lineCrossing({ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
+        Line lineCrossing(LibMath::Geometry3D::Point{ 0.0f, 0.0f, 0.0f }, LibMath::Vector3{ 0.0f, 1.0f, 0.0f });
         CHECK(Collision::checkCollisionPlanLine(plan, lineCrossing));
 
         // Line parallel to the plan (above)
-        Line lineParallelAbove({ 0.0f, 10.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineParallelAbove(LibMath::Geometry3D::Point{ 0.0f, 10.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK_FALSE(Collision::checkCollisionPlanLine(plan, lineParallelAbove));
 
         // Line parallel to the plan (below)
-        Line lineParallelBelow({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineParallelBelow(LibMath::Geometry3D::Point{ 0.0f, 0.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK_FALSE(Collision::checkCollisionPlanLine(plan, lineParallelBelow));
 
         // Line touching the plan at one point
-        Line lineTouching({ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
+        Line lineTouching(LibMath::Geometry3D::Point{ 0.0f, 0.0f, 0.0f }, LibMath::Vector3{ 0.0f, 1.0f, 0.0f });
         CHECK(Collision::checkCollisionPlanLine(plan, lineTouching));
     }
 }
@@ -547,31 +547,31 @@ TEST_CASE("Capsule Collisions", "[.all][Collision3D][capsule]")
         Capsule capsuleH({ -3.0f, 0.0f, 0.0f }, { 3.0f, 0.0f, 0.0f }, 1.0f);
 
         // Line passing through the center horizontally
-        Line lineHorizontal({ -5.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineHorizontal(LibMath::Geometry3D::Point{ -5.0f, 0.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineHorizontal));
 
         // Line passing through vertically
-        Line lineVertical({ 0.0f, -5.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
+        Line lineVertical(LibMath::Geometry3D::Point{ 0.0f, -5.0f, 0.0f }, LibMath::Vector3{ 0.0f, 1.0f, 0.0f });
         CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineVertical));
 
         // Line tangent to the cylindrical part
-        Line lineTangentCylinder({ -5.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineTangentCylinder(LibMath::Geometry3D::Point{ -5.0f, 1.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineTangentCylinder));
 
         // Line hitting one of the spherical ends
-        Line lineToEnd({ 3.0f, -2.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
+        Line lineToEnd(LibMath::Geometry3D::Point{ 3.0f, -2.0f, 0.0f }, LibMath::Vector3{ 0.0f, 1.0f, 0.0f });
         CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineToEnd));
 
         // Line missing the capsule entirely
-        Line lineMissing({ -5.0f, 3.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineMissing(LibMath::Geometry3D::Point{ -5.0f, 3.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK_FALSE(Collision::checkCollisionCapsuleLine(capsuleH, lineMissing));
 
         // Line entirely inside the capsule
-        Line lineInside({ -1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f });
+        Line lineInside(LibMath::Geometry3D::Point{ -1.0f, 0.0f, 0.0f }, LibMath::Vector3{ 1.0f, 0.0f, 0.0f });
         CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineInside));
 
         // Diagonal line intersecting
-        Line lineDiagonal({ -5.0f, -5.0f, 0.0f }, { 1.0f, 1.0f, 0.0f });
+        Line lineDiagonal(LibMath::Geometry3D::Point{ -5.0f, -5.0f, 0.0f }, LibMath::Vector3{ 1.0f, 1.0f, 0.0f });
         CHECK(Collision::checkCollisionCapsuleLine(capsuleH, lineDiagonal));
     }
 
