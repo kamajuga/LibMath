@@ -83,6 +83,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("[Collision3D]");
 	//arguments.push_back("[Collision2D]");
 	//arguments.push_back("[matrix]");
+	arguments.push_back("[Quaternion]");
 
 
 	/************************************\
@@ -113,8 +114,8 @@ int main(int argc, char* argv[])
 	//arguments.push_back("Vector4");
 	//arguments.push_back("Matrix2Dx2");
 	//arguments.push_back("Matrix2Dx3");
-	//arguments.push_back("Matrix3Dx3");
-	arguments.push_back("Matrix4");
+	//arguments.push_back("Matrix3");
+	//arguments.push_back("Matrix4");
 	//arguments.push_back("[Line2D]");
 	//arguments.push_back("[AABB2D]");
 	//arguments.push_back("[OBB2D]");

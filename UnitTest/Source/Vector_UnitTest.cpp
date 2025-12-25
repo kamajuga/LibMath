@@ -861,28 +861,28 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(empty.m_x == 0.0f);
 		CHECK(empty.m_y == 0.0f);
 		CHECK(empty.m_z == 0.0f);
-		CHECK(empty.m_k == 0.0f);
+		CHECK(empty.m_w == 0.0f);
 
 		// Single-value constructor
 		LibMath::Vector4 singleParam(2.5f);
 		CHECK(singleParam.m_x == 2.5f);
 		CHECK(singleParam.m_y == 2.5f);
 		CHECK(singleParam.m_z == 2.5f);
-		CHECK(singleParam.m_k == 2.5f);
+		CHECK(singleParam.m_w == 2.5f);
 
 		// Parameterized constructor
 		LibMath::Vector4 allParams(1.0f, 2.0f, 3.0f, 4.0f);
 		CHECK(allParams.m_x == 1.0f);
 		CHECK(allParams.m_y == 2.0f);
 		CHECK(allParams.m_z == 3.0f);
-		CHECK(allParams.m_k == 4.0f);
+		CHECK(allParams.m_w == 4.0f);
 
 		// Copy constructor
 		LibMath::Vector4 copy(allParams);
 		CHECK(copy.m_x == 1.0f);
 		CHECK(copy.m_y == 2.0f);
 		CHECK(copy.m_z == 3.0f);
-		CHECK(copy.m_k == 4.0f);
+		CHECK(copy.m_w == 4.0f);
 
 		// Vector3 + float constructor
 		LibMath::Vector3 v3{ 1.f, 2.f, 3.f };
@@ -890,7 +890,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(fromV3.m_x == 1.f);
 		CHECK(fromV3.m_y == 2.f);
 		CHECK(fromV3.m_z == 3.f);
-		CHECK(fromV3.m_k == 4.f);
+		CHECK(fromV3.m_w == 4.f);
 	}
 
 	SECTION("Assignment Operator")
@@ -901,7 +901,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(assigned.m_x == 1.0f);
 		CHECK(assigned.m_y == 2.0f);
 		CHECK(assigned.m_z == 3.0f);
-		CHECK(assigned.m_k == 4.0f);
+		CHECK(assigned.m_w == 4.0f);
 	}
 
 	SECTION("Element Access (operator[])")
@@ -966,7 +966,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(vec.m_x == 1.0f);
 		CHECK(vec.m_y == 2.0f);
 		CHECK(vec.m_z == 3.0f);
-		CHECK(vec.m_k == 1.0f);
+		CHECK(vec.m_w == 1.0f);
 	}
 
 	SECTION("Equality Operator (operator==)")
@@ -987,7 +987,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(negated.m_x == -1.0f);
 		CHECK(negated.m_y == -2.0f);
 		CHECK(negated.m_z == -3.0f);
-		CHECK(negated.m_k == -4.0f);
+		CHECK(negated.m_w == -4.0f);
 	}
 
 	SECTION("Addition Operator (operator+)")
@@ -999,7 +999,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(result.m_x == 3.0f);
 		CHECK(result.m_y == 5.0f);
 		CHECK(result.m_z == 7.0f);
-		CHECK(result.m_k == 9.0f);
+		CHECK(result.m_w == 9.0f);
 	}
 
 	SECTION("Subtraction Operator (operator-)")
@@ -1011,7 +1011,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(result.m_x == -1.0f);
 		CHECK(result.m_y == -1.0f);
 		CHECK(result.m_z == -1.0f);
-		CHECK(result.m_k == -1.0f);
+		CHECK(result.m_w == -1.0f);
 	}
 
 	SECTION("Scalar Multiplication (operator*)")
@@ -1022,7 +1022,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(result.m_x == 2.0f);
 		CHECK(result.m_y == 4.0f);
 		CHECK(result.m_z == 6.0f);
-		CHECK(result.m_k == 8.0f);
+		CHECK(result.m_w == 8.0f);
 	}
 
 	SECTION("Scalar Division (operator/)")
@@ -1033,7 +1033,7 @@ TEST_CASE("Vector4", "[.all][vector][Vector4]")
 		CHECK(result.m_x == 1.0f);
 		CHECK(result.m_y == 2.0f);
 		CHECK(result.m_z == 3.0f);
-		CHECK(result.m_k == 4.0f);
+		CHECK(result.m_w == 4.0f);
 
 		// Division by zero (if applicable)
 #ifdef _DEBUG

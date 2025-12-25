@@ -816,7 +816,7 @@ LibMath::Vector4::Vector4(float val)
 	m_x = val;
 	m_y = val;
 	m_z = val;
-	m_k = val;
+	m_w = val;
 }
 
 LibMath::Vector4::Vector4(float x, float y, float z, float k)
@@ -824,7 +824,7 @@ LibMath::Vector4::Vector4(float x, float y, float z, float k)
 	m_x = x;
 	m_y = y;
 	m_z = z;
-	m_k = k;
+	m_w = k;
 }
 
 LibMath::Vector4::Vector4(Vector4 const& other)
@@ -832,7 +832,7 @@ LibMath::Vector4::Vector4(Vector4 const& other)
 	m_x = other.m_x;
 	m_y = other.m_y;
 	m_z = other.m_z;
-	m_k = other.m_k;
+	m_w = other.m_w;
 }
 
 LibMath::Vector4::Vector4(LibMath::Vector3 const& vec3, const float& val)
@@ -840,7 +840,7 @@ LibMath::Vector4::Vector4(LibMath::Vector3 const& vec3, const float& val)
 	m_x = vec3.m_x;
 	m_y = vec3.m_y;
 	m_z = vec3.m_z;
-	m_k = val;
+	m_w = val;
 }
 
 float& LibMath::Vector4::operator[](int n)
@@ -862,7 +862,7 @@ float& LibMath::Vector4::operator[](int n)
 
 	if (n == 3)
 	{
-		return m_k;
+		return m_w;
 	}
 
 	throw(std::out_of_range("Error: Index out of range"));
@@ -887,7 +887,7 @@ float LibMath::Vector4::operator[](int n) const
 
 	if (n == 3)
 	{
-		return m_k;
+		return m_w;
 	}
 
 	throw(std::out_of_range("Error: Index out of range"));
@@ -903,7 +903,7 @@ float LibMath::Vector4::dotProduct(Vector4 const& vec)
 	float x_comp = m_x * vec.m_x;
 	float y_comp = m_y * vec.m_y;
 	float z_comp = m_z * vec.m_z;
-	float k_comp = m_k * vec.m_k;
+	float k_comp = m_w * vec.m_w;
 
 	return x_comp + y_comp + z_comp + k_comp;
 }
@@ -913,7 +913,7 @@ float LibMath::Vector4::magnitude(void) const
 	float x = powf(m_x, 2.0f);
 	float y = powf(m_y, 2.0f);
 	float z = powf(m_z, 2.0f);
-	float k = powf(m_k, 2.0f);
+	float k = powf(m_w, 2.0f);
 
 	return sqrtf(x + y + z + k);
 }
@@ -923,42 +923,42 @@ float LibMath::Vector4::magnitudeSquare(void) const
 	float x = powf(m_x, 2.0f);
 	float y = powf(m_y, 2.0f);
 	float z = powf(m_z, 2.0f);
-	float k = powf(m_k, 2.0f);
+	float k = powf(m_w, 2.0f);
 
 	return x + y + z + k;
 }
 
 void LibMath::Vector4::homogenize(void)
 {
-	m_x /= m_k;
-	m_y /= m_k;
-	m_z /= m_k;
-	m_k = 1;
+	m_x /= m_w;
+	m_y /= m_w;
+	m_z /= m_w;
+	m_w = 1;
 }
 
 bool LibMath::operator==(Vector4 const& vec1, Vector4 const& vec2)
 {
-	return ((vec1.m_x == vec2.m_x) && (vec1.m_y == vec2.m_y) && (vec1.m_z == vec2.m_z) && (vec1.m_k == vec2.m_k));
+	return ((vec1.m_x == vec2.m_x) && (vec1.m_y == vec2.m_y) && (vec1.m_z == vec2.m_z) && (vec1.m_w == vec2.m_w));
 }
 
 LibMath::Vector4 LibMath::operator-(Vector4 vec)
 {
-	return Vector4(-vec.m_x, -vec.m_y, -vec.m_z, -vec.m_k);
+	return Vector4(-vec.m_x, -vec.m_y, -vec.m_z, -vec.m_w);
 }
 
 LibMath::Vector4 LibMath::operator+(Vector4 vec1, Vector4 vec2)
 {
-	return Vector4(vec1.m_x + vec2.m_x, vec1.m_y + vec2.m_y, vec1.m_z + vec2.m_z, vec1.m_k + vec2.m_k);
+	return Vector4(vec1.m_x + vec2.m_x, vec1.m_y + vec2.m_y, vec1.m_z + vec2.m_z, vec1.m_w + vec2.m_w);
 }
 
 LibMath::Vector4 LibMath::operator-(Vector4 vec1, Vector4 vec2)
 {
-	return Vector4(vec1.m_x - vec2.m_x, vec1.m_y - vec2.m_y, vec1.m_z - vec2.m_z, vec1.m_k - vec2.m_k);
+	return Vector4(vec1.m_x - vec2.m_x, vec1.m_y - vec2.m_y, vec1.m_z - vec2.m_z, vec1.m_w - vec2.m_w);
 }
 
 LibMath::Vector4 LibMath::operator*(Vector4 vec, float val)
 {
-	return Vector4(vec.m_x * val, vec.m_y * val, vec.m_z * val, vec.m_k * val);
+	return Vector4(vec.m_x * val, vec.m_y * val, vec.m_z * val, vec.m_w * val);
 }
 
 LibMath::Vector4 LibMath::operator/(Vector4 vec, float val)
@@ -967,7 +967,7 @@ LibMath::Vector4 LibMath::operator/(Vector4 vec, float val)
 	{
 		throw(std::invalid_argument("Error: division by zero"));
 	}
-	return Vector4(vec.m_x / val, vec.m_y / val, vec.m_z / val, vec.m_k / val);
+	return Vector4(vec.m_x / val, vec.m_y / val, vec.m_z / val, vec.m_w / val);
 }
 
 #pragma endregion

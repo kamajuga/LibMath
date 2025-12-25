@@ -13,12 +13,11 @@ namespace LibMath
 		class Object3D
 		{
 		public:
-			virtual void update(LibMath::Matrix4& transMat) = 0;
+			virtual void update(LibMath::Matrix4& transMat);
 			virtual ~Object3D() = default;
 
 		};
 
-		// Todo: Implement tests for all the geometric objects
 		class Point : public Object3D
 		{
 		public:
@@ -51,21 +50,23 @@ namespace LibMath
 		class Line : public Object3D
 		{
 		public:
-			Line() = default;
-			Line(const Point& point, const LibMath::Vector3& dir);   // Director vector should be a unit vector
-			Line(const Point& pointStart, const Point& pointEnd);
-			Line(const Point& point, const LibMath::Vector3& dir, const float& scalair);
-			Line(const Line& other);
-			~Line() = default;
+										Line() = default;
 
-			Line& operator=(const Line& other);
-			Line operator*(const float& scalair);
+			//							Director vector should be a unit vector
+										Line(const Point& point, const LibMath::Vector3& dir);   
+										Line(const Point& pointStart, const Point& pointEnd);
+										Line(const Point& point, const LibMath::Vector3& dir, const float& scalair);
+										Line(const Line& other);
+										~Line() = default;
 
-			virtual void			update(LibMath::Matrix4& transMat) override;
+			Line&						operator=(const Line& other);
+			Line						operator*(const float& scalair);
 
-			Point			m_origin;
+			virtual void				update(LibMath::Matrix4& transMat) override;
+
+			Point						m_origin;
 			LibMath::Vector3			m_direction;
-			float			m_length = 0.f;
+			float						m_length = 0.f;
 		private:
 
 		};
@@ -107,9 +108,15 @@ namespace LibMath
 			float			extentZ(void) const;
 
 			Point			m_center;
-			float			m_width = 0.f; // length on X axis
-			float			m_height = 0.f; // length on Y axis
-			float			m_depth = 0.f; // length on Z axis
+
+			//				length on X axis
+			float			m_width = 0.f; 
+
+			//				length on Y axis
+			float			m_height = 0.f; 
+
+			//				length on Z axis
+			float			m_depth = 0.f; 
 		private:
 
 			

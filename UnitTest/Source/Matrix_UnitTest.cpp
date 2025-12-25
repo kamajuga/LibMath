@@ -457,33 +457,33 @@ TEST_CASE("Matrix2Dx3", "[.all][matrix][Matrix2D]")
     
 }
 
-TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
+TEST_CASE("Matrix3", "[.all][matrix][Matrix3D]")
 {
     SECTION("Instantiation")
     {
         SECTION("Constructors")
         {
             // Default constructor
-            LibMath::Matrix3Dx3 empty;
+            LibMath::Matrix3 empty;
             glm::mat3 emptyGlm{};
 
             CHECK_MATRIX3(empty, emptyGlm);
 
             // Diagonal constructor
-            LibMath::Matrix3Dx3 diagonal(2.0f);
+            LibMath::Matrix3 diagonal(2.0f);
             glm::mat3 diagonalGlm{ 2.f };
 
             CHECK_MATRIX3(diagonal, diagonalGlm);
 
             // Parameterized constructor
-            LibMath::Matrix3Dx3 param(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            LibMath::Matrix3 param(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
             glm::mat3 paramGlm(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
 
             CHECK_MATRIX3(param, paramGlm);
 
 
             // Copy constructor
-            LibMath::Matrix3Dx3 copy(param);
+            LibMath::Matrix3 copy(param);
             for (int i = 0; i < 3; ++i)
             {
                 for (int j = 0; j < 3; ++j)
@@ -498,8 +498,8 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
         SECTION("Assignment Operator")
         {
-            LibMath::Matrix3Dx3 original(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-            LibMath::Matrix3Dx3 assigned = original;
+            LibMath::Matrix3 original(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            LibMath::Matrix3 assigned = original;
 
             for (int i = 0; i < 3; ++i)
             {
@@ -518,14 +518,14 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
     SECTION("Accessors")
     {
-        LibMath::Matrix3Dx3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+        LibMath::Matrix3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
 
         // Non-const access
         mat[0][0] = 10.0f;
         CHECK(mat[0][0] == 10.0f);
 
         // Const access (if applicable)
-        LibMath::Matrix3Dx3 const constMat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+        LibMath::Matrix3 const constMat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
         CHECK(constMat[0][0] == 1.0f);
     }
 
@@ -533,8 +533,8 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
     {
         SECTION("Transpose")
         {
-            LibMath::Matrix3Dx3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-            LibMath::Matrix3Dx3 transposed = mat.transpose();
+            LibMath::Matrix3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            LibMath::Matrix3 transposed = mat.transpose();
 
             glm::mat3 matGlm(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
             glm::mat3 transposedGlm = glm::transpose(matGlm);
@@ -545,7 +545,7 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
         SECTION("Determinant")
         {
-            LibMath::Matrix3Dx3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            LibMath::Matrix3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
             float det = mat.determinant();
 
             glm::mat3 matGlm(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
@@ -557,8 +557,8 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
         SECTION("Minors")
         {
-            LibMath::Matrix3Dx3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-            LibMath::Matrix3Dx3 minors = mat.minors();
+            LibMath::Matrix3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            LibMath::Matrix3 minors = mat.minors();
 
             glm::mat3 matGlm(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
             glm::mat3 minorsGlm{};
@@ -590,8 +590,8 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
         SECTION("Cofactors")
         {
-            LibMath::Matrix3Dx3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-            LibMath::Matrix3Dx3 cofactors = mat.cofators();
+            LibMath::Matrix3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            LibMath::Matrix3 cofactors = mat.cofators();
             
             glm::mat3 matGlm(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
             glm::mat3 cofactorsGlm{ };
@@ -628,8 +628,8 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
         SECTION("Adjugate")
         {
-            LibMath::Matrix3Dx3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-            LibMath::Matrix3Dx3 adjugate = mat.adjugate();
+            LibMath::Matrix3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            LibMath::Matrix3 adjugate = mat.adjugate();
 
             glm::mat3 matGlm(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
             glm::mat3 cofactorsGlm{ };
@@ -667,8 +667,8 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
         SECTION("Inverse")
         {
-            LibMath::Matrix3Dx3 mat(1.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.8f, 0.0f, 0.0f, 1.0f); // Identity matrix
-            LibMath::Matrix3Dx3 inverse = mat.inverse();
+            LibMath::Matrix3 mat(1.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.8f, 0.0f, 0.0f, 1.0f); // Identity matrix
+            LibMath::Matrix3 inverse = mat.inverse();
 
             glm::mat3 matGlm(1.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.8f, 0.0f, 0.0f, 1.0f);
             glm::mat3 inverseGlm = glm::inverse(matGlm);
@@ -682,7 +682,7 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
         SECTION("Identity")
         {
 
-            LibMath::Matrix3Dx3 identity = LibMath::Matrix3Dx3::identity();
+            LibMath::Matrix3 identity = LibMath::Matrix3::identity();
             glm::mat3 identityGlm{ 1.f };
 
             CHECK_MATRIX3(identity, identityGlm);
@@ -693,7 +693,7 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
             LibMath::Radian rotation(static_cast<float>(M_PI) / 2.0f); // 90 degrees
             LibMath::Vector2 scale(2.0f, 3.0f);
 
-            LibMath::Matrix3Dx3 transform = LibMath::Matrix3Dx3::createTransform(translate, rotation, scale);
+            LibMath::Matrix3 transform = LibMath::Matrix3::createTransform(translate, rotation, scale);
 
 
             glm::mat3 glmIdentity{ 1.f };
@@ -712,11 +712,11 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
         {
             LibMath::Radian angle(static_cast<float>(M_PI) / 2.0f); // 90 degrees
 
-            LibMath::Matrix3Dx3 def;
+            LibMath::Matrix3 def;
 
-            LibMath::Matrix3Dx3 rotX = def.createRotationX(angle);
-            LibMath::Matrix3Dx3 rotY = def.createRotationY(angle);
-            LibMath::Matrix3Dx3 rotZ = def.createRotationZ(angle);
+            LibMath::Matrix3 rotX = def.createRotationX(angle);
+            LibMath::Matrix3 rotY = def.createRotationY(angle);
+            LibMath::Matrix3 rotZ = def.createRotationZ(angle);
             
             glm::mat3 glmRotX = glm::mat3(glm::rotate(glm::mat4(1.f), angle.raw(), glm::vec3(1.f, 0.f, 0.f)));
             glm::mat3 glmRotY = glm::mat3(glm::rotate(glm::mat4(1.f), angle.raw(), glm::vec3(0.f, 1.f, 0.f)));
@@ -733,9 +733,9 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
         {
             LibMath::Vector3 scale(2.0f, 3.0f, 4.0f);
 
-            LibMath::Matrix3Dx3 def;
+            LibMath::Matrix3 def;
 
-            LibMath::Matrix3Dx3 scaleMat = def.createScale(scale);
+            LibMath::Matrix3 scaleMat = def.createScale(scale);
 
             glm::vec3 scaleGlm(2.f, 3.f, 4.f);
 
@@ -748,27 +748,27 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
   
     SECTION("Arithmetic")
     {
-        LibMath::Matrix3Dx3 mat1(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-        LibMath::Matrix3Dx3 mat2(9.0f, 8.0f, 7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f);
+        LibMath::Matrix3 mat1(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+        LibMath::Matrix3 mat2(9.0f, 8.0f, 7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f);
 
         glm::mat3 mat1Glm(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
         glm::mat3 mat2Glm(9.0f, 8.0f, 7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f);
 
 
         // Addition
-        LibMath::Matrix3Dx3 sum = mat1 + mat2;
+        LibMath::Matrix3 sum = mat1 + mat2;
         glm::mat3 sumGlm = mat1Glm + mat2Glm;
 
         CHECK_MATRIX3(sum, sumGlm);
 
         // Scalar multiplication
-        LibMath::Matrix3Dx3 scaled = mat1 * 2.0f;
+        LibMath::Matrix3 scaled = mat1 * 2.0f;
         glm::mat3 scaledGlm = mat1Glm * 2.f;
 
         CHECK_MATRIX3(scaled, scaledGlm);
 
         // Matrix multiplication
-        LibMath::Matrix3Dx3 product = mat1 * mat2;
+        LibMath::Matrix3 product = mat1 * mat2;
         glm::mat3 productGlm = mat1Glm * mat2Glm;
 
         CHECK_MATRIX3(product, productGlm);
@@ -787,7 +787,7 @@ TEST_CASE("Matrix3Dx3", "[.all][matrix][Matrix3D]")
 
     SECTION("Edge Cases")
     {
-        LibMath::Matrix3Dx3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+        LibMath::Matrix3 mat(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
 
         // Out-of-bounds access (if applicable)
         CHECK_THROWS(mat[3][0]); // Row out of range
@@ -1291,7 +1291,7 @@ TEST_CASE("Matrix4", "[.all][matrix][Matrix4]")
             CHECK(result.m_x == Catch::Approx(resultGlm.x));
             CHECK(result.m_y == Catch::Approx(resultGlm.y));
             CHECK(result.m_z == Catch::Approx(resultGlm.z));
-            CHECK(result.m_k == Catch::Approx(resultGlm.w));
+            CHECK(result.m_w == Catch::Approx(resultGlm.w));
         }
     }
 

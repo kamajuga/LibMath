@@ -409,7 +409,7 @@ LibMath::Matrix2Dx3 LibMath::operator*(Matrix2Dx3 const& m1, Matrix2Dx3 const& m
 
 #pragma region Matrix3D
 
-LibMath::Matrix3Dx3::Matrix3Dx3(float const diagonal)
+LibMath::Matrix3::Matrix3(float const diagonal)
 {
 	m_elements[0][0] = diagonal;
 	m_elements[0][1] = 0;
@@ -424,7 +424,7 @@ LibMath::Matrix3Dx3::Matrix3Dx3(float const diagonal)
 	m_elements[2][2] = diagonal;
 }
 
-LibMath::Matrix3Dx3::Matrix3Dx3(float const a00, float const a01, float const a02, 
+LibMath::Matrix3::Matrix3(float const a00, float const a01, float const a02, 
 								float const a10, float const a11, float const a12, 
 								float const a20, float const a21, float const a22)
 {
@@ -441,7 +441,7 @@ LibMath::Matrix3Dx3::Matrix3Dx3(float const a00, float const a01, float const a0
 	m_elements[2][2] = a22;
 }
 
-LibMath::Matrix3Dx3::Matrix3Dx3(Matrix3Dx3 const& other)
+LibMath::Matrix3::Matrix3(Matrix3 const& other)
 {
 	m_elements[0][0] = other.m_elements[0][0];
 	m_elements[0][1] = other.m_elements[0][1];
@@ -456,7 +456,7 @@ LibMath::Matrix3Dx3::Matrix3Dx3(Matrix3Dx3 const& other)
 	m_elements[2][2] = other.m_elements[2][2];
 }
 
-LibMath::Matrix3Dx3& LibMath::Matrix3Dx3::operator=(Matrix3Dx3 const& other)
+LibMath::Matrix3& LibMath::Matrix3::operator=(Matrix3 const& other)
 {
 	m_elements[0][0] = other.m_elements[0][0];
 	m_elements[0][1] = other.m_elements[0][1];
@@ -473,7 +473,7 @@ LibMath::Matrix3Dx3& LibMath::Matrix3Dx3::operator=(Matrix3Dx3 const& other)
 	return *this;
 }
 
-LibMath::Matrix3Dx3::RowProxy LibMath::Matrix3Dx3::operator[](size_t const row)
+LibMath::Matrix3::RowProxy LibMath::Matrix3::operator[](size_t const row)
 {
 	if (row > 2)
 	{
@@ -483,7 +483,7 @@ LibMath::Matrix3Dx3::RowProxy LibMath::Matrix3Dx3::operator[](size_t const row)
 	return RowProxy(m_elements[row]);
 }
 
-LibMath::Matrix3Dx3::RowProxy LibMath::Matrix3Dx3::operator[](size_t const row) const
+LibMath::Matrix3::RowProxy LibMath::Matrix3::operator[](size_t const row) const
 {
 	if (row > 2)
 	{
@@ -493,16 +493,16 @@ LibMath::Matrix3Dx3::RowProxy LibMath::Matrix3Dx3::operator[](size_t const row) 
 	return RowProxy(m_elements[row]);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::transpose(void) const
+LibMath::Matrix3 LibMath::Matrix3::transpose(void) const
 {
-	return Matrix3Dx3(
+	return Matrix3(
 		m_elements[0][0], m_elements[1][0], m_elements[2][0],
 		m_elements[0][1], m_elements[1][1], m_elements[2][1],
 		m_elements[0][2], m_elements[1][2], m_elements[2][2]
 	);
 }
 
-float LibMath::Matrix3Dx3::determinant(void) const
+float LibMath::Matrix3::determinant(void) const
 {
 	float component1 = m_elements[0][0] * ((m_elements[1][1] * m_elements[2][2]) - (m_elements[1][2] * m_elements[2][1]));
 	float component2 = m_elements[0][1] * ((m_elements[1][0] * m_elements[2][2]) - (m_elements[1][2] * m_elements[2][0]));
@@ -511,7 +511,7 @@ float LibMath::Matrix3Dx3::determinant(void) const
 	return component1 - component2 + component3;
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::minors(void) const
+LibMath::Matrix3 LibMath::Matrix3::minors(void) const
 {
 	float minor00 = (m_elements[1][1] * m_elements[2][2]) - (m_elements[2][1] * m_elements[1][2]);
 	float minor01 = (m_elements[1][0] * m_elements[2][2]) - (m_elements[1][2] * m_elements[2][0]);
@@ -525,147 +525,147 @@ LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::minors(void) const
 	float minor21 = (m_elements[0][0] * m_elements[1][2]) - (m_elements[1][0] * m_elements[0][2]);
 	float minor22 = (m_elements[0][0] * m_elements[1][1]) - (m_elements[1][0] * m_elements[0][1]);
 
-	return Matrix3Dx3(
+	return Matrix3(
 		minor00, minor01, minor02,
 		minor10, minor11, minor12,
 		minor20, minor21, minor22
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::cofators(void) const
+LibMath::Matrix3 LibMath::Matrix3::cofators(void) const
 {
-	Matrix3Dx3 minors_ = minors();
+	Matrix3 minors_ = minors();
 
-	return Matrix3Dx3(
+	return Matrix3(
 		minors_[0][0], -minors_[0][1], minors_[0][2],
 		-minors_[1][0], minors_[1][1], -minors_[1][2],
 		minors_[2][0], -minors_[2][1], minors_[2][2]
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::adjugate(void) const
+LibMath::Matrix3 LibMath::Matrix3::adjugate(void) const
 {
-	Matrix3Dx3 cofactors_ = cofators();
+	Matrix3 cofactors_ = cofators();
 
 	return cofactors_.transpose();
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::inverse(void) const
+LibMath::Matrix3 LibMath::Matrix3::inverse(void) const
 {
 	float det = determinant();
 
 	float opDet = 1 / det;
 
-	Matrix3Dx3 adj = adjugate();
-	return Matrix3Dx3(
+	Matrix3 adj = adjugate();
+	return Matrix3(
 		opDet * adj[0][0], opDet * adj[0][1], opDet * adj[0][2],
 		opDet * adj[1][0], opDet * adj[1][1], opDet * adj[1][2],
 		opDet * adj[2][0], opDet * adj[2][1], opDet * adj[2][2]
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createTranslation(LibMath::Vector2 const& translation)
+LibMath::Matrix3 LibMath::Matrix3::createTranslation(LibMath::Vector2 const& translation)
 {
-	return Matrix3Dx3(			0,					0,					0,
+	return Matrix3(			0,					0,					0,
 								0,					0,					0, 
 					translation.m_x, translation.m_y,				1);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createTransform(LibMath::Vector2 const& translate, LibMath::Radian const& rotation, LibMath::Vector2 const& scale)
+LibMath::Matrix3 LibMath::Matrix3::createTransform(LibMath::Vector2 const& translate, LibMath::Radian const& rotation, LibMath::Vector2 const& scale)
 {
 	
 	float cosR = LibMath::cos(rotation);
 	float sinR = LibMath::sin(rotation);
 	
-	return Matrix3Dx3(
+	return Matrix3(
 		scale.m_x * cosR, scale.m_x * sinR, 0.f,
 		-scale.m_y * sinR, scale.m_y * cosR, 0.f,
 		translate.m_x, translate.m_y, 1.f
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationX(LibMath::Radian const& angle)
+LibMath::Matrix3 LibMath::Matrix3::createRotationX(LibMath::Radian const& angle)
 {
 	float cosR = LibMath::cos(angle);
 	float sinR = LibMath::sin(angle);
 
-	return Matrix3Dx3(
+	return Matrix3(
 		1.f, 0.f, 0.f,
 		0.f, cosR, sinR,
 		0.f, -sinR, cosR
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationY(LibMath::Radian const& angle)
+LibMath::Matrix3 LibMath::Matrix3::createRotationY(LibMath::Radian const& angle)
 {
 	float cosR = LibMath::cos(angle);
 	float sinR = LibMath::sin(angle);
 
-	return Matrix3Dx3(
+	return Matrix3(
 		cosR, 0.f, -sinR, 
 		0.f, 1.f, 0.f,
 		sinR, 0.f, cosR
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationZ(LibMath::Radian const& angle)
+LibMath::Matrix3 LibMath::Matrix3::createRotationZ(LibMath::Radian const& angle)
 {
 	float cosR = LibMath::cos(angle);
 	float sinR = LibMath::sin(angle);
 
-	return Matrix3Dx3(
+	return Matrix3(
 		cosR, sinR, 0.f,
 		-sinR, cosR, 0.f,
 		0.f, 0.f, 1.f
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createRotationZ(LibMath::Vector2 const& center, LibMath::Radian const& angle)
+LibMath::Matrix3 LibMath::Matrix3::createRotationZ(LibMath::Vector2 const& center, LibMath::Radian const& angle)
 {
-	Matrix3Dx3 translateToOrigin = createTranslation(Vector2(-center.m_x, -center.m_y));
-	Matrix3Dx3 rotation = createRotationZ(angle);
-	Matrix3Dx3 translateBack = createTranslation(center);
+	Matrix3 translateToOrigin = createTranslation(Vector2(-center.m_x, -center.m_y));
+	Matrix3 rotation = createRotationZ(angle);
+	Matrix3 translateBack = createTranslation(center);
 
 	return translateBack * rotation * translateToOrigin;
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::createScale(LibMath::Vector3 const& scale)
+LibMath::Matrix3 LibMath::Matrix3::createScale(LibMath::Vector3 const& scale)
 {
-	return Matrix3Dx3(
+	return Matrix3(
 		scale.m_x, 0.0f, 0.f,
 		0.f, scale.m_y, 0.f,
 		0.f, 0.f, scale.m_z
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::Matrix3Dx3::identity(void)
+LibMath::Matrix3 LibMath::Matrix3::identity(void)
 {
-	return Matrix3Dx3(
+	return Matrix3(
 		1.f, 0.f, 0.f, 
 		0.f, 1.f, 0.f, 
 		0.f, 0.f, 1.f
 	);
 }
 
-LibMath::Matrix3Dx3	LibMath::operator+(Matrix3Dx3 const& m1, Matrix3Dx3 const& m2)
+LibMath::Matrix3	LibMath::operator+(Matrix3 const& m1, Matrix3 const& m2)
 {
-	return Matrix3Dx3(
+	return Matrix3(
 		m1[0][0] + m2[0][0], m1[0][1] + m2[0][1], m1[0][2] + m2[0][2],
 		m1[1][0] + m2[1][0], m1[1][1] + m2[1][1], m1[1][2] + m2[1][2],
 		m1[2][0] + m2[2][0], m1[2][1] + m2[2][1], m1[2][2] + m2[2][2]
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const& m, float const& scalar)
+LibMath::Matrix3 LibMath::operator*(Matrix3 const& m, float const& scalar)
 {
-	return Matrix3Dx3(
+	return Matrix3(
 		scalar * m[0][0], scalar * m[0][1], scalar * m[0][2],
 		scalar * m[1][0], scalar * m[1][1], scalar * m[1][2],
 		scalar * m[2][0], scalar * m[2][1], scalar * m[2][2]
 	);
 }
 
-LibMath::Vector3 LibMath::operator*(Matrix3Dx3 const& mat, LibMath::Vector3 const& vec)
+LibMath::Vector3 LibMath::operator*(Matrix3 const& mat, LibMath::Vector3 const& vec)
 {
 	// Column-Major
 	return LibMath::Vector3(
@@ -675,7 +675,7 @@ LibMath::Vector3 LibMath::operator*(Matrix3Dx3 const& mat, LibMath::Vector3 cons
 	);
 }
 
-LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const& m1, Matrix3Dx3 const& m2)
+LibMath::Matrix3 LibMath::operator*(Matrix3 const& m1, Matrix3 const& m2)
 {
 
 	float a1 = (m1[0][0] * m2[0][0]) + (m1[1][0] * m2[0][1]) + (m1[2][0] * m2[0][2]);
@@ -689,7 +689,7 @@ LibMath::Matrix3Dx3 LibMath::operator*(Matrix3Dx3 const& m1, Matrix3Dx3 const& m
 	float a7 = (m1[0][0] * m2[2][0]) + (m1[1][0] * m2[2][1]) + (m1[2][0] * m2[2][2]);
 	float a8 = (m1[0][1] * m2[2][0]) + (m1[1][1] * m2[2][1]) + (m1[2][1] * m2[2][2]);
 	float a9 = (m1[0][2] * m2[2][0]) + (m1[1][2] * m2[2][1]) + (m1[2][2] * m2[2][2]);
-	return Matrix3Dx3(
+	return Matrix3(
 		a1, a2, a3,
 		a4, a5, a6,
 		a7, a8, a9
@@ -829,22 +829,22 @@ LibMath::Matrix4 LibMath::Matrix4::transpose(void) const
 
 float LibMath::Matrix4::determinant(void) const
 {
-	LibMath::Matrix3Dx3 subMatrix00(m_elements[1][1], m_elements[1][2], m_elements[1][3], 
+	LibMath::Matrix3 subMatrix00(m_elements[1][1], m_elements[1][2], m_elements[1][3], 
 									m_elements[2][1], m_elements[2][2], m_elements[2][3], 
 									m_elements[3][1], m_elements[3][2], m_elements[3][3]);
 	float minor00 = subMatrix00.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix01(m_elements[1][0], m_elements[1][2], m_elements[1][3],
+	LibMath::Matrix3 subMatrix01(m_elements[1][0], m_elements[1][2], m_elements[1][3],
 									m_elements[2][0], m_elements[2][2], m_elements[2][3],
 									m_elements[3][0], m_elements[3][2], m_elements[3][3]);
 	float minor01 = subMatrix01.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix02(m_elements[1][0], m_elements[1][1], m_elements[1][3],
+	LibMath::Matrix3 subMatrix02(m_elements[1][0], m_elements[1][1], m_elements[1][3],
 									m_elements[2][0], m_elements[2][1], m_elements[2][3],
 									m_elements[3][0], m_elements[3][1], m_elements[3][3]);
 	float minor02 = subMatrix02.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix03(m_elements[1][0], m_elements[1][1], m_elements[1][2],
+	LibMath::Matrix3 subMatrix03(m_elements[1][0], m_elements[1][1], m_elements[1][2],
 									m_elements[2][0], m_elements[2][1], m_elements[2][2],
 									m_elements[3][0], m_elements[3][1], m_elements[3][2]);
 	float minor03 = subMatrix03.determinant();
@@ -855,88 +855,88 @@ float LibMath::Matrix4::determinant(void) const
 
 LibMath::Matrix4 LibMath::Matrix4::minors(void) const
 {
-	LibMath::Matrix3Dx3 subMatrix00(m_elements[1][1], m_elements[1][2], m_elements[1][3],
+	LibMath::Matrix3 subMatrix00(m_elements[1][1], m_elements[1][2], m_elements[1][3],
 									m_elements[2][1], m_elements[2][2], m_elements[2][3],
 									m_elements[3][1], m_elements[3][2], m_elements[3][3]);
 	float minor00 = subMatrix00.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix01(m_elements[1][0], m_elements[1][2], m_elements[1][3],
+	LibMath::Matrix3 subMatrix01(m_elements[1][0], m_elements[1][2], m_elements[1][3],
 									m_elements[2][0], m_elements[2][2], m_elements[2][3],
 									m_elements[3][0], m_elements[3][2], m_elements[3][3]);
 	float minor01 = subMatrix01.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix02(m_elements[1][0], m_elements[1][1], m_elements[1][3],
+	LibMath::Matrix3 subMatrix02(m_elements[1][0], m_elements[1][1], m_elements[1][3],
 									m_elements[2][0], m_elements[2][1], m_elements[2][3],
 									m_elements[3][0], m_elements[3][1], m_elements[3][3]);
 	float minor02 = subMatrix02.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix03(m_elements[1][0], m_elements[1][1], m_elements[1][2],
+	LibMath::Matrix3 subMatrix03(m_elements[1][0], m_elements[1][1], m_elements[1][2],
 									m_elements[2][0], m_elements[2][1], m_elements[2][2],
 									m_elements[3][0], m_elements[3][1], m_elements[3][2]);
 	float minor03 = subMatrix03.determinant();
 
 	/////////////////////////////////////////////////
 
-	LibMath::Matrix3Dx3 subMatrix10(m_elements[0][1], m_elements[0][2], m_elements[0][3],
+	LibMath::Matrix3 subMatrix10(m_elements[0][1], m_elements[0][2], m_elements[0][3],
 									m_elements[2][1], m_elements[2][2], m_elements[2][3],
 									m_elements[3][1], m_elements[3][2], m_elements[3][3]);
 	float minor10 = subMatrix10.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix11(m_elements[0][0], m_elements[0][2], m_elements[0][3],
+	LibMath::Matrix3 subMatrix11(m_elements[0][0], m_elements[0][2], m_elements[0][3],
 									m_elements[2][0], m_elements[2][2], m_elements[2][3],
 									m_elements[3][0], m_elements[3][2], m_elements[3][3]);
 	float minor11 = subMatrix11.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix12(m_elements[0][0], m_elements[0][1], m_elements[0][3],
+	LibMath::Matrix3 subMatrix12(m_elements[0][0], m_elements[0][1], m_elements[0][3],
 									m_elements[2][0], m_elements[2][1], m_elements[2][3],
 									m_elements[3][0], m_elements[3][1], m_elements[3][3]);
 	float minor12 = subMatrix12.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix13(m_elements[0][0], m_elements[0][1], m_elements[0][2],
+	LibMath::Matrix3 subMatrix13(m_elements[0][0], m_elements[0][1], m_elements[0][2],
 									m_elements[2][0], m_elements[2][1], m_elements[2][2],
 									m_elements[3][0], m_elements[3][1], m_elements[3][2]);
 	float minor13 = subMatrix13.determinant();
 
 	/////////////////////////////////////////////////
 
-	LibMath::Matrix3Dx3 subMatrix20(m_elements[0][1], m_elements[0][2], m_elements[0][3],
+	LibMath::Matrix3 subMatrix20(m_elements[0][1], m_elements[0][2], m_elements[0][3],
 									m_elements[1][1], m_elements[1][2], m_elements[1][3],
 									m_elements[3][1], m_elements[3][2], m_elements[3][3]);
 	float minor20 = subMatrix20.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix21(m_elements[0][0], m_elements[0][2], m_elements[0][3],
+	LibMath::Matrix3 subMatrix21(m_elements[0][0], m_elements[0][2], m_elements[0][3],
 									m_elements[1][0], m_elements[1][2], m_elements[1][3],
 									m_elements[3][0], m_elements[3][2], m_elements[3][3]);
 	float minor21 = subMatrix21.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix22(m_elements[0][0], m_elements[0][1], m_elements[0][3],
+	LibMath::Matrix3 subMatrix22(m_elements[0][0], m_elements[0][1], m_elements[0][3],
 									m_elements[1][0], m_elements[1][1], m_elements[1][3],
 									m_elements[3][0], m_elements[3][1], m_elements[3][3]);
 	float minor22 = subMatrix22.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix23(m_elements[0][0], m_elements[0][1], m_elements[0][2],
+	LibMath::Matrix3 subMatrix23(m_elements[0][0], m_elements[0][1], m_elements[0][2],
 									m_elements[1][0], m_elements[1][1], m_elements[1][2],
 									m_elements[3][0], m_elements[3][1], m_elements[3][2]);
 	float minor23 = subMatrix23.determinant();
 
 	/////////////////////////////////////////////////
 
-	LibMath::Matrix3Dx3 subMatrix30(m_elements[0][1], m_elements[0][2], m_elements[0][3],
+	LibMath::Matrix3 subMatrix30(m_elements[0][1], m_elements[0][2], m_elements[0][3],
 									m_elements[1][1], m_elements[1][2], m_elements[1][3],
 									m_elements[2][1], m_elements[2][2], m_elements[2][3]);
 	float minor30 = subMatrix30.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix31(m_elements[0][0], m_elements[0][2], m_elements[0][3],
+	LibMath::Matrix3 subMatrix31(m_elements[0][0], m_elements[0][2], m_elements[0][3],
 									m_elements[1][0], m_elements[1][2], m_elements[1][3],
 									m_elements[2][0], m_elements[2][2], m_elements[2][3]);
 	float minor31 = subMatrix31.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix32	(m_elements[0][0], m_elements[0][1], m_elements[0][3],
+	LibMath::Matrix3 subMatrix32	(m_elements[0][0], m_elements[0][1], m_elements[0][3],
 									m_elements[1][0], m_elements[1][1], m_elements[1][3],
 									m_elements[2][0], m_elements[2][1], m_elements[2][3]);
 	float minor32 = subMatrix32.determinant();
 
-	LibMath::Matrix3Dx3 subMatrix33(m_elements[0][0], m_elements[0][1], m_elements[0][2],
+	LibMath::Matrix3 subMatrix33(m_elements[0][0], m_elements[0][1], m_elements[0][2],
 									m_elements[1][0], m_elements[1][1], m_elements[1][2],
 									m_elements[2][0], m_elements[2][1], m_elements[2][2]);
 	float minor33 = subMatrix33.determinant();
@@ -1128,10 +1128,10 @@ LibMath::Matrix4 LibMath::operator*(Matrix4 const& m, float const& scalar)
 LibMath::Vector4 LibMath::operator*(const Matrix4 & m, const LibMath::Vector4 & vec)
 {
 	return LibMath::Vector4(
-		(m[0][0] * vec.m_x) + (m[1][0] * vec.m_y) + (m[2][0] * vec.m_z) + (m[3][0] * vec.m_k),
-		(m[0][1] * vec.m_x) + (m[1][1] * vec.m_y) + (m[2][1] * vec.m_z) + (m[3][1] * vec.m_k),
-		(m[0][2] * vec.m_x) + (m[1][2] * vec.m_y) + (m[2][2] * vec.m_z) + (m[3][2] * vec.m_k),
-		(m[0][3] * vec.m_x) + (m[1][3] * vec.m_y) + (m[2][3] * vec.m_z) + (m[3][3] * vec.m_k)
+		(m[0][0] * vec.m_x) + (m[1][0] * vec.m_y) + (m[2][0] * vec.m_z) + (m[3][0] * vec.m_w),
+		(m[0][1] * vec.m_x) + (m[1][1] * vec.m_y) + (m[2][1] * vec.m_z) + (m[3][1] * vec.m_w),
+		(m[0][2] * vec.m_x) + (m[1][2] * vec.m_y) + (m[2][2] * vec.m_z) + (m[3][2] * vec.m_w),
+		(m[0][3] * vec.m_x) + (m[1][3] * vec.m_y) + (m[2][3] * vec.m_z) + (m[3][3] * vec.m_w)
 	);
 }
 
