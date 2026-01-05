@@ -21,26 +21,26 @@ namespace LibMath
 		class Point : public Object3D
 		{
 		public:
-									Point() = default;
-									Point(const float x, const float y, const float z);
-									Point(const Point& other);
-									Point(Vector3 const& vec);
-									~Point() = default;
+							Point() = default;
+							Point(const float x, const float y, const float z);
+							Point(const Point& other);
+							Point(Vector3 const& vec);
+							~Point() = default;
 
-			Point&					operator=(const Point& other);
+			Point&		operator=(const Point& other);
 
-			Vector3					toVector3() const;
+			Vector3			toVector3() const;
 
-			virtual void			update(LibMath::Matrix4& transMat) override;
+			virtual void	update(LibMath::Matrix4& transMat) override;
 
-			float					getDistanceSquared(const Point&) const;
-			float					getDistance(const Point&) const;
+			float			getDistanceSquared(const Point&) const;
+			float			getDistance(const Point&) const;
 
-			LibMath::Vector3					operator-(const Point& point) const;
+			LibMath::Vector3		operator-(const Point& point) const;
 
-			float					m_x = 0.0f;
-			float					m_y = 0.0f;
-			float					m_z = 0.0f;
+			float	m_x = 0.0f;
+			float	m_y = 0.0f;
+			float	m_z = 0.0f;
 
 		private:
 			
@@ -50,23 +50,23 @@ namespace LibMath
 		class Line : public Object3D
 		{
 		public:
-										Line() = default;
+							Line() = default;
 
-			//							Director vector should be a unit vector
-										Line(const Point& point, const LibMath::Vector3& dir);   
-										Line(const Point& pointStart, const Point& pointEnd);
-										Line(const Point& point, const LibMath::Vector3& dir, const float& scalair);
-										Line(const Line& other);
-										~Line() = default;
+			//				Director vector should be a unit vector
+							Line(const Point& point, const LibMath::Vector3& dir);   
+							Line(const Point& pointStart, const Point& pointEnd);
+							Line(const Point& point, const LibMath::Vector3& dir, const float& scalair);
+							Line(const Line& other);
+							~Line() = default;
 
-			Line&						operator=(const Line& other);
-			Line						operator*(const float& scalair);
+			Line&		operator=(const Line& other);
+			Line		operator*(const float& scalair);
 
-			virtual void				update(LibMath::Matrix4& transMat) override;
+			virtual void	update(LibMath::Matrix4& transMat) override;
 
-			Point						m_origin;
-			LibMath::Vector3			m_direction;
-			float						m_length = 0.f;
+			Point				m_origin;
+			LibMath::Vector3	m_direction;
+			float				m_length = 0.f;
 		private:
 
 		};
@@ -74,17 +74,17 @@ namespace LibMath
 		class Plan : public Object3D
 		{
 		public:
-			Plan() = default;
-			Plan(const LibMath::Vector3& normal, const float& distance);
-			Plan(const Plan& other);
-			~Plan() = default;
+							Plan() = default;
+							Plan(const LibMath::Vector3& normal, const float& distance);
+							Plan(const Plan& other);
+							~Plan() = default;
 
-			Plan& operator=(const Plan& other);
+			Plan&		operator=(const Plan& other);
 
 
 
-			Vector3			m_normal;
-			float			m_distance = 0.f;
+			Vector3	m_normal;
+			float	m_distance = 0.f;
 
 		private:
 			
@@ -94,29 +94,29 @@ namespace LibMath
 		class AABB :public Object3D
 		{
 		public:
-			AABB() = default;
-			AABB(const Point& center, const float& width, const float& height, const float& depth);
-			AABB(const AABB& other);
-			~AABB() = default;
+							AABB() = default;
+							AABB(const Point& center, const float& width, const float& height, const float& depth);
+							AABB(const AABB& other);
+							~AABB() = default;
 
-			AABB& operator=(const AABB& other);
+			AABB&		operator=(const AABB& other);
 
-			virtual void			update(LibMath::Matrix4& transMat) override;
+			virtual void	update(LibMath::Matrix4& transMat) override;
 
 			float			extentX(void) const;
 			float			extentY(void) const;
 			float			extentZ(void) const;
 
-			Point			m_center;
+			Point	m_center;
 
-			//				length on X axis
-			float			m_width = 0.f; 
+			//		length on X axis
+			float	m_width = 0.f; 
 
-			//				length on Y axis
-			float			m_height = 0.f; 
+			//		length on Y axis
+			float	m_height = 0.f; 
 
-			//				length on Z axis
-			float			m_depth = 0.f; 
+			//		length on Z axis
+			float	m_depth = 0.f; 
 		private:
 
 			
@@ -125,20 +125,20 @@ namespace LibMath
 		class OBB : public Object3D
 		{
 		public:
-			OBB() = default;
-			OBB(const Point& center, const float& width, const float& height, const float& m_depth, const Radian& rotation);
-			OBB(const OBB& other);
-			~OBB() = default;
+							OBB() = default;
+							OBB(const Point& center, const float& width, const float& height, const float& m_depth, const Radian& rotation);
+							OBB(const OBB& other);
+							~OBB() = default;
 
-			virtual void			update(LibMath::Matrix4& transMat) override;
+			virtual void	update(LibMath::Matrix4& transMat) override;
 
-			OBB& operator=(const OBB& other);
+			OBB&		operator=(const OBB& other);
 
-			Point			m_center;
-			float			m_width = 0.f;
-			float			m_height = 0.f;
-			float			m_depth = 0.f;
-			Radian m_rotation;
+			Point	m_center;
+			float	m_width = 0.f;
+			float	m_height = 0.f;
+			float	m_depth = 0.f;
+			Radian	m_rotation;
 
 		private:
 			
@@ -147,17 +147,17 @@ namespace LibMath
 		class Sphere : public Object3D
 		{
 		public:
-			Sphere() = default;
-			Sphere(const Point& center, const float& radius);
-			Sphere(const Sphere& other);
-			~Sphere() = default;
+							Sphere() = default;
+							Sphere(const Point& center, const float& radius);
+							Sphere(const Sphere& other);
+							~Sphere() = default;
 
-			virtual void			update(LibMath::Matrix4& transMat) override;
+			virtual void	update(LibMath::Matrix4& transMat) override;
 
-			Sphere& operator=(const Sphere& other);
+			Sphere&		operator=(const Sphere& other);
 
-			Point			m_center;
-			float			m_radius = 0.f;
+			Point	m_center;
+			float	m_radius = 0.f;
 
 		private:
 			
@@ -166,25 +166,25 @@ namespace LibMath
 		class Capsule :public Object3D
 		{
 		public:
-			Capsule() = default;
-			Capsule(const Point& pointA, const Point& pointB, const float& radius);
-			Capsule(const Capsule& other);
-			~Capsule() = default;
+							Capsule() = default;
+							Capsule(const Point& pointA, const Point& pointB, const float& radius);
+							Capsule(const Capsule& other);
+							~Capsule() = default;
 
-			virtual void			update(LibMath::Matrix4& transMat) override;
+			virtual void	update(LibMath::Matrix4& transMat) override;
 
-			Capsule& operator=(const Capsule& other);
+			Capsule&	operator=(const Capsule& other);
 
-			Point			m_pointA;
-			Point			m_pointB;
-			float			m_radius = 0.f;
+			Point	m_pointA;
+			Point	m_pointB;
+			float	m_radius = 0.f;
 
 		private:
 
 		};
 
-		Point			getClosestToAABB(const LibMath::Geometry3D::AABB&, const Point&);
-		Point			getClosestToSegment(const Point&, const Point&, const Point&);
+		Point				getClosestToAABB(const LibMath::Geometry3D::AABB&, const Point&);
+		Point				getClosestToSegment(const Point&, const Point&, const Point&);
 
 	}
 

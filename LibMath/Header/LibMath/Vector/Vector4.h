@@ -9,11 +9,11 @@ namespace LibMath
 	class Vector4
 	{
 	public:
-						Vector4() = default;
-		explicit		Vector4(float val);
-						Vector4(float x, float y, float z, float k);
-						Vector4(Vector4 const& other);
-						Vector4(LibMath::Vector3 const& vec3, const float& val = 1.0);
+							Vector4() = default;
+		explicit			Vector4(float val);
+							Vector4(float x, float y, float z, float k);
+							Vector4(Vector4 const& other);
+							Vector4(LibMath::Vector3 const& vec3, const float& val = 1.0);
 
 
 		Vector4&		operator=(Vector4 const& other) = default;
@@ -21,14 +21,14 @@ namespace LibMath
 		float&			operator[](int n);								
 		float			operator[](int n) const;
 
-		bool			isUnit(void) const;
+		bool				isUnit(void) const;
 
-		float			dotProduct(Vector4 const& vec);
+		float				dotProduct(Vector4 const& vec);
 
-		float			magnitude(void) const;
-		float			magnitudeSquare(void) const;
+		float				magnitude(void) const;
+		float				magnitudeSquare(void) const;
 
-		void			homogenize(void);
+		void				homogenize(void);
 
 
 		float m_x = 0.0f;

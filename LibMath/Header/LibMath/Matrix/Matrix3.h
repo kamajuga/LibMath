@@ -17,7 +17,7 @@ namespace LibMath
 							Matrix3(Matrix3 const& other);
 							~Matrix3() = default;
 
-		Matrix3&			operator=(Matrix3 const& other);
+		Matrix3&		operator=(Matrix3 const& other);
 
 		class RowProxy {
 		private:
@@ -34,7 +34,7 @@ namespace LibMath
 
 			}
 
-			float& operator[](size_t const col) {
+			float&		operator[](size_t const col) {
 
 				if (col > 2)
 				{
@@ -44,7 +44,7 @@ namespace LibMath
 				return row[col];
 			}
 
-			float operator[](size_t const col) const {
+			float		operator[](size_t const col) const {
 
 				if (col > 2)
 				{
@@ -55,30 +55,30 @@ namespace LibMath
 			}
 		};
 
-		RowProxy			operator[](size_t const row);					// alternative for operator[][] overload
-		RowProxy			operator[](size_t const row) const;
+		RowProxy		operator[](size_t const row);					// alternative for operator[][] overload
+		RowProxy		operator[](size_t const row) const;
 
-		Matrix3			transpose(void) const;
+		Matrix3				transpose(void) const;
 		float				determinant(void) const;
-		Matrix3			minors(void) const;
-		Matrix3			cofators(void) const;
-		Matrix3			adjugate(void) const;
-		Matrix3			inverse(void) const;
+		Matrix3				minors(void) const;
+		Matrix3				cofators(void) const;
+		Matrix3				adjugate(void) const;
+		Matrix3				inverse(void) const;
 
-		static	Matrix3			createTranslation(LibMath::Vector2 const& vec);
+		static	Matrix3		createTranslation(LibMath::Vector2 const& vec);
 
-		static Matrix3			createTransform(LibMath::Vector2 const& translate = LibMath::Vector2(0.0f, 0.0f), // returns T . R . S
+		static Matrix3		createTransform(LibMath::Vector2 const& translate = LibMath::Vector2(0.0f, 0.0f), // returns T . R . S
 			LibMath::Radian const& rotation = LibMath::Radian(0.0f),
 			LibMath::Vector2 const& scale = LibMath::Vector2(1.0f, 1.0f));
 	
-		static Matrix3			createRotationX(LibMath::Radian const& angle);
-		static Matrix3			createRotationY(LibMath::Radian const& angle);
-		static Matrix3			createRotationZ(LibMath::Radian const& angle);
-		static Matrix3			createRotationZ(LibMath::Vector2 const& center, LibMath::Radian const& angle); // In 2D the rotation is done by the Z axis
+		static Matrix3		createRotationX(LibMath::Radian const& angle);
+		static Matrix3		createRotationY(LibMath::Radian const& angle);
+		static Matrix3		createRotationZ(LibMath::Radian const& angle);
+		static Matrix3		createRotationZ(LibMath::Vector2 const& center, LibMath::Radian const& angle); // In 2D the rotation is done by the Z axis
 
-		static Matrix3			createScale(LibMath::Vector3 const& scale);
+		static Matrix3		createScale(LibMath::Vector3 const& scale);
 		
-		static Matrix3			identity(void);
+		static Matrix3		identity(void);
 
 
 
@@ -88,7 +88,7 @@ namespace LibMath
 	};
 	Matrix3				operator+(Matrix3 const& mat1, Matrix3 const& mat2);
 	Matrix3				operator*(Matrix3 const& mat, float const& val);
-	LibMath::Vector3		operator*(Matrix3 const& mat, LibMath::Vector3 const& vec);
+	LibMath::Vector3	operator*(Matrix3 const& mat, LibMath::Vector3 const& vec);
 	Matrix3				operator*(Matrix3 const& mat1, Matrix3 const& mat2);
 }
 

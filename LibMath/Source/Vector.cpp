@@ -1,6 +1,7 @@
 #include "LibMath/Vector.h"
 #include "LibMath/Matrix/Matrix3.h"
 #include "LibMath/GeometricObject3.h"
+#include "LibMath/Quaternion.h"
 #include <cmath>
 
 #define EPSILON 1e-5
@@ -593,6 +594,15 @@ void LibMath::Vector3::rotate(Radian angle, Vector3 const& vec)
 	normalizedAxis.normalize();
 
 	*this = rotateArroundAxis(*this, normalizedAxis, angle);
+}
+
+void LibMath::Vector3::rotate(Quaternion const& quat)
+{
+	Vector3 vec = quat.rotate(*this);
+
+	m_x = vec.m_x;
+	m_y = vec.m_y;
+	m_z = vec.m_z;
 }
 
 void LibMath::Vector3::scale(Vector3 const& vec)

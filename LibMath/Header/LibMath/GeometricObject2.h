@@ -22,7 +22,7 @@ namespace LibMath
 							Point(Point const& other);
 							~Point() = default;
 
-			Point&			operator=(const Point& other);
+			Point&		operator=(const Point& other);
 			operator		LibMath::Vector2() const; // add test
 
 
@@ -33,8 +33,8 @@ namespace LibMath
 
 		};
 
-		bool				operator==(Point point1, Point Point);
 		float				DistancebBetweenPoint(Point const& point1, Point const& point2);
+		bool			operator==(Point point1, Point Point);
 
 
 		class Line
@@ -45,18 +45,18 @@ namespace LibMath
 							Line(const Line& other);
 							~Line() = default;
 
-			Line&			operator=(const Line& other);
+			Line&		operator=(const Line& other);
 			float			lenght(void) const;
 			float			lenghtSquare(void) const;
 
-			Point			m_start;
-			Point			m_end;
+			Point	m_start;
+			Point	m_end;
 
 		private:
 			
 
 		};
-		bool				operator==(Line line1, Line Line);
+		bool			operator==(Line line1, Line Line);
 		bool				isPointOnSegment(Point const& point, Point const& segStart, Point const& segEnd);
 
 		class AABB
@@ -67,7 +67,7 @@ namespace LibMath
 							AABB(AABB const& other);
 							~AABB() = default;
 
-			AABB&			operator=(const AABB& other);
+			AABB&		operator=(const AABB& other);
 
 			float			extentX(void) const;
 			float			extentY(void) const;
@@ -77,9 +77,9 @@ namespace LibMath
 			Point			getBottomRightCorner(void) const;
 			Point			getBottomLeftCorner(void) const;
 
-			Point			m_center;
-			float			m_height = 0.f;
-			float			m_width = 0.f;
+			Point	m_center;
+			float	m_height = 0.f;
+			float	m_width = 0.f;
 		private:
 			
 
@@ -89,20 +89,20 @@ namespace LibMath
 		class OBB
 		{
 		public:
-								OBB() = default;
-			explicit			OBB(Point center, float height, float width);
-								OBB(OBB const& other);
-								~OBB() = default;
+							OBB() = default;
+			explicit		OBB(Point center, float height, float width);
+							OBB(OBB const& other);
+							~OBB() = default;
 
-			OBB&				operator=(const OBB& other);
+			OBB&		operator=(const OBB& other);
 
 
-			void				rotate(LibMath::Radian rad);
+			void			rotate(LibMath::Radian rad);
 
-			Point				getTopRightCorner(void) const;
-			Point				getTopLeftCorner(void) const;
-			Point				getBotRightCorner(void) const;
-			Point				getBotLeftCorner(void) const;
+			Point			getTopRightCorner(void) const;
+			Point			getTopLeftCorner(void) const;
+			Point			getBotRightCorner(void) const;
+			Point			getBotLeftCorner(void) const;
 
 			Point				m_center;
 			float				m_height = 0.f;
@@ -113,9 +113,9 @@ namespace LibMath
 
 		};
 
-		LibMath::Vector2		normalVector(Point const& p1, Point const& p2);
-		bool					overlapOnAxis(float& min1, float& max1, float& min2, float& max2);
-		void					projectRectangleOnAxis(OBB const& rectangle, const LibMath::Vector2& axis, float& min, float& max);
+		LibMath::Vector2	normalVector(Point const& p1, Point const& p2);
+		bool				overlapOnAxis(float& min1, float& max1, float& min2, float& max2);
+		void				projectRectangleOnAxis(OBB const& rectangle, const LibMath::Vector2& axis, float& min, float& max);
 
 		class Circle
 		{
@@ -126,13 +126,13 @@ namespace LibMath
 							Circle(Circle const& other);
 							~Circle() = default;
 
-			Circle&			operator=(const Circle& other);
+			Circle&		operator=(const Circle& other);
 
 			float			perimeter(void) const;
 			float			area(void) const;
 
-			Point			m_center;
-			float			m_radius = 0.f;
+			Point	m_center;
+			float	m_radius = 0.f;
 
 		private:
 			

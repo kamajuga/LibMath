@@ -89,12 +89,12 @@ void LibMath::Quaternion::normalize()
 	m_w /= mag;
 }
 
-LibMath::Quaternion LibMath::Quaternion::conjugate(void)
+LibMath::Quaternion LibMath::Quaternion::conjugate(void) const
 {
 	return Quaternion(-m_x, -m_y, -m_z, m_w);
 }
 
-LibMath::Quaternion LibMath::Quaternion::inverse(void)
+LibMath::Quaternion LibMath::Quaternion::inverse(void) const
 {
 	Quaternion conj = conjugate();
 	float magSquare = magnitudeSquare();
@@ -119,7 +119,7 @@ LibMath::Radian LibMath::Quaternion::angleBetween(Quaternion const& other) const
 	return LibMath::acos(cos) * 2;
 }
 
-LibMath::Vector3 LibMath::Quaternion::rotate(Vector3 const& vec)
+LibMath::Vector3 LibMath::Quaternion::rotate(Vector3 const& vec) const
 {
 	Quaternion point = Quaternion(vec);
 	Quaternion result = *this * point * inverse();

@@ -35,7 +35,6 @@ namespace LibMath
 
 
 		Matrix2Dx2			createRotation(Radian const& rad) const;
-		// Matrix2Dx2			createRotation(LibMath::Vector2 const& center, LibMath::Radian const& angle);
 		Matrix2Dx2			createScale(LibMath::Vector2 const& vec) const;
 		Matrix2Dx2			createTransform(LibMath::Radian const& rad = 0_rad, LibMath::Vector2 const& scale = Vector2(1, 1)) const;
 
@@ -49,34 +48,31 @@ namespace LibMath
 	Matrix2Dx2			operator+(Matrix2Dx2 const& m1, Matrix2Dx2 const& m2);
 	Matrix2Dx2			operator*(Matrix2Dx2 const& m1, Matrix2Dx2 const& m2);
 	Matrix2Dx2			operator*(Matrix2Dx2 const& m1, float const& scalar);
-	LibMath::Vector2			operator*(Matrix2Dx2 const& m, LibMath::Vector2 const& vec);
+	LibMath::Vector2	operator*(Matrix2Dx2 const& m, LibMath::Vector2 const& vec);
 
 	class Matrix2Dx3
 	{
 	public:
-		Matrix2Dx3() = default;
-		Matrix2Dx3(float const diagonal);
-		Matrix2Dx3(float const a00, float const a01, float const a02, 
-				   float const a10, float const a11, float const a12, 
-				   float const a20, float const a21, float const a22);
-		Matrix2Dx3(Matrix2Dx3 const& other);
+							Matrix2Dx3() = default;
+							Matrix2Dx3(float const diagonal);
+							Matrix2Dx3(float const a00, float const a01, float const a02, 
+									   float const a10, float const a11, float const a12, 
+									   float const a20, float const a21, float const a22);
+							Matrix2Dx3(Matrix2Dx3 const& other);
 
-		Matrix2Dx3& operator=(Matrix2Dx3 const& other);
+		Matrix2Dx3&		operator=(Matrix2Dx3 const& other);
 
-		class RowProxy {
+		class RowProxy 
+		{
 		private:
 			float* row;
 
 		public:
-			RowProxy(float* rowRef) {
-				row = rowRef;
-			}
+							RowProxy(float* rowRef) { row = rowRef; }
+							RowProxy(float const* rowRef) { row = const_cast<float*>(rowRef); }
 
-			RowProxy(float const* rowRef) {
-				row = const_cast<float*>(rowRef);
-			}
-
-			float& operator[](size_t const col) {
+			float&		operator[](size_t const col) 
+			{
 
 				if (col >2)
 				{
@@ -86,7 +82,8 @@ namespace LibMath
 				return row[col];
 			}
 
-			float operator[](size_t const col) const {
+			float		operator[](size_t const col) const 
+			{
 				if (col > 2) {
 					throw std::out_of_range("Error: column out of range");
 				}
@@ -94,17 +91,17 @@ namespace LibMath
 			}
 		};
 
-		RowProxy	operator[](size_t const row);
-		RowProxy	operator[](size_t const row) const;
+		RowProxy		operator[](size_t const row);
+		RowProxy		operator[](size_t const row) const;
 
-		bool		operator==(Matrix2Dx3 const& m);
+		bool			operator==(Matrix2Dx3 const& m);
 
 		static Matrix2Dx3	createTranslation(LibMath::Vector2 const& translation);
 		static Matrix2Dx3	createRotation(LibMath::Geometry2D::Point const& point, LibMath::Radian const& rad);
 		static Matrix2Dx3	createScale(LibMath::Vector2 const& scale);
 
 		static Matrix2Dx3	createTransform(LibMath::Vector2 const& translation = LibMath::Vector2(0, 0),
-			LibMath::Radian const& rotation = LibMath::Radian(0), LibMath::Vector2 const& scale = LibMath::Vector2(1, 1));
+											LibMath::Radian const& rotation = LibMath::Radian(0), LibMath::Vector2 const& scale = LibMath::Vector2(1, 1));
 
 		static Matrix2Dx3	identity(void);
 		
@@ -117,10 +114,10 @@ namespace LibMath
 		float m_elements[3][3] = { 0 };
 
 	};
-	Matrix2Dx3					operator+(Matrix2Dx3 const& m1, Matrix2Dx3 const& m2);
-	Matrix2Dx3					operator*(Matrix2Dx3 const& m, float const& scalar);
-	LibMath::Vector3			operator*(Matrix2Dx3 const& m, LibMath::Vector3 const& vec);
-	Matrix2Dx3					operator*(Matrix2Dx3 const& m1, Matrix2Dx3 const& m2);
+	Matrix2Dx3			operator+(Matrix2Dx3 const& m1, Matrix2Dx3 const& m2);
+	Matrix2Dx3			operator*(Matrix2Dx3 const& m, float const& scalar);
+	LibMath::Vector3	operator*(Matrix2Dx3 const& m, LibMath::Vector3 const& vec);
+	Matrix2Dx3			operator*(Matrix2Dx3 const& m1, Matrix2Dx3 const& m2);
 }
 
 #endif // !LIBMATH_MATRIX_MATRIX2_H_
