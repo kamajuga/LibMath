@@ -3,6 +3,7 @@
 #include "LibMath/Matrix4Vector4Operation.h"
 #include "LibMath/Arithmetic.h"
 
+
 #pragma region Matrix 2D
 
 #pragma region Matrix2Dx2
@@ -473,6 +474,19 @@ LibMath::Matrix3& LibMath::Matrix3::operator=(Matrix3 const& other)
 	return *this;
 }
 
+LibMath::Matrix3::operator LibMath::Matrix4() const
+{
+	return Matrix4(
+		m_elements[0][0],	m_elements[0][1] ,	m_elements[0][2] ,	0.f ,
+
+		m_elements[1][0] ,	m_elements[1][1] ,	m_elements[1][2] ,	0.f ,
+	
+		m_elements[2][0] ,	m_elements[2][1] ,	m_elements[2][2] ,	0.f ,
+
+		0.f				 ,	0.f				 ,	0.f				 ,	1.f
+	);
+}
+
 LibMath::Matrix3::RowProxy LibMath::Matrix3::operator[](size_t const row)
 {
 	if (row > 2)
@@ -724,9 +738,9 @@ LibMath::Matrix4::Matrix4(float const diagonal)
 }
 
 LibMath::Matrix4::Matrix4(float const a00, float const a01, float const a02, float const a03,
-	float const a10, float const a11, float const a12, float const a13,
-	float const a20, float const a21, float const a22, float const a23,
-	float const a30, float const a31, float const a32, float const a33)
+						  float const a10, float const a11, float const a12, float const a13,
+						  float const a20, float const a21, float const a22, float const a23,
+						  float const a30, float const a31, float const a32, float const a33)
 {
 	m_elements[0][0] = a00;
 	m_elements[0][1] = a01;
@@ -795,6 +809,17 @@ LibMath::Matrix4& LibMath::Matrix4::operator=(Matrix4 const& other)
 	m_elements[3][3] = other.m_elements[3][3];
 
 	return *this;
+}
+
+LibMath::Matrix4::operator LibMath::Matrix3() const
+{
+	return Matrix3(
+		m_elements[0][0] ,	m_elements[0][1] ,	m_elements[0][2] ,
+		
+		m_elements[1][0] ,	m_elements[1][1] ,	m_elements[1][2] ,
+
+		m_elements[2][0] ,	m_elements[2][1] ,	m_elements[2][2]
+	);
 }
 
 LibMath::Matrix4::RowProxy LibMath::Matrix4::operator[](size_t const row) const

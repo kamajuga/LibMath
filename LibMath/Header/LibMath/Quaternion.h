@@ -28,14 +28,15 @@ namespace LibMath
 
 		Quaternion			inverse(void) const;
 
-		Radian				angleBetween(Quaternion const& other) const;
-
 		Vector3				rotate(Vector3 const& vec) const;
 
 		Matrix3				toMatrix(void);
 
 		bool				isUnit(void) const;
+		
+		Radian				angleBetween(Quaternion const& other) const;
 
+		static Radian		angleBetween(Quaternion const& qStart, Quaternion const& qEnd);
 		static Quaternion	identity();
 		static Quaternion	slerp(Quaternion const& qStart, Quaternion const& qEnd, float t);
 		static Quaternion	nlerp(Quaternion const& qStart, Quaternion const& qEnd, float t);

@@ -10,6 +10,11 @@ bool LibMath::almostEqual(float num1, float num2)
     return std::abs(num1 - num2) <= EPSILON ;
 }
 
+float	LibMath::lerp(float start, float end, float alpha)
+{
+	return start * (1 - alpha) + end * alpha;
+}
+
 float LibMath::ceiling(float num)
 {
     return std::ceilf(num);

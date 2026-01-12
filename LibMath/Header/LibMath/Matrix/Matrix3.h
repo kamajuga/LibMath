@@ -3,6 +3,7 @@
 
 #include "LibMath/Vector/Vector3.h"
 #include "LibMath/Vector/Vector2.h"
+#include "LibMath/LibMathFwd.h"
 
 namespace LibMath
 {
@@ -18,6 +19,8 @@ namespace LibMath
 							~Matrix3() = default;
 
 		Matrix3&		operator=(Matrix3 const& other);
+
+		operator LibMath::Matrix4() const;
 
 		class RowProxy {
 		private:

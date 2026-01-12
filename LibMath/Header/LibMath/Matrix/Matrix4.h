@@ -22,6 +22,8 @@ namespace LibMath
 
 		Matrix4&		operator=(Matrix4 const& other);
 
+		operator LibMath::Matrix3() const;
+
 		class RowProxy 
 		{
 		private:

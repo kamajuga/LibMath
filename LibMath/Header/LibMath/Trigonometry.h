@@ -5,7 +5,8 @@
 
 namespace LibMath
 {
-	// extern float const g_pi;	 // useful constant pi -> 3.141592...
+	float constexpr		g_pi = 3.14159274101257f;	 // useful constant pi -> 3.141592...
+	float constexpr		g_half_pi = 1.570796370506286f;
 
 	float				sin(Radian rad);		// float result = sin(Radian{0.5});		// 0.479426
 	float				cos(Radian rad);		// float result = sin(Degree{45});		// 0.707107			// this make use implicit conversion
