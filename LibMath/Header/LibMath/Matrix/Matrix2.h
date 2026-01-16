@@ -21,7 +21,6 @@ namespace LibMath
 	
 
 		bool				operator==(Matrix2Dx2 const& other) const;
-		//RowProxy			operator[](size_t const row);					// alternative for operator[][] overload
 
 		float*				operator[](size_t const row);
 		float const*		operator[](size_t const row) const;
@@ -64,7 +63,7 @@ namespace LibMath
 
 		class RowProxy 
 		{
-		private:
+		private: 
 			float* row;
 
 		public:

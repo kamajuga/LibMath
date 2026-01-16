@@ -23,7 +23,7 @@ namespace LibMath
 							~Point() = default;
 
 			Point&		operator=(const Point& other);
-			operator		LibMath::Vector2() const; // add test
+			operator	LibMath::Vector2() const; // add test
 
 
 			float			m_x = 0.f;

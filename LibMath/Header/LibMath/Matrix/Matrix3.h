@@ -20,7 +20,7 @@ namespace LibMath
 
 		Matrix3&		operator=(Matrix3 const& other);
 
-		operator LibMath::Matrix4() const;
+		operator		LibMath::Matrix4() const;
 
 		class RowProxy {
 		private:

@@ -13,8 +13,8 @@ namespace LibMath
 		class Object3D
 		{
 		public:
-			virtual void update(LibMath::Matrix4& transMat);
-			virtual ~Object3D() = default;
+			virtual void	update(LibMath::Matrix4& transMat);
+			virtual			~Object3D() = default;
 
 		};
 

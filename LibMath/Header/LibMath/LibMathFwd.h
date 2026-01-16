@@ -8,6 +8,8 @@ namespace LibMath {
     class Vector2;
     class Vector3;
     class Vector4;
+    class Matrix3;
+    class Matrix4;
 
     namespace Geometry3D {
         class Point;

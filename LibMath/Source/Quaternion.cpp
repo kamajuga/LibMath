@@ -153,6 +153,18 @@ bool LibMath::Quaternion::isUnit() const
 	return LibMath::almostEqual(magnitude(), 1.f);
 }
 
+LibMath::Radian LibMath::Quaternion::angleBetween(Quaternion const& qStart, Quaternion const& qEnd)
+{
+	float dot = qStart.m_x * qEnd.m_x + qStart.m_y * qEnd.m_y + qStart.m_z * qEnd.m_z + qStart.m_w * qEnd.m_w;
+
+	float magSquare1 = qStart.magnitudeSquare();
+	float magSquare2 = qEnd.magnitudeSquare();
+
+	float cos = dot / LibMath::squareRoot(magSquare1 * magSquare2);
+
+	return LibMath::acos(cos);
+}
+
 LibMath::Quaternion LibMath::Quaternion::identity()
 {
 	return Quaternion(0, 0, 0, 1);

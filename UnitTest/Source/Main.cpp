@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 	*    test are ran                    *
 	*                                    *
 	\************************************/
-	//arguments.push_back("[all],");
+	arguments.push_back("[all],");
 	//arguments.push_back("[angle],");
 	//arguments.push_back("[vector],");
 	//arguments.push_back("[geometricObject]");
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("[Collision3D]");
 	//arguments.push_back("[Collision2D]");
 	//arguments.push_back("[matrix]");
-	arguments.push_back("[Quaternion]");
+	//arguments.push_back("[Quaternion]");
 
 
 	/************************************\
