@@ -150,7 +150,7 @@ LibMath::Matrix3 LibMath::Quaternion::toMatrix(void)
 
 bool LibMath::Quaternion::isUnit() const
 {
-	return LibMath::almostEqual(magnitude(), 1.f);
+	return LibMath::almostEqual(magnitudeSquare(), 1.f);
 }
 
 LibMath::Radian LibMath::Quaternion::angleBetween(Quaternion const& qStart, Quaternion const& qEnd)

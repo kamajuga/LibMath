@@ -37,7 +37,6 @@ LibMath::Vector2::Vector2(Geometry2D::Point const& point)
 	m_y = point.m_y;
 }
 
-
 float& LibMath::Vector2::operator[](int n)
 {
 	if (n == 0)
@@ -149,7 +148,7 @@ float LibMath::Vector2::magnitude(void) const
 
 bool LibMath::Vector2::isUnit(void) const
 {
-	return (abs(magnitude() - 1.0f)) <= 0.0000001f;
+	return (abs(magnitudeSquare() - 1.0f)) <= EPSILON;
 }
 
 float LibMath::Vector2::dotProduct(Vector2 vec) const
@@ -159,7 +158,6 @@ float LibMath::Vector2::dotProduct(Vector2 vec) const
 
 float LibMath::Vector2::magnitudeSquare(void) const
 {
-	//float mag = magnitude();
 	return powf(m_x, 2) + powf(m_y, 2);
 }
 
@@ -457,7 +455,7 @@ bool LibMath::Vector3::isShorterThan(Vector3 const& vec) const
 
 bool LibMath::Vector3::isUnitVector(void) const
 {
-	return std::abs(magnitude() - 1) <= EPSILON  ;
+	return std::abs(magnitudeSquared() - 1) <= EPSILON  ;
 }
 
 float LibMath::Vector3::magnitude(void) const
@@ -912,7 +910,7 @@ float LibMath::Vector4::operator[](int n) const
 
 bool LibMath::Vector4::isUnit(void) const
 {
-	return std::abs(magnitude() - 1) <= EPSILON;
+	return std::abs(magnitudeSquare() - 1) <= EPSILON;
 }
 
 float LibMath::Vector4::dotProduct(Vector4 const& vec)
