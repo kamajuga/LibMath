@@ -21,6 +21,8 @@ namespace LibMath
 							Vector3(Vector3 const& other);						// copy all component
 							Vector3(LibMath::Geometry3D::Point const& point);
 							~Vector3() = default;
+		
+		operator			LibMath::Vector4() const;
 
 		static Vector3		zero(void);											// return a vector with all its component set to 0
 		static Vector3		one(void);											// return a vector with all its component set to 1

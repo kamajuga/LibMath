@@ -291,6 +291,11 @@ LibMath::Vector3::Vector3(LibMath::Geometry3D::Point const& point)
 	m_z = point.m_z;
 }
 
+LibMath::Vector3::operator LibMath::Vector4() const
+{
+	return LibMath::Vector4(m_x, m_y, m_z, 1.f);
+}
+
 LibMath::Vector3 LibMath::Vector3::zero(void)
 {
 	return Vector3(0.0f);
@@ -512,8 +517,6 @@ void LibMath::Vector3::reflectOnto(Vector3 const& vec)
 	m_z = m_z - 2 * dot_p * normalized_vec.m_z; 
 }
 
-// Ajoutez ces fonctions à votre classe Vector3
-
 void LibMath::Vector3::rotateX(Radian angle)
 {
 	float c = cos(angle);
@@ -620,7 +623,6 @@ std::string LibMath::Vector3::string(void) const
 std::string LibMath::Vector3::stringLong(void) const
 {
 	return std::string("Vector3{ x:" + formatNumber(m_x) + ", y:" + formatNumber(m_y) + ", z:" + formatNumber(m_z) + " }");
-	//return std::string();
 }
 
 void LibMath::Vector3::translate(Vector3 const& vec)
@@ -851,6 +853,11 @@ LibMath::Vector4::Vector4(LibMath::Vector3 const& vec3, const float& val)
 	m_y = vec3.m_y;
 	m_z = vec3.m_z;
 	m_w = val;
+}
+
+LibMath::Vector4::operator LibMath::Vector3() const
+{
+	return LibMath::Vector3(m_x, m_y, m_z);
 }
 
 float& LibMath::Vector4::operator[](int n)

@@ -15,11 +15,12 @@ namespace LibMath
 							Vector4(Vector4 const& other);
 							Vector4(LibMath::Vector3 const& vec3, const float& val = 1.0);
 
+		operator			LibMath::Vector3() const;
 
-		Vector4&		operator=(Vector4 const& other) = default;
+		Vector4&			operator=(Vector4 const& other) = default;
 
-		float&			operator[](int n);								
-		float			operator[](int n) const;
+		float&				operator[](int n);								
+		float				operator[](int n) const;
 
 		bool				isUnit(void) const;
 

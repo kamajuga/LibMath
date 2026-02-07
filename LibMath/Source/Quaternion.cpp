@@ -178,14 +178,25 @@ LibMath::Quaternion LibMath::Quaternion::slerp(Quaternion const& qStart, Quatern
 	Quaternion unitQEnd = qEnd;
 	unitQEnd.normalize();
 
-	Radian angleBetween = unitQStart.angleBetween(unitQEnd) * 0.5;
+	float cosTheta = qStart.m_x * qEnd.m_x + qStart.m_y * qEnd.m_y + qStart.m_z * qEnd.m_z + qStart.m_w * qEnd.m_w;
+
+	if (cosTheta < 0)
+	{
+		// Angle is greater then 90deg
+		unitQEnd = unitQEnd.conjugate();
+		unitQEnd.m_w = -unitQEnd.m_w;
+		cosTheta = -cosTheta;
+	}
+
+	if (cosTheta > 0.9995f) {
+		return nlerp(qStart, qEnd, t);
+	}
+	Radian angleBetween = LibMath::acos(cosTheta);
 
 	float sinTheta = sin(angleBetween);
 
 	// Handle very small angles (fall back to linear interpolation)
-	if (sinTheta < 0.001f) {
-		return nlerp(qStart, qEnd, t);
-	}
+	// Avoid division by zero
 
 	float SsinTheta = sin(angleBetween * (1 - t));
 	float EsinTheta = sin(angleBetween * t);
