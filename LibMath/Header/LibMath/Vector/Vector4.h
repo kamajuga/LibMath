@@ -19,6 +19,8 @@ namespace LibMath
 
 		Vector4&			operator=(Vector4 const& other) = default;
 
+		Vector4				lerp(Vector4 const& vec1, Vector4 const& vec2, float t);
+
 		float&				operator[](int n);								
 		float				operator[](int n) const;
 

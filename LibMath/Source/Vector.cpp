@@ -34,7 +34,7 @@ LibMath::Vector2::Vector2(Vector2 const& other)
 LibMath::Vector2::Vector2(Geometry2D::Point const& point)
 {
 	m_x = point.m_x;
-	m_y = point.m_y;
+	m_y = point.m_y;                                                                                                                          
 }
 
 float& LibMath::Vector2::operator[](int n)
@@ -332,6 +332,17 @@ LibMath::Vector3 LibMath::Vector3::front(void)
 LibMath::Vector3 LibMath::Vector3::back(void)
 {
 	return Vector3(0.0f, 0.0f, -1.0f);
+}
+
+LibMath::Vector3 LibMath::Vector3::lerp(Vector3 const& vec1, Vector3 const& vec2, float t)
+{
+	// Clamp t between 0 and 1 to prevent extrapolation
+	t = std::max(0.0f, std::min(1.0f, t));
+	return Vector3(
+		vec1.m_x + (vec2.m_x - vec1.m_x) * t,
+		vec1.m_y + (vec2.m_y - vec1.m_y) * t,
+		vec1.m_z + (vec2.m_z - vec1.m_z) * t
+	);
 }
 
 float& LibMath::Vector3::operator[](int n)
@@ -856,6 +867,18 @@ LibMath::Vector4::Vector4(LibMath::Vector3 const& vec3, const float& val)
 LibMath::Vector4::operator LibMath::Vector3() const
 {
 	return LibMath::Vector3(m_x, m_y, m_z);
+}
+
+LibMath::Vector4 LibMath::Vector4::lerp(Vector4 const& vec1, Vector4 const& vec2, float t)
+{
+	// Clamp t between 0 and 1 to prevent extrapolation
+	t = std::max(0.0f, std::min(1.0f, t));
+	return Vector4(
+		vec1.m_x + (vec2.m_x - vec1.m_x) * t,
+		vec1.m_y + (vec2.m_y - vec1.m_y) * t,
+		vec1.m_z + (vec2.m_z - vec1.m_z) * t,
+		vec1.m_w + (vec2.m_w - vec1.m_w) * t
+	);
 }
 
 float& LibMath::Vector4::operator[](int n)

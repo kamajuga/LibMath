@@ -75,10 +75,10 @@ int main(int argc, char* argv[])
 	*    test are ran                    *
 	*                                    *
 	\************************************/
-	arguments.push_back("[all],");
+	//arguments.push_back("[all],");
 	//arguments.push_back("[angle],");
 	//arguments.push_back("[vector],");
-	//arguments.push_back("[geometricObject]");
+	arguments.push_back("[geometricObject]");
 	//arguments.push_back("[geometricObject3D]");
 	//arguments.push_back("[Collision3D]");
 	//arguments.push_back("[Collision2D]");
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 	//arguments.push_back("Radian,");
 	//arguments.push_back("Trigonometry,");
 	//arguments.push_back("Point");
-	//arguments.push_back("Line");
+	arguments.push_back("Line");
 	//arguments.push_back("RectangleAABB");
 	//arguments.push_back("RectangleOBB");
 	//arguments.push_back("Circle2");

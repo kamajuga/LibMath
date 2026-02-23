@@ -33,6 +33,8 @@ namespace LibMath
 		static Vector3		front(void);										// return a unit vector pointing forward
 		static Vector3		back(void);											// return a unit vector pointing backward
 
+		static Vector3		lerp(Vector3 const& vec1, Vector3 const& vec2, float t);
+
 		Vector3&		operator=(Vector3 const& other) = default;
 
 

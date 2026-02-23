@@ -876,7 +876,6 @@ TEST_CASE("Matrix4", "[.all][matrix][Matrix4]")
         }
     }
 
-    glm::mat4 mat = glm::lookAt()
     SECTION("Accessor")
     {
         LibMath::Matrix4 mat(

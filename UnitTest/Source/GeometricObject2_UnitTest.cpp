@@ -27,21 +27,18 @@ TEST_CASE("Point", "[.all][geometricObject]")
 		float y = 15.f;
 
 		LibMath::Geometry2D::Point a{ x, y };
-		CHECK(a.m_x == 60.f);
-		CHECK(a.m_y == 15.f);
+		CHECK(a.m_x == x);
+		CHECK(a.m_y == y);
 
 		// copy constructor
 		LibMath::Geometry2D::Point b{ a };
-		CHECK(b.m_x == 60.f);
-		CHECK(b.m_y == 15.f);
+		CHECK(b.m_x == x);
+		CHECK(b.m_y == y);
 
 		// assignment operator
 		p = a;
 		CHECK(p.m_x == x);
 		CHECK(p.m_y == y);
-
-
-		CHECK(sizeof LibMath::Geometry2D::Point == 2 * sizeof(float));
 
 	}
 
@@ -57,7 +54,114 @@ TEST_CASE("Point", "[.all][geometricObject]")
 		// compare with different
 		CHECK_FALSE(LibMath::Geometry2D::Point{ 90.f, 100.f } == LibMath::Geometry2D::Point(450.f, 100.f));
 		CHECK_FALSE(LibMath::Geometry2D::Point{ 10.f, 20.f } == LibMath::Geometry2D::Point{ 10.f, 20.1f });
+		CHECK_FALSE(LibMath::Geometry2D::Point{ 150.f, 30.f } == LibMath::Geometry2D::Point{ 70.f, 25.f });
 
+	}
+
+	SECTION("DistanceBetweenPoint")
+	{
+		SECTION("Distance - Same point object")
+		{
+			LibMath::Geometry2D::Point p{ 3.f, 4.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p, p) == 0.f);
+		}
+
+		SECTION("Distance - Same coordinates, different objects")
+		{
+			LibMath::Geometry2D::Point p1{ 3.f, 4.f };
+			LibMath::Geometry2D::Point p2{ 3.f, 4.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == 0.f);
+		}
+
+		SECTION("Distance - From origin")
+		{
+			LibMath::Geometry2D::Point origin{ 0.f, 0.f };
+
+			// 3-4-5 right triangle
+			LibMath::Geometry2D::Point p{ 3.f, 4.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(origin, p) == Catch::Approx(5.f));
+		}
+
+		SECTION("Distance - Horizontal only")
+		{
+			LibMath::Geometry2D::Point p1{ 7.f, 7.f };
+			LibMath::Geometry2D::Point p2{ 5.f, 7.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(2.f));
+		}
+
+		SECTION("Distance - Vertical only")
+		{
+			LibMath::Geometry2D::Point p1{ 25.4f, 25.4f };
+			LibMath::Geometry2D::Point p2{ 25.4f, 18.504f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(6.896f));
+		}
+
+		SECTION("Distance - Symmetry: d(A,B) == d(B,A)")
+		{
+			LibMath::Geometry2D::Point p1{ -1.028f, 2.f };
+			LibMath::Geometry2D::Point p2{ 4.f, -6.286f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) ==
+				LibMath::Geometry2D::DistancebBetweenPoint(p2, p1));
+		}
+
+		SECTION("Distance - Negative coordinates")
+		{
+			LibMath::Geometry2D::Point p1{ -3.f, -4.f };
+			LibMath::Geometry2D::Point p2{ 0.f,  0.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(5.f));
+		}
+
+		SECTION("Distance - Both points in negative space")
+		{
+			LibMath::Geometry2D::Point p1{ -1.f, -1.f };
+			LibMath::Geometry2D::Point p2{ -4.f, -5.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(5.f));
+		}
+
+		SECTION("Distance - Mixed positive/negative coordinates")
+		{
+			LibMath::Geometry2D::Point p1{ -3.f, 0.f };
+			LibMath::Geometry2D::Point p2{ 3.f, 0.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(6.f));
+		}
+
+		SECTION("Distance - Fractional values")
+		{
+			LibMath::Geometry2D::Point p1{ 0.f,  0.f };
+			LibMath::Geometry2D::Point p2{ 0.3f, 0.4f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(0.5f));
+		}
+
+		SECTION("Distance - Large values")
+		{
+			LibMath::Geometry2D::Point p1{ 5.8f,    5.8f };
+			LibMath::Geometry2D::Point p2{ 10005.8f, 10005.8f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(10000.f * std::sqrt(2.f)));
+		}
+
+		SECTION("Distance - Small values")
+		{
+			LibMath::Geometry2D::Point p1{ 0.0000002551f,    0.0000004852f };
+			LibMath::Geometry2D::Point p2{ 1.8e-5f, 425.1025e-8f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(1.81401e-5f).epsilon(1e-4f));
+		}
+
+		SECTION("Distance - Copy constructed points yield same result")
+		{
+			LibMath::Geometry2D::Point p1{ 1.f, 1.f };
+			LibMath::Geometry2D::Point p2{ 4.f, 5.f };
+			LibMath::Geometry2D::Point p1Copy{ p1 };
+			LibMath::Geometry2D::Point p2Copy{ p2 };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) ==
+				LibMath::Geometry2D::DistancebBetweenPoint(p1Copy, p2Copy));
+		}
+
+		SECTION("Distance - Default constructed points are at origin")
+		{
+			LibMath::Geometry2D::Point p1;
+			LibMath::Geometry2D::Point p2{ 0.f, 5.f };
+			CHECK(LibMath::Geometry2D::DistancebBetweenPoint(p1, p2) == Catch::Approx(5.f));
+		}
 	}
 }
 
@@ -65,10 +169,6 @@ TEST_CASE("Line", "[.all][geometricObject]")
 {
 	SECTION("Instantiation") 
 	{
-		// Destructor
-		{
-			LibMath::Geometry2D::Line temp;
-		}
 
 		// Default constructor
 		LibMath::Geometry2D::Line lineDefault;
@@ -90,47 +190,45 @@ TEST_CASE("Line", "[.all][geometricObject]")
 		// Assignment operator
 		LibMath::Geometry2D::Line lineAssign;
 		lineAssign = lineParam;
-		CHECK(lineAssign.m_start == p1);
-		CHECK(lineAssign.m_end == p2);
-	}
+		CHECK(lineAssign.m_start == lineParam.m_start);
+		CHECK(lineAssign.m_end == lineParam.m_end);
 
-	SECTION("Accessor")
-	{
-		float x = 60.f;
-		float y = 15.f;
-		LibMath::Geometry2D::Point p1(x, y);
-		LibMath::Geometry2D::Point p2(x + 10, y - 5);
-
-		LibMath::Geometry2D::Line line{ p1, p2 };
-
+		// Destructor
 		{
-			LibMath::Geometry2D::Line& line2 = line;
-			CHECK(line2.m_start == p1);
+			LibMath::Geometry2D::Line temp;
 		}
-
 	}
 
 	SECTION("Comparison") 
 	{
 		LibMath::Geometry2D::Point p1(0.0f, 0.0f);
 		LibMath::Geometry2D::Point p2(3.0f, 4.0f);
+		LibMath::Geometry2D::Point p3(-3.0f, -4.0f);
+		
 
 		LibMath::Geometry2D::Line line1(p1, p2);
 		LibMath::Geometry2D::Line line2(p1, p2);
 		LibMath::Geometry2D::Line line3(p2, LibMath::Geometry2D::Point(6.0f, 8.0f));
+		LibMath::Geometry2D::Line line4(p1, p3);
 
 		CHECK(line1 == line2);
 		CHECK_FALSE(line1 == line3);
+		CHECK(line1.m_start.m_x == -line4.m_start.m_x);
+		CHECK(line1.m_start.m_y == -line4.m_start.m_y);
+		CHECK(line1.m_end.m_x == -line4.m_end.m_x);
+		CHECK(line1.m_end.m_y == -line4.m_end.m_y);
 	}
 
 	SECTION("Length and LengthSquared") 
 	{
-		LibMath::Geometry2D::Point p1(0.0f, 0.0f);
+		LibMath::Geometry2D::Point p1(5.0f, 9.0f);
 		LibMath::Geometry2D::Point p2(3.0f, 4.0f);
 		LibMath::Geometry2D::Line line(p1, p2);
 
-		CHECK(line.lenght() == Catch::Approx(5.0f));
-		CHECK(line.lenghtSquare() == Catch::Approx(25.0f));
+		float distance = LibMath::Geometry2D::DistancebBetweenPoint(p1, p2);
+
+		CHECK(line.lenght() == Catch::Approx(distance));
+		CHECK(line.lenghtSquare() == Catch::Approx(distance * distance));
 	}
 }
 

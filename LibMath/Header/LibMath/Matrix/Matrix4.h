@@ -64,9 +64,10 @@ namespace LibMath
 		Matrix4				cofators(void) const;
 		Matrix4				adjugate(void) const;
 		Matrix4				inverse(void) const;
-		float*				getPointer(void) { return &m_elements[0][0]; };
+		float*				data(void) { return &m_elements[0][0]; };
 
-		static Matrix4		perspective(float const fov, float const aspectRatio, float const near, float const far);
+		static Matrix4		perspective(float const fov, float const aspectRatio, 
+							float const near, float const far);
 
 		static Matrix4		createTransform(LibMath::Vector3 const& translate,
 													LibMath::Radian const& rotation,
